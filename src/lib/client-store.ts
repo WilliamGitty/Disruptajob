@@ -9,7 +9,6 @@ import type {
   PipelineEntry,
   PipelineStage,
   Project,
-  Role,
   SearchBrief,
 } from "@/types";
 
@@ -20,7 +19,6 @@ const CUSTOM_PROJECTS_KEY = "disruptajob:custom-projects";
 const ONBOARDING_DRAFT_KEY = "disruptajob:onboarding-draft";
 const DEMO_SEEDED_KEY = "disruptajob:demo-seeded";
 const COMPANY_SETUP_KEY = "disruptajob:company-setup";
-const CUSTOM_ROLES_KEY = "disruptajob:custom-roles";
 const PIPELINE_KEY = "disruptajob:pipeline";
 const PIPELINE_SEEDED_KEY = "disruptajob:pipeline-seeded";
 
@@ -359,6 +357,7 @@ export function useOnboardingDraft() {
 export const EMPTY_COMPANY_SETUP: CompanySetupDraft = {
   step: 0,
   name: "",
+  contactEmail: "",
   website: "",
   blurb: "",
   teamSize: "",
@@ -384,11 +383,6 @@ export function useCompanySetup() {
     EMPTY_COMPANY_SETUP
   );
   return { setup: value, patch, reset, hydrated };
-}
-
-/** Roles published by the employer during this session (seeded roles live in mock-data). */
-export function useCustomRoles() {
-  return useLocalList<Role>(CUSTOM_ROLES_KEY);
 }
 
 /**

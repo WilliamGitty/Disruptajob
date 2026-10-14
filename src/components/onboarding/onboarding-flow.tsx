@@ -111,6 +111,16 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
    */
   function finish() {
     setError(null);
+
+    // The password is deliberately not persisted with the draft, so someone who closed the tab
+    // and came back no longer has one. Without this they'd be told "use at least 10 characters"
+    // on a step that has no password field — send them to the field instead of describing it.
+    if (!session && password.length < 10) {
+      setError("Set a password to finish — we don't store it with your draft, so it's gone after a reload.");
+      goTo(1);
+      return;
+    }
+
     startSaving(async () => {
       const result = await completeCandidateOnboarding({
         name: draft.name,

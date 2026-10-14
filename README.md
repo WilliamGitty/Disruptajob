@@ -86,20 +86,22 @@ Deliberate choices worth knowing:
 
 ## Deployment
 
-See [DEPLOY.md](DEPLOY.md). Roughly £5/month on Fly.io. Note that **Vercel won't work unchanged**:
+See [DEPLOY.md](DEPLOY.md). Roughly £3/month on Fly.io. Note that **Vercel won't work unchanged**:
 the database is a file on disk, and Vercel's filesystem is ephemeral.
 
 ## State of the build
 
 This is a working prototype, not a production service. Honest list of what's missing:
 
-- **Onboarding flows still write to `localStorage`** — the candidate and company setup wizards save
-  drafts locally, and completing company setup doesn't yet create a real role in the database.
 - **No tests.** The privacy and matching logic are the two places a bug is genuinely costly.
 - **No email**, so no verification or notifications. Sign-up accepts any address.
 - **No rate limiting** on sign-in or sign-up.
 - **No GDPR export or account deletion**, both of which are legally required in the UK before real
   users exist.
 - **Not registered with the ICO**, and there's no privacy policy or terms.
+- **Onboarding drafts are still per-browser.** Both wizards keep progress in `localStorage` until
+  the final step writes everything to the database, so a half-finished profile doesn't follow you
+  to another device — and the password, deliberately never stored with the draft, has to be
+  re-entered if you close the tab.
 - `src/lib/client-store.ts` is largely superseded by the server layer and is where the two
   remaining lint warnings live.

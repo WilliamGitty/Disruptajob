@@ -263,6 +263,8 @@ export interface CompanySetupDraft {
   completedAt?: string;
   // Step 1 — company
   name: string;
+  /** Who is setting this up. Becomes the account when the role is published. */
+  contactEmail: string;
   website: string;
   blurb: string;
   stage?: CompanyStage;

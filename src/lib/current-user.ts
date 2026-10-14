@@ -1,6 +1,12 @@
-// Stand-in for auth in this prototype: the one candidate the demo treats as "signed in".
-export const CURRENT_TALENT_ID = "william-sandford";
-
-/** Stand-in for auth on the employer side: the company whose seat the demo is sitting in. */
-export const CURRENT_EMPLOYER_ID = "employer-1";
+/**
+ * The last remnant of the pre-auth prototype.
+ *
+ * The candidate and employer id constants that used to live here are gone: both onboarding flows
+ * now derive the actor from the session, so a hardcoded id can no longer send someone else's work
+ * to a seeded demo profile.
+ *
+ * This one survives only as a default argument in `search.ts` and `role-matching.ts`, which is a
+ * poor default — a caller that forgets to pass the viewing company evaluates a candidate's
+ * blocklist against the wrong one. Those signatures should require it.
+ */
 export const CURRENT_EMPLOYER_COMPANY = "Meridian Robotics";

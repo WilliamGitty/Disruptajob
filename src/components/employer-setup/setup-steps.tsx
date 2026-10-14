@@ -39,7 +39,18 @@ const ARRANGEMENTS: { value: WorkArrangement; label: string }[] = [
 
 // --- Step 1: Company -------------------------------------------------------
 
-export function CompanyStep({ setup, patch }: StepProps) {
+export function CompanyStep({
+  setup,
+  patch,
+  password,
+  onPasswordChange,
+  signedIn,
+}: StepProps & {
+  password: string;
+  onPasswordChange: (value: string) => void;
+  /** An employer already signed in keeps the account they have — don't ask again. */
+  signedIn: boolean;
+}) {
   const [connecting, setConnecting] = useState(false);
   const [suggested, setSuggested] = useState<string[]>([]);
 
@@ -105,8 +116,38 @@ export function CompanyStep({ setup, patch }: StepProps) {
       </Field>
 
       <Field label="Company name">
-        <Input value={setup.name} onChange={(e) => patch({ name: e.target.value })} />
+        <Input
+          value={setup.name}
+          onChange={(e) => patch({ name: e.target.value })}
+          disabled={signedIn}
+        />
       </Field>
+
+      {!signedIn && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <Field label="Your work email">
+            <Input
+              type="email"
+              placeholder="you@company.com"
+              value={setup.contactEmail}
+              onChange={(e) => patch({ contactEmail: e.target.value })}
+            />
+          </Field>
+          <Field label="Password">
+            <Input
+              type="password"
+              placeholder="At least 10 characters"
+              value={password}
+              onChange={(e) => onPasswordChange(e.target.value)}
+              autoComplete="new-password"
+            />
+          </Field>
+          <p className="text-xs leading-relaxed text-ink-faint sm:col-span-2">
+            Your account is created when you publish, not now — so you can look around first. The
+            password is never saved with your draft.
+          </p>
+        </div>
+      )}
 
       <Field label="What you do, in a sentence">
         <Textarea
