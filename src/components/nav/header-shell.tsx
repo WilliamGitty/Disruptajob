@@ -1,0 +1,31 @@
+import { getCurrentAccount } from "@/server/auth";
+import { listInvitesForCandidate, listInvitesForCompany } from "@/server/repositories/invites";
+import { countAwaitingCandidate, countAwaitingEmployer } from "@/lib/invites";
+import { Header } from "@/components/nav/header";
+
+/**
+ * Resolves who's signed in and how much is waiting on them, then hands plain values to the
+ * client header.
+ *
+ * Counting used to happen in the browser against localStorage, which meant the badge reflected
+ * whatever that one browser had done rather than what's actually true. Now it's a server read
+ * scoped to the signed-in account.
+ */
+export async function HeaderShell() {
+  const account = await getCurrentAccount();
+
+  let awaiting = 0;
+  if (account?.candidateId) {
+    awaiting = countAwaitingCandidate(listInvitesForCandidate(account.candidateId), account.candidateId);
+  } else if (account?.companyId) {
+    awaiting = countAwaitingEmployer(listInvitesForCompany(account.companyId));
+  }
+
+  return (
+    <Header
+      awaiting={awaiting}
+      signedInAs={account ? { name: account.displayName, role: account.role } : undefined}
+      talentHome={account?.candidateId ? `/profile/${account.candidateId}` : "/talent/onboarding"}
+    />
+  );
+}

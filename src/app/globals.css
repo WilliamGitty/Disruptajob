@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+
+:root {
+  --paper: #f7f5f0;
+  --paper-dim: #efebe2;
+  --paper-line: #e0dbcd;
+  --ink: #15140f;
+  --ink-soft: #46443c;
+  --ink-faint: #8a8676;
+  --accent: #b3401c;
+  --accent-dark: #8c3115;
+  --accent-soft: #f1ded4;
+  --evidence: #2f5a46;
+  --evidence-soft: #e2ebe4;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-dim: var(--paper-dim);
+  --color-paper-line: var(--paper-line);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-soft: var(--accent-soft);
+  --color-evidence: var(--evidence);
+  --color-evidence-soft: var(--evidence-soft);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-editorial-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--paper-line);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.font-serif-display {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease forwards;
+}
+
+.grain-noise {
+  background-image: radial-gradient(circle at 1px 1px, rgba(21, 20, 15, 0.055) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+.underline-grow {
+  position: relative;
+  text-decoration: none;
+}
+
+.underline-grow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.25s ease;
+}
+
+.underline-grow:hover::after {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+}

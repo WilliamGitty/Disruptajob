@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.data
+.claude
+*.zip
+npm-debug.log*
+.DS_Store
+tsconfig.tsbuildinfo
