@@ -15,11 +15,24 @@ Fly.io is configured here. Railway, Render or any VPS would work the same way.
 
 | | |
 |---|---|
-| Fly.io — 1 shared-cpu machine, 512MB, 1GB volume | **~£5/month** |
-| Domain (.com) | ~£11/year |
-| **Total year one** | **~£72** |
+| Fly.io — shared-cpu-1x, 512MB, 1GB volume | **~£3/month** |
+| Domain — optional; `.fly.dev` is free and fine for a prototype | £0–11/year |
+| **Total year one** | **~£36**, or ~£47 with a domain |
 
-Nothing else is needed to be live. Email, payments and OAuth only matter once real people use it.
+Nothing else is needed. Email, payments and OAuth only matter once real people use it.
+
+### Why not £0
+
+Worth knowing what was ruled out, so it doesn't get relitigated:
+
+| Option | Why not |
+|---|---|
+| **Vercel / Netlify free** | Ephemeral filesystem. The SQLite database is wiped on deploy and isn't shared between serverless invocations, so signing in as a candidate and then as an employer can hit different instances with different data — which breaks the one thing the demo exists to show. |
+| **Vercel free + Turso** | Genuinely £0 and a good long-term answer. But `node:sqlite` is **synchronous** and the libSQL client is **async**, so every repository function and every page that calls one has to change. Two to four hours of refactoring to save £36 a year. |
+| **Render free** | No persistent disk, and the instance sleeps — a cold start in front of someone you're trying to impress. |
+| **Oracle Cloud Always Free** | Actually free forever and powerful enough. But you're administering a VM: Docker, a reverse proxy, TLS renewal, security updates. Fine if you want that; it is not the cheap option once your time counts. |
+
+£3/month is roughly one coffee a quarter. Spend the hours on the product.
 
 ## Steps
 

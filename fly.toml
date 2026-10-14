@@ -30,5 +30,10 @@ primary_region = "lhr"  # London, closest to the users this is built for
   min_machines_running = 1
 
 [[vm]]
+  # The smallest machine that comfortably runs a Next.js server. 256mb is cheaper but leaves no
+  # headroom for a build spike, and an OOM-killed demo is worse value than the extra pound.
   size = "shared-cpu-1x"
   memory = "512mb"
+
+# Roughly £3/month all in: ~£2.90 for the machine, ~12p for a 1GB volume. There is no cheaper
+# option that keeps the database — see DEPLOY.md for why the free serverless hosts don't work.
