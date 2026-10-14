@@ -6,6 +6,7 @@ import { getCandidateById } from "@/server/repositories/candidates";
 import { getCompanyById } from "@/server/repositories/companies";
 import { awaitsCandidate } from "@/lib/invites";
 import { OpportunityCard } from "@/components/invites/opportunity-card";
+import { QuietInbox } from "@/components/illustrations/empty-states";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Who's interested — Disruptajob" };
@@ -51,6 +52,7 @@ export default async function OpportunitiesPage() {
 
         {invites.length === 0 ? (
           <div className="mt-10 border border-dashed border-ink/20 p-10 text-center">
+            <QuietInbox className="mx-auto mb-6 h-24 w-40" />
             <p className="font-serif-display text-xl text-ink">Quiet so far — that&rsquo;s normal.</p>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
               Companies here search for proven capability, so the more of your work is written

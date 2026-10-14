@@ -75,6 +75,15 @@ Deliberate choices worth knowing:
 - **Visibility is re-applied on every read.** Someone who hides after being saved to a pipeline
   disappears from it — a saved list never outlives consent.
 
+## Documents worth reading first
+
+| | |
+|---|---|
+| [docs/strategy.md](docs/strategy.md) | The thesis in Innovator's Dilemma terms — job to be done, why incumbents can't follow, what the strategy forbids, and OKRs. Start here. |
+| [docs/design-principles.md](docs/design-principles.md) | Why the interface looks and reads the way it does. |
+| [docs/candidate-onboarding-flow-spec.md](docs/candidate-onboarding-flow-spec.md) | The original build spec for candidate onboarding. |
+| [DEPLOY.md](DEPLOY.md) | Hosting, costs, and the checklist before this can be genuinely public. |
+
 ## Deployment
 
 See [DEPLOY.md](DEPLOY.md). Roughly £5/month on Fly.io. Note that **Vercel won't work unchanged**:

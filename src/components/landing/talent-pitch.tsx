@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DescribeOneThing,
+  TagWhatItProves,
+  YouDecideWhoSees,
+} from "@/components/illustrations/step-marks";
 
 /**
  * The candidate's "what do I actually do here" step.
@@ -13,16 +18,19 @@ import { Button } from "@/components/ui/button";
 const STEPS = [
   {
     n: "01",
+    Mark: DescribeOneThing,
     heading: "Describe one thing you built.",
     body: "A process you fixed, a tool you made, a mess you untangled. Plain words are fine — this isn’t a cover letter and nobody is marking your grammar.",
   },
   {
     n: "02",
+    Mark: TagWhatItProves,
     heading: "Tag what it proves.",
     body: "You pick the capabilities that piece of work demonstrates. That’s the only thing that moves your profile — nothing you simply claim ever will.",
   },
   {
     n: "03",
+    Mark: YouDecideWhoSees,
     heading: "Decide who can see you.",
     body: "You start hidden. Open up when you’re ready, and block your current employer by name so a job search never costs you the job you have.",
   },
@@ -46,13 +54,12 @@ export function TalentPitch() {
         </div>
 
         <ol className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:gap-14">
-          {STEPS.map((step) => (
-            <li key={step.n}>
-              <span className="font-serif-display text-sm text-accent">{step.n}</span>
-              <h3 className="mt-3 font-serif-display text-xl leading-snug text-ink">
-                {step.heading}
-              </h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{step.body}</p>
+          {STEPS.map(({ n, heading, body, Mark }) => (
+            <li key={n}>
+              <Mark className="mb-5 h-16 w-full" />
+              <span className="font-serif-display text-sm text-accent">{n}</span>
+              <h3 className="mt-3 font-serif-display text-xl leading-snug text-ink">{heading}</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{body}</p>
             </li>
           ))}
         </ol>

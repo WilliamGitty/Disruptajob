@@ -2,6 +2,7 @@ import type { CandidateProfile, Project } from "@/types";
 import { ProjectCard } from "@/components/profile/project-card";
 import { AddProjectModal } from "@/components/profile/add-project-modal";
 import { RemoveProjectButton } from "@/components/profile/remove-project-button";
+import { EmptyShelf } from "@/components/illustrations/empty-states";
 
 /**
  * Someone's body of work.
@@ -33,6 +34,7 @@ export function FeaturedWorkSection({
 
         {projects.length === 0 ? (
           <div className="border border-dashed border-ink/20 p-10 text-center">
+            <EmptyShelf className="mx-auto mb-6 h-24 w-40" />
             <p className="font-serif-display text-xl text-ink">
               {isOwnProfile ? "Nothing here yet." : "No published work yet."}
             </p>

@@ -1,3 +1,9 @@
+import {
+  IdenticalOnPaper,
+  SentIntoSilence,
+  TitleTooSmall,
+} from "@/components/illustrations/reality-marks";
+
 /**
  * The empathy beat.
  *
@@ -8,16 +14,20 @@
 
 const REALITIES = [
   {
-    heading: "You’ve been applying for months.",
+    // A number rather than "months" — specificity is what makes someone feel recognised.
+    heading: "Two hundred applications. Four replies.",
     body: "Not because you’re underqualified. Because an application is judged on a document that can’t show what you actually did.",
+    Mark: SentIntoSilence,
   },
   {
     heading: "Your title picked one job.",
     body: "You might run operations, build the automations and own half of product. “Operations Associate” covers none of it — and that’s the word the filters search for.",
+    Mark: TitleTooSmall,
   },
   {
     heading: "Everyone sounds perfect on paper now.",
     body: "AI writes a flawless cover letter in seconds, so polish stopped meaning anything. The work you’ve genuinely done is the one thing that’s still yours.",
+    Mark: IdenticalOnPaper,
   },
 ];
 
@@ -39,10 +49,11 @@ export function NotYourFault() {
         </div>
 
         <div className="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 sm:grid-cols-3">
-          {REALITIES.map((item) => (
-            <div key={item.heading} className="bg-paper p-8">
-              <h3 className="font-serif-display text-xl leading-snug text-ink">{item.heading}</h3>
-              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
+          {REALITIES.map(({ heading, body, Mark }) => (
+            <div key={heading} className="flex flex-col bg-paper p-8">
+              <Mark className="mb-6 h-20 w-full" />
+              <h3 className="font-serif-display text-xl leading-snug text-ink">{heading}</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{body}</p>
             </div>
           ))}
         </div>

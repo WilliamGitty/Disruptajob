@@ -9,6 +9,7 @@ import { pipelineCandidateIds } from "@/server/repositories/pipeline";
 import { SearchBox } from "@/components/employer/search-box";
 import { ResultCard } from "@/components/employer/result-card";
 import { RecordSearch } from "@/components/employer/record-search";
+import { NoMatches } from "@/components/illustrations/empty-states";
 
 export const dynamic = "force-dynamic";
 
@@ -87,19 +88,33 @@ export default async function EmployerSearchResultsPage({
           </p>
         )}
 
-        <div className="space-y-5">
-          {matches.map((match) => {
-            const candidate = byId.get(match.candidateId)!;
-            return (
-              <ResultCard
-                key={candidate.id}
-                candidate={candidate}
-                match={match}
-                alreadyOnBoard={onBoard.has(candidate.id)}
-              />
-            );
-          })}
-        </div>
+        {ranked.length === 0 ? (
+          <div className="border border-dashed border-ink/20 p-12 text-center">
+            <NoMatches className="mx-auto mb-6 h-24 w-40" />
+            <p className="font-serif-display text-xl text-ink">
+              Nobody has evidence for that yet.
+            </p>
+            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
+              We only return people whose projects actually demonstrate what you asked for, so an
+              empty result is honest rather than a failure. Try describing the capability more
+              broadly — &ldquo;automation&rdquo; rather than a specific tool.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-5">
+            {matches.map((match) => {
+              const candidate = byId.get(match.candidateId)!;
+              return (
+                <ResultCard
+                  key={candidate.id}
+                  candidate={candidate}
+                  match={match}
+                  alreadyOnBoard={onBoard.has(candidate.id)}
+                />
+              );
+            })}
+          </div>
+        )}
 
         {totalPages > 1 && (
           <nav className="mt-10 flex items-center justify-between border-t border-ink/10 pt-6 text-sm">

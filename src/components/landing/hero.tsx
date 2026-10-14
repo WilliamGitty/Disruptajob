@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Clock, Eye, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProjectThumbnail } from "@/components/ui/project-thumbnail";
+import { TitleVsWork } from "@/components/illustrations/title-vs-work";
 
 /**
  * Two doors, candidate first.
@@ -23,9 +23,10 @@ export function Hero() {
             Your job title doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-            You do the ops, and the automation, and half of product. Your CV has room for one
-            line of that. If you&rsquo;ve been applying for months and hearing nothing back, it
-            probably isn&rsquo;t you — it&rsquo;s the format. Here you show the work instead.
+            You run the ops, build the automations and own half of product. Your CV has room for
+            one line of that. If you&rsquo;ve sent two hundred applications and heard back from
+            four, the problem isn&rsquo;t you — it&rsquo;s the format. Here you show the work
+            instead.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -53,12 +54,13 @@ export function Hero() {
           </ul>
         </div>
 
+        {/* The thesis, drawn — someone should understand this company before reading a word. */}
         <div className="relative hidden lg:block">
           <div className="absolute -inset-4 border border-ink/10" />
-          <ProjectThumbnail seed="disruptajob-hero" variant="hero" className="h-full min-h-[360px] w-full" />
+          <TitleVsWork className="h-full w-full" />
           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between border border-ink/10 bg-paper/95 px-4 py-3 text-xs">
-            <span className="text-ink-faint">What you built, not what you claimed</span>
-            <span className="font-medium text-ink">Real work</span>
+            <span className="text-ink-faint">One line on a CV</span>
+            <span className="font-medium text-ink">Six months of real work</span>
           </div>
         </div>
       </div>
