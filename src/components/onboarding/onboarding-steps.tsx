@@ -36,6 +36,15 @@ export interface StepProps {
   patch: (partial: Partial<OnboardingDraft>) => void;
 }
 
+/**
+ * Owner id for work captured during onboarding.
+ *
+ * These projects live in the browser until the final step writes them to the database under the
+ * real candidate id, so this is only ever a local grouping key. It used to be the literal string
+ * "william-sandford", which meant everyone's onboarding wrote into one seeded person's profile.
+ */
+export const DRAFT_OWNER_ID = "onboarding-draft";
+
 // --- shared small controls ------------------------------------------------
 
 function OptionButton({
@@ -102,7 +111,18 @@ export function HookStep({ draft, patch }: StepProps) {
 
 // --- Step 2: Identity -----------------------------------------------------
 
-export function IdentityStep({ draft, patch }: StepProps) {
+export function IdentityStep({
+  draft,
+  patch,
+  password,
+  onPasswordChange,
+  signedIn,
+}: StepProps & {
+  password: string;
+  onPasswordChange: (value: string) => void;
+  /** Someone already signed in keeps the credentials they have — don't ask again. */
+  signedIn: boolean;
+}) {
   return (
     <div className="space-y-6">
       <StepIntro
@@ -112,7 +132,12 @@ export function IdentityStep({ draft, patch }: StepProps) {
       />
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field label="Name">
-          <Input value={draft.name} onChange={(e) => patch({ name: e.target.value })} placeholder="Alex Morgan" />
+          <Input
+            value={draft.name}
+            onChange={(e) => patch({ name: e.target.value })}
+            placeholder="Alex Morgan"
+            disabled={signedIn}
+          />
         </Field>
         <Field label="Email">
           <Input
@@ -120,8 +145,24 @@ export function IdentityStep({ draft, patch }: StepProps) {
             value={draft.email}
             onChange={(e) => patch({ email: e.target.value })}
             placeholder="you@example.com"
+            disabled={signedIn}
           />
         </Field>
+        {!signedIn && (
+          <Field label="Password">
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => onPasswordChange(e.target.value)}
+              placeholder="At least 10 characters"
+              autoComplete="new-password"
+            />
+            <p className="mt-2 text-xs leading-relaxed text-ink-faint">
+              The only thing we ask you to remember. Your draft stays in this browser as you go —
+              the password is never saved alongside it.
+            </p>
+          </Field>
+        )}
         <Field label="Location">
           <Input
             value={draft.location}
@@ -525,7 +566,7 @@ function ManualEvidenceForm({ onAdd }: { onAdd: (project: Project) => void }) {
     onAdd({
       id,
       slug,
-      ownerId: "william-sandford",
+      ownerId: DRAFT_OWNER_ID,
       title: title.trim(),
       description: description.trim(),
       thumbnailSeed: slug,
