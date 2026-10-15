@@ -145,6 +145,34 @@ A strategy that forbids nothing isn't a strategy. We will not:
 - **Make candidates discoverable by default.** The privacy promise is what makes an employed
   person brave enough to publish work. Breaking it once breaks it permanently.
 
+### 5a. The job board question, settled
+
+Asked directly in October 2026: *should companies showcase their open jobs, and should candidates
+get an AI-matched feed of roles they'd suit?*
+
+**The first half is a no, and it's the same no as above.** A board makes the candidate browse and
+apply. That returns them to being an applicant — the precise dynamic that has them eleven months
+into a search feeling invisible — and it puts us back in the volume business we exist to leave.
+It would also hand incumbents a fight on their own terms, which is the one fight a new entrant
+cannot win.
+
+**The second half is more interesting and nearly right.** "Roles you'd suit, matched from your
+portfolio" is a feed with an apply button at the end of it, however it's dressed. But the demand
+signal underneath it is real, useful, and ours alone — nobody else can compute it, because nobody
+else holds evidence-tagged work on both sides.
+
+So we show the demand and remove the application. A candidate sees how many companies have
+described work they can evidence, which capabilities are being asked for, what's in demand that
+they haven't evidenced — and, the number that matters, **how many of those companies currently
+cannot see them**. That last one turns visibility from an abstract setting into a concrete,
+reversible decision.
+
+Two actions follow, neither of which is an application: add evidence, or open up. See
+`server/repositories/demand.ts`.
+
+This is also our answer on gamification. Streaks, badges and completion percentages are what a
+product invents when it has no real feedback to give. We have real feedback.
+
 ---
 
 ## 6. Objectives and key results
