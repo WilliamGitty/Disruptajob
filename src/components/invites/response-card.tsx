@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { InviteStatusBadge } from "@/components/invites/invite-status-badge";
 import { InviteThread } from "@/components/invites/invite-thread";
 import { TermsSummary } from "@/components/employer/terms-summary";
+import { HandoffPanel } from "@/components/employer/handoff-panel";
+import type { Handoff } from "@/server/repositories/handoff";
 
 /**
  * One conversation, from the company's side.
@@ -24,10 +26,13 @@ export function ResponseCard({
   candidateName,
   candidateSlug,
   terms,
+  handoff,
 }: {
   invite: Invite;
   candidateName: string;
   candidateSlug?: string;
+  /** Present only once accepted — the server decides, not this component. */
+  handoff?: Handoff;
   terms?: NonNegotiables;
 }) {
   const [followUp, setFollowUp] = useState("");
@@ -75,6 +80,11 @@ export function ResponseCard({
         <p className="mt-5 border-t border-ink/10 pt-5 text-sm text-ink-faint">
           {candidateName} declined this invite.
         </p>
+      )}
+
+      {/* Contact details, released by the server only on acceptance. */}
+      {invite.status === "accepted" && handoff && (
+        <HandoffPanel handoff={handoff} roleTitle={invite.roleTitle} />
       )}
 
       {/* Terms surface the moment they accept — so nobody discovers a mismatch three weeks in. */}

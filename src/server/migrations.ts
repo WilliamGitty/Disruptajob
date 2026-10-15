@@ -17,13 +17,34 @@ interface Migration {
   up: (db: DatabaseSync) => void;
 }
 
+/**
+ * Add a column only if it isn't already there.
+ *
+ * SQLite has no ADD COLUMN IF NOT EXISTS, and a migration that assumes absence is one schema.sql
+ * edit away from breaking every fresh install — which is exactly how this helper came to exist.
+ */
+function addColumn(db: DatabaseSync, table: string, column: string, type: string): void {
+  const existing = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+  if (existing.some((c) => c.name === column)) return;
+  db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+}
+
 const MIGRATIONS: Migration[] = [
   {
     // Email-only sign-in was a stand-in while there was no way to create an account at all.
     // Nullable so the seeded demo accounts keep working without one.
     id: "001-account-password",
     up: (db) => {
-      db.exec("ALTER TABLE account ADD COLUMN password_hash TEXT");
+      addColumn(db, "account", "password_hash", "TEXT");
+    },
+  },
+  {
+    // Reaching out now asks how the company wants to continue if the person says yes. Nullable,
+    // so invites sent before this existed keep working and simply have no stated preference.
+    id: "002-invite-followup",
+    up: (db) => {
+      addColumn(db, "invite", "followup_channel", "TEXT");
+      addColumn(db, "invite", "followup_detail", "TEXT");
     },
   },
 ];

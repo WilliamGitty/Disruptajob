@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { sendInvite } from "@/server/actions/hiring";
+import { FOLLOWUP_OPTIONS, followupPromise, type FollowupChannel } from "@/lib/followup";
+import { cn } from "@/lib/utils";
 
 const DEFAULT_MESSAGE =
   "Your work looks highly relevant to something we are building. Would you be interested in a conversation?";
@@ -37,6 +39,8 @@ export function InviteModal({
     `Your work on ${candidateName.split(" ")[0]}'s recent projects looks highly relevant to something we are building. Would you be interested in a conversation?`
   );
   const [compensationRange, setCompensationRange] = useState("");
+  const [followupChannel, setFollowupChannel] = useState<FollowupChannel>("here");
+  const [followupDetail, setFollowupDetail] = useState("");
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -51,6 +55,8 @@ export function InviteModal({
         roleTitle: roleTitle || "Untitled opportunity",
         message: message || DEFAULT_MESSAGE,
         compensationRange: compensationRange || undefined,
+        followupChannel,
+        followupDetail: followupDetail || undefined,
       });
       setSent(true);
     } catch {
@@ -82,8 +88,8 @@ export function InviteModal({
             </div>
             <h3 className="font-serif-display text-xl text-ink">Invite sent to {candidateName}</h3>
             <p className="mt-2 max-w-sm text-sm text-ink-soft">
-              Disruptajob has recorded this invite. {candidateName.split(" ")[0]} will see it the
-              next time they check their opportunities.
+              {candidateName.split(" ")[0]} will see it the next time they check their
+              opportunities. {followupPromise(followupChannel)}
             </p>
             <Button className="mt-6" variant="outline" onClick={() => handleOpenChange(false)}>
               Close
@@ -129,6 +135,47 @@ export function InviteModal({
                   value={compensationRange}
                   onChange={(e) => setCompensationRange(e.target.value)}
                 />
+              </div>
+
+              {/* Asked now, honoured later. Contact details are never released on reaching out —
+                  only on acceptance — so this is a choice about what happens if they say yes. */}
+              <div className="space-y-2 border-t border-ink/10 pt-5">
+                <Label>If they say yes, how do you want to carry on?</Label>
+                <div className="grid grid-cols-1 gap-2">
+                  {FOLLOWUP_OPTIONS.map((o) => (
+                    <button
+                      key={o.value}
+                      type="button"
+                      onClick={() => setFollowupChannel(o.value)}
+                      aria-pressed={followupChannel === o.value}
+                      className={cn(
+                        "border px-4 py-3 text-left transition-colors",
+                        followupChannel === o.value
+                          ? "border-accent bg-accent-soft"
+                          : "border-ink/15 hover:border-ink"
+                      )}
+                    >
+                      <span className="block text-sm font-medium text-ink">{o.label}</span>
+                      <span className="mt-0.5 block text-xs leading-relaxed text-ink-soft">
+                        {o.body}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {followupChannel === "ats" && (
+                  <Input
+                    className="mt-2"
+                    placeholder="Which ATS? e.g. Greenhouse, Workable"
+                    value={followupDetail}
+                    onChange={(e) => setFollowupDetail(e.target.value)}
+                  />
+                )}
+
+                <p className="pt-1 text-xs leading-relaxed text-ink-faint">
+                  You never see someone&rsquo;s contact details for reaching out — only once
+                  they&rsquo;ve accepted. {followupPromise(followupChannel)}
+                </p>
               </div>
 
               {error && (

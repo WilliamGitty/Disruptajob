@@ -225,6 +225,9 @@ CREATE TABLE IF NOT EXISTS invite (
   role_title         TEXT NOT NULL,
   message            TEXT NOT NULL,
   compensation_range TEXT,
+  -- followup_channel / followup_detail are added by migration 002 — see migrations.ts. Columns
+  -- added after this file existed live there, never here, or a fresh database creates them and
+  -- the migration then fails trying to add them again.
   status             TEXT NOT NULL DEFAULT 'sent'
                      CHECK (status IN ('sent', 'viewed', 'accepted', 'declined')),
   responded_at       TEXT,

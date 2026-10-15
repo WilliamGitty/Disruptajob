@@ -5,6 +5,7 @@ import { listInvitesForCompany } from "@/server/repositories/invites";
 import { getCandidateById } from "@/server/repositories/candidates";
 import { awaitsEmployer } from "@/lib/invites";
 import { ResponseCard } from "@/components/invites/response-card";
+import { handoffForInvite } from "@/server/repositories/handoff";
 
 export const metadata: Metadata = { title: "Conversations — Disruptajob" };
 export const dynamic = "force-dynamic";
@@ -90,6 +91,11 @@ export default async function ResponsesPage() {
                   candidateName={candidate?.name ?? "Candidate"}
                   candidateSlug={candidate?.slug}
                   terms={candidate?.nonNegotiables}
+                  handoff={
+                    invite.status === "accepted"
+                      ? handoffForInvite(invite.id, account.companyId!)
+                      : undefined
+                  }
                 />
               );
             })}

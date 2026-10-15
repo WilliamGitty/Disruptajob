@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { all, get, run, transaction } from "../db";
 import { getCurrentAccount, requireCandidate, requireEmployer } from "../auth";
 import { isCandidateVisibleTo } from "../repositories/discovery";
+import { isFollowupChannel } from "@/lib/followup";
 import { getCompanyById } from "../repositories/companies";
 import type { PipelineStage } from "@/types";
 
@@ -202,6 +203,9 @@ export async function sendInvite(input: {
   message: string;
   compensationRange?: string;
   roleId?: string;
+  /** How they want to continue if the candidate accepts. See lib/followup.ts. */
+  followupChannel?: string;
+  followupDetail?: string;
 }) {
   const { companyId } = await requireEmployer();
   const company = getCompanyById(companyId);
@@ -215,8 +219,8 @@ export async function sendInvite(input: {
   transaction(() => {
     run(
       `INSERT INTO invite (id, candidate_id, company_id, role_id, role_title, message,
-                           compensation_range, status, created_at)
-       VALUES (?,?,?,?,?,?,?,'sent',?)`,
+                           compensation_range, followup_channel, followup_detail, status, created_at)
+       VALUES (?,?,?,?,?,?,?,?,?,'sent',?)`,
       randomUUID(),
       input.candidateId,
       companyId,
@@ -224,6 +228,8 @@ export async function sendInvite(input: {
       input.roleTitle,
       input.message,
       input.compensationRange ?? null,
+      isFollowupChannel(input.followupChannel) ? input.followupChannel : "here",
+      input.followupDetail?.trim().slice(0, 200) || null,
       now
     );
 
