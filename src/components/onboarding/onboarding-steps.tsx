@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import {
-  Briefcase,
   Check,
-  FileText,
   FolderGit2,
   Loader2,
   Lock,
@@ -30,7 +28,7 @@ import { StrengthBar } from "@/components/ui/strength-bar";
 import { capabilityLabel } from "@/lib/capabilities";
 import { computeCapabilities } from "@/lib/capability-scoring";
 import { isSafeHttpUrl, slugify, uniqueSlug } from "@/lib/project-input";
-import { importFromCv, importFromGitHub, importFromLinkedIn } from "@/lib/mock-imports";
+import { importGitHubRepos } from "@/server/actions/github-import";
 import { cn } from "@/lib/utils";
 
 export interface StepProps {
@@ -307,120 +305,109 @@ export function HypothesisStep({ draft, patch }: StepProps) {
 // --- Step 5: Accelerators -------------------------------------------------
 
 export function AcceleratorsStep({
-  draft,
   patch,
   onImportGitHub,
 }: StepProps & { onImportGitHub: (projects: Project[]) => void }) {
-  const [loading, setLoading] = useState<null | "cv" | "linkedin" | "github">(null);
-
-  async function doCv() {
-    setLoading("cv");
-    const bg = await importFromCv();
-    patch({
-      cvImported: true,
-      importedExperience: bg.experience,
-      importedEducation: bg.education,
-    });
-    setLoading(null);
-  }
-
-  async function doLinkedIn() {
-    setLoading("linkedin");
-    const bg = await importFromLinkedIn();
-    patch({
-      linkedinConnected: true,
-      importedExperience: bg.experience,
-      importedEducation: bg.education,
-    });
-    setLoading(null);
-  }
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [imported, setImported] = useState<number | null>(null);
 
   async function doGitHub() {
-    setLoading("github");
-    const projects = await importFromGitHub("william-sandford");
-    onImportGitHub(projects);
+    setLoading(true);
+    setError(null);
+    const result = await importGitHubRepos(username);
+    setLoading(false);
+
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+    onImportGitHub(result.projects);
+    setImported(result.projects.length);
     patch({ githubConnected: true });
-    setLoading(null);
   }
 
   return (
     <div className="space-y-6">
       <StepIntro
-        eyebrow="Optional — skip any of these"
-        title="Want to speed this up?"
-        body="These just save you typing. We only read metadata to help you draft — nothing publishes until you confirm it, and none of this ever sets your capability scores. Evidence does that."
+        eyebrow="Optional — skip this entirely"
+        title="Got public code? We can save you some typing."
+        body="Repos come in as drafts for you to review and tag. Nothing publishes until you confirm it, and an import can never set your capability scores — only work you've tagged does that."
       />
-      <div className="grid grid-cols-1 gap-4">
-        <AcceleratorCard
-          icon={<FileText className="h-5 w-5" />}
-          title="Upload your CV"
-          body="Drafts your experience and education. Never touches your capabilities or evidence."
-          done={draft.cvImported}
-          loading={loading === "cv"}
-          onClick={doCv}
-        />
-        <AcceleratorCard
-          icon={<Briefcase className="h-5 w-5" />}
-          title="Connect LinkedIn"
-          body="Pulls in work history and education only — not your headline or title."
-          done={draft.linkedinConnected}
-          loading={loading === "linkedin"}
-          onClick={doLinkedIn}
-        />
-        <AcceleratorCard
-          icon={<FolderGit2 className="h-5 w-5" />}
-          title="Connect GitHub"
-          body="Brings repos in as draft projects for you to review, edit, and tag. Nothing goes live until you confirm."
-          done={draft.githubConnected}
-          loading={loading === "github"}
-          onClick={doGitHub}
-        />
-      </div>
-    </div>
-  );
-}
 
-function AcceleratorCard({
-  icon,
-  title,
-  body,
-  done,
-  loading,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  body: string;
-  done: boolean;
-  loading: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <div className="flex items-center gap-4 border border-ink/15 p-4">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-paper-dim/60 text-ink-soft">
-        {icon}
+      <div className="border border-ink/15 p-5">
+        <div className="flex items-start gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-paper-dim/60 text-ink-soft">
+            <FolderGit2 className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-ink">Import from GitHub</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-ink-faint">
+              Public repositories only. No sign-in, and we never ask for access to anything private.
+            </p>
+
+            {imported !== null ? (
+              <p className="mt-4 flex items-center gap-2 text-sm text-ink">
+                <Check className="h-4 w-4 text-evidence" />
+                {imported} {imported === 1 ? "repo" : "repos"} brought in as drafts — you&rsquo;ll
+                tag them on the next step.
+              </p>
+            ) : (
+              <>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Input
+                    className="max-w-xs"
+                    placeholder="your-github-username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (username.trim() && !loading) void doGitHub();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={doGitHub}
+                    disabled={!username.trim() || loading}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" /> Reading
+                      </>
+                    ) : (
+                      "Import"
+                    )}
+                  </Button>
+                </div>
+                {error && (
+                  <p role="alert" className="mt-3 text-sm text-accent">
+                    {error}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-ink">{title}</p>
-        <p className="mt-0.5 text-xs text-ink-faint">{body}</p>
+
+      {/*
+        CV and LinkedIn both need something we don't have yet — a parser and an OAuth app
+        respectively. They used to be buttons that returned a seeded demo person's job history,
+        which meant a real candidate could watch somebody else's career appear as their own. An
+        honest "not yet" is worth more than a button that lies.
+      */}
+      <div className="border border-dashed border-ink/20 p-5">
+        <p className="text-sm font-medium text-ink">Coming later: CV and LinkedIn</p>
+        <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+          Both will fill in your work history and education only — never your capabilities. For now
+          you can add those by hand on the background step, and honestly, the work you describe
+          matters far more than either of them.
+        </p>
       </div>
-      <Button
-        type="button"
-        variant={done ? "outline" : "primary"}
-        size="sm"
-        onClick={onClick}
-        disabled={loading || done}
-      >
-        {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : done ? (
-          <>
-            <Check className="h-4 w-4 text-evidence" /> Connected
-          </>
-        ) : (
-          "Connect"
-        )}
-      </Button>
     </div>
   );
 }

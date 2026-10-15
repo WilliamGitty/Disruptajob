@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Check, Globe, Loader2 } from "lucide-react";
+import { Check, Globe } from "lucide-react";
 import type { CompanySetupDraft, CompanyStage, WorkArrangement, WorkExample } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,7 @@ import { ChipInput } from "@/components/ui/chip-input";
 import { WorkExampleEditor } from "@/components/employer-setup/work-example-editor";
 import { JobDescriptionDrop } from "@/components/employer-setup/job-description-drop";
 import type { JobDescriptionDraft } from "@/lib/job-description";
-import { importFromWebsite } from "@/lib/company-imports";
+import { companyNameFromDomain } from "@/lib/company-imports";
 import { matchCandidatesForCapabilities } from "@/lib/role-matching";
 import { capabilityLabel } from "@/lib/capabilities";
 import { CANDIDATES } from "@/lib/mock-data";
@@ -53,31 +52,20 @@ export function CompanyStep({
   /** An employer already signed in keeps the account they have — don't ask again. */
   signedIn: boolean;
 }) {
-  const [connecting, setConnecting] = useState(false);
-  const [suggested, setSuggested] = useState<string[]>([]);
-
-  async function connect() {
+  // Nothing is fetched — the name is derived from the domain, which is the only thing we can
+  // honestly do without reading a stranger's website. Overwrites nothing already typed.
+  function applyDomainAsName() {
     if (!setup.website.trim()) return;
-    setConnecting(true);
-    const imported = await importFromWebsite(setup.website);
-    patch({
-      name: imported.name || setup.name,
-      blurb: imported.blurb || setup.blurb,
-      stage: imported.stage ?? setup.stage,
-      teamSize: imported.teamSize || setup.teamSize,
-      location: imported.location || setup.location,
-      websiteConnected: true,
-    });
-    setSuggested(imported.suggestedCapabilities);
-    setConnecting(false);
+    const { name } = companyNameFromDomain(setup.website);
+    patch({ name: setup.name.trim() || name, websiteConnected: true });
   }
 
   return (
     <div className="space-y-6">
       <StepIntro
         eyebrow="Who you are"
-        title="Start with your website."
-        body="We'll pull the basics so you're not typing what's already public. Everything stays editable — and nothing here affects who you match with."
+        title="Who you are, briefly."
+        body="None of this affects who you match with — that comes entirely from the work you describe on the next step."
       />
 
       <Field label="Company website">
@@ -89,32 +77,26 @@ export function CompanyStep({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                void connect();
+                applyDomainAsName();
               }
             }}
           />
-          <Button variant="outline" onClick={connect} disabled={!setup.website.trim() || connecting}>
-            {connecting ? (
+          <Button variant="outline" onClick={applyDomainAsName} disabled={!setup.website.trim()}>
+            {setup.websiteConnected ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Reading
-              </>
-            ) : setup.websiteConnected ? (
-              <>
-                <Check className="h-4 w-4 text-evidence" /> Connected
+                <Check className="h-4 w-4 text-evidence" /> Used
               </>
             ) : (
               <>
-                <Globe className="h-4 w-4" /> Connect
+                <Globe className="h-4 w-4" /> Use as name
               </>
             )}
           </Button>
         </div>
-        {suggested.length > 0 && (
-          <p className="text-xs text-ink-faint">
-            Looks like you work on {suggested.map(capabilityLabel).join(", ")} — we&rsquo;ll
-            suggest those when you describe the work. You decide.
-          </p>
-        )}
+        <p className="text-xs text-ink-faint">
+          We don&rsquo;t read your site — this just saves you typing your own name. Everything that
+          matters, you write yourself.
+        </p>
       </Field>
 
       <Field label="Company name">

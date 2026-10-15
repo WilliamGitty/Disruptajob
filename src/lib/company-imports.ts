@@ -1,63 +1,25 @@
-// Stubbed company enrichment ("connect your website"). No real network or scraping.
-//
-// Same trust boundary as the candidate-side imports in `mock-imports.ts`, enforced by the return
-// TYPE rather than by convention: `CompanyContextImport` has no field for work examples, roles or
-// terms. A company's actual work must be written by a human who knows the job — if a scrape could
-// populate it, employers would ship whatever marketing copy their homepage happens to carry, and
-// the matching signal would be exactly as worthless as a job description.
-
-import { fakeLatency } from "./mock-imports";
-import type { CompanyStage } from "@/types";
-
 /**
- * Context fields only. Deliberately cannot carry `workExamples` — see the note above.
- * `suggestedCapabilities` is a *prompt* for the human, never applied automatically.
+ * Filling in a company name from a web address.
+ *
+ * This used to be "Connect your website": a button that waited 1.3 seconds to look like it was
+ * reading something, then returned invented company descriptions for three hardcoded demo domains.
+ * For anyone else it returned a capitalised domain name — which is all it ever actually did.
+ *
+ * Really reading a company's site is possible later and is not free: fetching a URL a stranger
+ * supplies is a server-side request forgery risk that needs real care, and homepage marketing copy
+ * is a poor source for anything that matters anyway. So this does the one genuinely useful thing it
+ * can do honestly, and says so.
+ *
+ * The trust boundary is unchanged and is the reason this file is deliberately small:
+ * `CompanyContextImport` has no field for work examples, roles or terms. A company's actual work
+ * must be written by someone who knows the job — if a scrape could populate it, employers would
+ * ship whatever their homepage says and the matching signal would be exactly as worthless as a
+ * job description.
  */
+
+/** Context fields only. Deliberately cannot carry `workExamples` — see the note above. */
 export interface CompanyContextImport {
   name: string;
-  blurb: string;
-  stage?: CompanyStage;
-  teamSize: string;
-  location: string;
-  /** Hints to pre-tick in the picker. The person still confirms every one. */
-  suggestedCapabilities: string[];
-}
-
-const PROFILES: Record<string, CompanyContextImport> = {
-  "meridianrobotics.com": {
-    name: "Meridian Robotics",
-    blurb:
-      "We build the software that runs automated warehouses — routing, dispatch and the systems that keep physical goods moving.",
-    stage: "series-b",
-    teamSize: "120–180",
-    location: "London, UK",
-    suggestedCapabilities: ["operations", "automation", "systems-thinking"],
-  },
-  "halcyonsystems.io": {
-    name: "Halcyon Systems",
-    blurb:
-      "A small team replacing the spreadsheets and manual admin that mid-market operations teams still run on.",
-    stage: "seed",
-    teamSize: "12–20",
-    location: "Remote (UK/EU)",
-    suggestedCapabilities: ["automation", "workflow-design", "rapid-prototyping"],
-  },
-};
-
-/** Fallback for any domain we don't have a canned profile for. */
-function genericProfile(domain: string): CompanyContextImport {
-  const bare = domain.replace(/^www\./, "").split(".")[0] ?? "Your company";
-  const name = bare
-    .split(/[-_]/)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-  return {
-    name,
-    blurb: "",
-    teamSize: "",
-    location: "",
-    suggestedCapabilities: [],
-  };
 }
 
 /** Normalise whatever someone pastes — "https://Foo.com/about" → "foo.com". */
@@ -71,12 +33,20 @@ export function normaliseDomain(input: string): string {
 }
 
 /**
- * "Connect your website" — returns context fields a human then edits.
- * Never returns work examples, roles or terms.
+ * A reasonable guess at a company name from its domain. Nothing is fetched.
+ *
+ * "harbour-freight.co.uk" → "Harbour Freight". The person edits it if we guessed wrong, which is
+ * why guessing is acceptable here and would not be for anything that affects matching.
  */
-export async function importFromWebsite(url: string): Promise<CompanyContextImport> {
-  await fakeLatency(1300);
-  const domain = normaliseDomain(url);
-  const known = PROFILES[domain];
-  return structuredClone(known ?? genericProfile(domain));
+export function companyNameFromDomain(input: string): CompanyContextImport {
+  const domain = normaliseDomain(input);
+  const bare = domain.split(".")[0] ?? "";
+
+  const name = bare
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+  return { name };
 }
