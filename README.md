@@ -38,6 +38,12 @@ npm ci
 npm run dev
 ```
 
+Tests run on Node's built-in runner — no framework, no build step:
+
+```bash
+npm test
+```
+
 Open http://localhost:3000. The database is created and seeded automatically on first run, so
 there's no extra setup step. Sign in at `/signin` as `will@example.com` (candidate) or
 `hiring@meridianrobotics.com` (employer) — no password locally.
@@ -66,6 +72,10 @@ src/
     actions/            writes — every one re-derives the actor from the session
 ```
 
+Tests cover the two places a bug is genuinely costly — the privacy gate and capability matching —
+and are checked against deliberate mutations: flipping the discoverability default, dropping the
+blocklist from the search gate, and changing the schema default all turn the suite red.
+
 Deliberate choices worth knowing:
 
 - **Capability scores are computed at read time** from tagged projects. There is no score column,
@@ -93,7 +103,6 @@ the database is a file on disk, and Vercel's filesystem is ephemeral.
 
 This is a working prototype, not a production service. Honest list of what's missing:
 
-- **No tests.** The privacy and matching logic are the two places a bug is genuinely costly.
 - **No email**, so no verification or notifications. Sign-up accepts any address.
 - **No rate limiting** on sign-in or sign-up.
 - **No GDPR export or account deletion**, both of which are legally required in the UK before real
