@@ -25,6 +25,12 @@ jobs:
 
       - run: npm ci
 
+      # Next generates route and layout types into .next/types. A fresh checkout has no .next, so
+      # typecheck fails on names like LayoutProps that exist locally only because dev has run.
+      # This is the whole reason CI earns its place: it runs the way a new machine does.
+      - name: Generate route types
+        run: npx next typegen
+
       - name: Typecheck
         run: npx tsc --noEmit
 
