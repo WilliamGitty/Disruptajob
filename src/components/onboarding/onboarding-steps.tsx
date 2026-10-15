@@ -24,6 +24,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ChipInput } from "@/components/ui/chip-input";
 import { CapabilityPicker } from "@/components/ui/capability-picker";
+import { WorkPromptDeck } from "@/components/onboarding/work-prompt-deck";
+import type { WorkPrompt } from "@/lib/work-prompts";
 import { StrengthBar } from "@/components/ui/strength-bar";
 import { capabilityLabel } from "@/lib/capabilities";
 import { computeCapabilities } from "@/lib/capability-scoring";
@@ -439,6 +441,7 @@ export function EvidenceStep({
 }) {
   const drafts = ownProjects.filter((p) => p.status === "draft");
   const published = ownProjects.filter((p) => p.status !== "draft");
+  const [prompt, setPrompt] = useState<WorkPrompt | null>(null);
 
   return (
     <div className="space-y-6">
@@ -492,7 +495,19 @@ export function EvidenceStep({
         </div>
       )}
 
-      <ManualEvidenceForm onAdd={onAddProject} />
+      {/* The deck is biased toward work this person hasn't evidenced yet, so someone with three
+          automation projects is asked about the reporting nobody else understands. */}
+      <WorkPromptDeck
+        className="border-t border-ink/10 pt-7"
+        evidencedTags={published.flatMap((p) => p.capabilities)}
+        onChoose={setPrompt}
+      />
+
+      <ManualEvidenceForm
+        onAdd={onAddProject}
+        prompt={prompt}
+        onClearPrompt={() => setPrompt(null)}
+      />
     </div>
   );
 }
@@ -538,13 +553,26 @@ function DraftProjectReview({
   );
 }
 
-function ManualEvidenceForm({ onAdd }: { onAdd: (project: Project) => void }) {
-  const [open, setOpen] = useState(false);
+function ManualEvidenceForm({
+  onAdd,
+  prompt,
+  onClearPrompt,
+}: {
+  onAdd: (project: Project) => void;
+  /** A question chosen from the deck, shown above the form to frame the answer. */
+  prompt?: WorkPrompt | null;
+  onClearPrompt?: () => void;
+}) {
+  const [openedManually, setOpenedManually] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [whatIBuilt, setWhatIBuilt] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [caps, setCaps] = useState<string[]>([]);
+
+  // Derived rather than synced in an effect: choosing a question *is* opening the form, so there
+  // is no second piece of state that could disagree with the first.
+  const open = openedManually || Boolean(prompt);
 
   const canSubmit = title.trim() && description.trim() && whatIBuilt.trim() && caps.length > 0;
 
@@ -584,12 +612,13 @@ function ManualEvidenceForm({ onAdd }: { onAdd: (project: Project) => void }) {
       source: "manual",
     });
     reset();
-    setOpen(false);
+    setOpenedManually(false);
+    onClearPrompt?.();
   }
 
   if (!open) {
     return (
-      <Button type="button" variant="outline" onClick={() => setOpen(true)}>
+      <Button type="button" variant="outline" onClick={() => setOpenedManually(true)}>
         <Plus className="h-4 w-4" /> Add a project manually
       </Button>
     );
@@ -597,6 +626,13 @@ function ManualEvidenceForm({ onAdd }: { onAdd: (project: Project) => void }) {
 
   return (
     <div className="space-y-4 border border-ink/15 p-4">
+      {prompt && (
+        <div className="-m-4 mb-0 border-b border-ink/10 bg-accent-soft px-4 py-3">
+          <p className="font-serif-display text-[17px] leading-snug text-ink">{prompt.question}</p>
+          <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">{prompt.nudge}</p>
+        </div>
+      )}
+
       <Field label="Title">
         <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="AI-powered invoice triage" />
       </Field>
@@ -620,7 +656,7 @@ function ManualEvidenceForm({ onAdd }: { onAdd: (project: Project) => void }) {
         <Button type="button" variant="accent" size="sm" onClick={submit} disabled={!canSubmit}>
           Add evidence
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => { reset(); setOpen(false); }}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => { reset(); setOpenedManually(false); onClearPrompt?.(); }}>
           Cancel
         </Button>
       </div>

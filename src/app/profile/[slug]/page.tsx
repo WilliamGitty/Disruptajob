@@ -11,6 +11,7 @@ import { FeaturedWorkSection } from "@/components/profile/featured-work-section"
 import { CapabilitiesSection } from "@/components/profile/capabilities-section";
 import { BackgroundSection } from "@/components/profile/background-section";
 import { EvidenceNudge } from "@/components/profile/evidence-nudge";
+import { PortfolioCoach } from "@/components/profile/portfolio-coach";
 
 // Profiles come from the database and change as people add evidence, so they're rendered per
 // request rather than prerendered at build.
@@ -58,6 +59,15 @@ export default async function ProfilePage({
         isOwnProfile={isOwnProfile}
       />
       <CapabilitiesSection candidate={candidate} projects={projects} />
+
+      {/* Placed after the capability graph: you should see what you've built before being told
+          what would strengthen it. Owner only — nobody else sees how someone was advised. */}
+      {isOwnProfile && (
+        <div className="mx-auto max-w-[1400px] px-6 pb-4 lg:px-10">
+          <PortfolioCoach candidate={candidate} projects={projects} />
+        </div>
+      )}
+
       <BackgroundSection candidate={candidate} />
     </main>
   );

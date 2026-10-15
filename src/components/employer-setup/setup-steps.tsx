@@ -3,13 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check, Globe, Loader2 } from "lucide-react";
-import type { CompanySetupDraft, CompanyStage, WorkArrangement } from "@/types";
+import type { CompanySetupDraft, CompanyStage, WorkArrangement, WorkExample } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ChipInput } from "@/components/ui/chip-input";
 import { WorkExampleEditor } from "@/components/employer-setup/work-example-editor";
+import { JobDescriptionDrop } from "@/components/employer-setup/job-description-drop";
+import type { JobDescriptionDraft } from "@/lib/job-description";
 import { importFromWebsite } from "@/lib/company-imports";
 import { matchCandidatesForCapabilities } from "@/lib/role-matching";
 import { capabilityLabel } from "@/lib/capabilities";
@@ -206,6 +208,41 @@ export function CompanyStep({
 // --- Step 2: The work ------------------------------------------------------
 
 export function WorkStep({ setup, patch }: StepProps) {
+  /**
+   * Fill the blanks a parsed job description can legitimately fill.
+   *
+   * Only empty fields are written to: someone who has already typed a role title and then drops a
+   * document should not watch their own words get overwritten. Work examples are appended as
+   * unconfirmed entries with no capabilities applied — the company ticks those itself, because a
+   * tag nobody confirmed is exactly the keyword matching this product replaces.
+   */
+  function applyJobDescription(draft: JobDescriptionDraft) {
+    const added: WorkExample[] = draft.workExamples.map((w, i) => ({
+      id: `we-jd-${Date.now()}-${i}`,
+      title: w.title,
+      description: w.description,
+      whatYoudDo: [],
+      capabilities: [],
+      attachments: [],
+    }));
+
+    patch({
+      roleTitle: setup.roleTitle.trim() || draft.roleTitle,
+      whyThisRole: setup.whyThisRole.trim() || draft.whyThisRole,
+      location: setup.location.trim() || draft.location || "",
+      workExamples: [...setup.workExamples, ...added],
+      terms: {
+        ...setup.terms,
+        compRange: setup.terms.compRange?.trim() || draft.compRange || "",
+        workArrangements:
+          setup.terms.workArrangements.length > 0
+            ? setup.terms.workArrangements
+            : draft.workArrangements,
+      },
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
   return (
     <div className="space-y-6">
       <StepIntro
@@ -213,6 +250,8 @@ export function WorkStep({ setup, patch }: StepProps) {
         title="What would they actually be doing?"
         body="We don't take job descriptions. Describe one or two real pieces of work this person would own — it's what candidates read, and it's what we match their evidence against."
       />
+
+      <JobDescriptionDrop onApply={applyJobDescription} />
 
       <Field label="What would you call this role?">
         <Input
