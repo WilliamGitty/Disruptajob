@@ -12,6 +12,8 @@ import { CapabilitiesSection } from "@/components/profile/capabilities-section";
 import { BackgroundSection } from "@/components/profile/background-section";
 import { EvidenceNudge } from "@/components/profile/evidence-nudge";
 import { PortfolioCoach } from "@/components/profile/portfolio-coach";
+import { DemandPanel } from "@/components/profile/demand-panel";
+import { demandFor } from "@/server/repositories/demand";
 
 // Profiles come from the database and change as people add evidence, so they're rendered per
 // request rather than prerendered at build.
@@ -63,8 +65,9 @@ export default async function ProfilePage({
       {/* Placed after the capability graph: you should see what you've built before being told
           what would strengthen it. Owner only — nobody else sees how someone was advised. */}
       {isOwnProfile && (
-        <div className="mx-auto max-w-[1400px] px-6 pb-4 lg:px-10">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 px-6 pb-4 lg:grid-cols-2 lg:px-10">
           <PortfolioCoach candidate={candidate} projects={projects} />
+          <DemandPanel demand={demandFor(candidate)} ownerFirstName={candidate.name.split(" ")[0]} />
         </div>
       )}
 
