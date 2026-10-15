@@ -11,12 +11,18 @@ export function Footer() {
         <p className="max-w-sm text-sm text-ink-faint">
           Judge the work before you judge the paper.
         </p>
-        <div className="flex items-center gap-6 text-sm text-ink-faint">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-faint">
           <Link href="/profile/william-sandford" className="underline-grow hover:text-ink">
             Example profile
           </Link>
           <Link href="/employer" className="underline-grow hover:text-ink">
             For employers
+          </Link>
+          <Link href="/privacy" className="underline-grow hover:text-ink">
+            Privacy
+          </Link>
+          <Link href="/terms" className="underline-grow hover:text-ink">
+            Terms
           </Link>
         </div>
       </div>

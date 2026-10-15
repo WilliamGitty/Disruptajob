@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import { all, get, run } from "./db";
 import { EVENTS, type EventName } from "@/lib/events";
+import { maybePrune } from "./retention";
 
 export { EVENTS };
 export type { EventName };
@@ -62,6 +63,10 @@ export async function track(
   try {
     const visitor = await visitorId();
     if (!visitor) return;
+
+    // Housekeeping rides along with the thing that happens most often, so retention is enforced
+    // by the running application rather than by remembering to run a job.
+    maybePrune();
 
     run(
       "INSERT INTO event (id, name, visitor, path, props, created_at) VALUES (?,?,?,?,?,?)",

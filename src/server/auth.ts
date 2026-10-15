@@ -210,11 +210,14 @@ export async function getCurrentAccount(): Promise<Account | undefined> {
   const token = jar.get(COOKIE)?.value;
   if (!token) return undefined;
 
+  // Expiry is enforced here, in the query, rather than left to the cookie's maxAge. A cookie
+  // lifetime is a request to the browser; a token copied out of one would otherwise work forever.
   const row = get<AccountRow>(
     `SELECT a.id, a.email, a.display_name, a.role, a.candidate_id, a.company_id
        FROM session s JOIN account a ON a.id = s.account_id
-      WHERE s.token = ?`,
-    token
+      WHERE s.token = ? AND s.created_at >= ?`,
+    token,
+    new Date(Date.now() - ONE_MONTH * 1000).toISOString()
   );
   return row ? hydrate(row) : undefined;
 }

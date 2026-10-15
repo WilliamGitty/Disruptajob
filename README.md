@@ -72,6 +72,9 @@ src/
     actions/            writes — every one re-derives the actor from the session
 ```
 
+Retention periods live in `server/retention.ts` and are imported directly into the privacy policy
+page, so a promise on that page and the pruning job that enforces it cannot drift apart.
+
 Sign-in, sign-up and the interest form are rate limited per email and per machine, counted in
 SQLite. Every account can export everything held about it as JSON and delete itself permanently —
 real deletion, no `deleted_at` column.
@@ -108,7 +111,9 @@ the database is a file on disk, and Vercel's filesystem is ephemeral.
 This is a working prototype, not a production service. Honest list of what's missing:
 
 - **No email**, so no verification or notifications. Sign-up accepts any address.
-- **Not registered with the ICO**, and there's no privacy policy or terms.
+- **Not registered with the ICO.** A privacy policy and terms exist at `/privacy` and `/terms`,
+  drafted against what the code actually does, but both carry placeholders for the legal entity
+  and have not been reviewed by a solicitor.
 - **Onboarding drafts are still per-browser.** Both wizards keep progress in `localStorage` until
   the final step writes everything to the database, so a half-finished profile doesn't follow you
   to another device — and the password, deliberately never stored with the draft, has to be
