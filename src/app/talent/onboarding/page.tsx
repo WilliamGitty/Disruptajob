@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
 import { getCurrentAccount } from "@/server/auth";
+import { EVENTS, track } from "@/server/analytics";
 
 export const metadata: Metadata = {
   title: "Build your profile — Disruptajob",
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function OnboardingPage() {
+  await track(EVENTS.onboardingStart, { path: "/talent/onboarding" });
+
   const account = await getCurrentAccount();
   // Someone already signed in is topping up an existing profile, not creating one — so we skip
   // the password and keep their real name rather than asking for it again.

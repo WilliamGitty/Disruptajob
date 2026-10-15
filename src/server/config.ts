@@ -12,3 +12,20 @@ export const DEMO_MODE = process.env.DEMO_MODE === "true";
 
 /** Whether strangers can create accounts. Closed in demo mode, for the reason above. */
 export const SIGNUP_ENABLED = !DEMO_MODE;
+
+/**
+ * Who may read the funnel page at /funnel.
+ *
+ * A comma-separated list of account emails. Unset means nobody, and the route 404s — so the
+ * numbers are private by default rather than private only if you remember to lock them. Set it to
+ * your own address on deploy: `fly secrets set ADMIN_EMAILS=you@example.com`.
+ */
+export const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? "")
+  .split(",")
+  .map((e) => e.trim().toLowerCase())
+  .filter(Boolean);
+
+export function isAdminEmail(email: string | undefined): boolean {
+  if (!email || ADMIN_EMAILS.length === 0) return false;
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+}

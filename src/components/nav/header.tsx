@@ -84,7 +84,7 @@ export function Header({
               const active = pathname === link.href || (pathname?.startsWith(link.href) && link.href !== talentHome && link.href !== EMPLOYER_HOME);
               return (
                 <Link
-                  key={link.href}
+                  key={link.label}
                   href={link.href}
                   className={cn(
                     "inline-flex items-center gap-2 text-[13px] font-medium tracking-wide transition-colors",
@@ -119,7 +119,7 @@ export function Header({
               const active = pathname === link.href || (pathname?.startsWith(link.href) && link.href !== talentHome && link.href !== EMPLOYER_HOME);
               return (
                 <Link
-                  key={link.href}
+                  key={link.label}
                   href={link.href}
                   className={cn(
                     "inline-flex items-center gap-2 text-sm font-medium tracking-wide transition-colors",

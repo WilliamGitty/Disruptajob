@@ -6,6 +6,8 @@ import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCompanySetup } from "@/lib/client-store";
 import { completeCompanySetup } from "@/server/actions/company-setup";
+import { trackEvent } from "@/server/actions/track";
+import { EVENTS } from "@/lib/events";
 import { cn } from "@/lib/utils";
 import {
   CompanyStep,
@@ -61,6 +63,7 @@ export function SetupFlow({ session }: { session?: EmployerSession }) {
   function goTo(next: number) {
     const clamped = Math.max(0, Math.min(LAST_STEP, next));
     patch({ step: clamped, updatedAt: new Date().toISOString() });
+    void trackEvent(EVENTS.employerSetupStep, { step: clamped, label: STEPS[clamped].label });
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -105,6 +108,7 @@ export function SetupFlow({ session }: { session?: EmployerSession }) {
         return;
       }
 
+      void trackEvent(EVENTS.employerSetupComplete, { workExamples: setup.workExamples.length });
       setPublished(true);
       patch({ completedAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
       if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });

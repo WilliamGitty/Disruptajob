@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useCustomProjects, useOnboardingDraft } from "@/lib/client-store";
 import { proposeCapabilities } from "@/lib/capabilities";
 import { completeCandidateOnboarding } from "@/server/actions/onboarding";
+import { trackEvent } from "@/server/actions/track";
+import { EVENTS } from "@/lib/events";
 import { cn } from "@/lib/utils";
 import {
   AcceleratorsStep,
@@ -99,6 +101,9 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
       partial.hypothesisTags = proposeCapabilities(draft.titleGap);
     }
     patch(partial);
+    // Which step someone reaches is the whole point of measuring this: the drop-off tells you
+    // which question is too much to ask, which no amount of looking at the page will.
+    void trackEvent(EVENTS.onboardingStep, { step: clamped, label: STEPS[clamped].label });
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -151,6 +156,7 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
         return;
       }
 
+      void trackEvent(EVENTS.onboardingComplete, { projects: published.length });
       setProfileSlug(result.slug);
       patch({ completedAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
       // The projects are in the database now; leaving them in localStorage would double them up
@@ -169,6 +175,7 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
 
   function addProject(project: Project) {
     add(project);
+    void trackEvent(EVENTS.onboardingProject);
   }
   function publishDraft(id: string, capabilities: string[]) {
     update((p) => p.id === id, (p) => ({ ...p, capabilities, status: "published" }));

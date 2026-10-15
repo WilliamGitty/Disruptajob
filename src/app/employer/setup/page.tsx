@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SetupFlow } from "@/components/employer-setup/setup-flow";
 import { getCurrentAccount } from "@/server/auth";
+import { EVENTS, track } from "@/server/analytics";
 
 export const metadata: Metadata = {
   title: "Set up hiring — Disruptajob",
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function EmployerSetupPage() {
+  await track(EVENTS.employerSetupStart, { path: "/employer/setup" });
+
   const account = await getCurrentAccount();
   // An employer already signed in is adding a role to a company that exists, not creating one.
   const session =

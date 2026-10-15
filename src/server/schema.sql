@@ -271,3 +271,37 @@ CREATE INDEX IF NOT EXISTS idx_invite_candidate ON invite(candidate_id);
 CREATE INDEX IF NOT EXISTS idx_invite_company ON invite(company_id);
 CREATE INDEX IF NOT EXISTS idx_pipeline_company ON pipeline_entry(company_id);
 CREATE INDEX IF NOT EXISTS idx_role_company ON role(company_id);
+
+-- Funnel measurement, kept first-party on purpose.
+--
+-- A product whose promise is "hidden until you say otherwise" cannot ship third-party tracking
+-- scripts: the same page that says nobody sees you would be telling an ad network you were here.
+-- So events live in this database and go nowhere else.
+--
+-- `visitor` is a random id in a first-party cookie. It exists to stitch one person's steps into a
+-- funnel and nothing more — there is deliberately no IP address, no user agent and no fingerprint
+-- column, so a row can identify a session but never a human.
+CREATE TABLE IF NOT EXISTS event (
+  id         TEXT PRIMARY KEY,
+  name       TEXT NOT NULL,
+  visitor    TEXT NOT NULL,
+  path       TEXT,
+  -- JSON, for the handful of dimensions worth slicing by (which step, which side of the market).
+  props      TEXT,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_event_name ON event(name);
+CREATE INDEX IF NOT EXISTS idx_event_visitor ON event(visitor);
+CREATE INDEX IF NOT EXISTS idx_event_created ON event(created_at);
+
+-- The visitor who understood the pitch but isn't ready to spend ten minutes today.
+-- Without this they leave no trace and there is no way to ever reach them again.
+CREATE TABLE IF NOT EXISTS interest (
+  id         TEXT PRIMARY KEY,
+  email      TEXT NOT NULL UNIQUE,
+  -- 'talent' or 'employer' — which door they were standing at when they asked.
+  side       TEXT NOT NULL DEFAULT 'talent' CHECK (side IN ('talent', 'employer')),
+  note       TEXT,
+  created_at TEXT NOT NULL
+);
