@@ -101,6 +101,8 @@ Deliberate choices worth knowing:
 | [docs/design-principles.md](docs/design-principles.md) | Why the interface looks and reads the way it does. |
 | [docs/candidate-onboarding-flow-spec.md](docs/candidate-onboarding-flow-spec.md) | The original build spec for candidate onboarding. |
 | [DEPLOY.md](DEPLOY.md) | Hosting, costs, and the checklist before this can be genuinely public. |
+| [brand/](brand/) | Positioning, voice, visual identity and ready-to-use copy, for when marketing starts. |
+| [team/](team/) | What each role owns, decides, and would be doing this month — and which to hire first. |
 
 ## Deployment
 
@@ -111,7 +113,12 @@ the database is a file on disk, and Vercel's filesystem is ephemeral.
 
 This is a working prototype, not a production service. Honest list of what's missing:
 
-- **No email**, so no verification or notifications. Sign-up accepts any address.
+- **No email**, so no verification, no notifications, and **no password reset** — a forgotten
+  password currently locks someone out permanently. This is the largest functional gap: a candidate
+  is never told they have an invite, and an employer is never told it was accepted, so the two-sided
+  loop depends on people happening to log back in.
+- **CV and LinkedIn import don't exist yet** and say so in the interface. GitHub import is real and
+  needs no key.
 - **Not registered with the ICO.** A privacy policy and terms exist at `/privacy` and `/terms`,
   drafted against what the code actually does, but both carry placeholders for the legal entity
   and have not been reviewed by a solicitor.
