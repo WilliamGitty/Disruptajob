@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { get, run, transaction } from "../db";
 import { getCurrentAccount, signUp } from "../auth";
 import { isSafeHttpUrl } from "@/lib/project-input";
+import { rateLimit, retryMessage } from "../rate-limit";
+import { callerKey } from "../request-identity";
 import type { Discoverability, NonNegotiables, WorkArrangement } from "@/types";
 
 /**
@@ -112,6 +114,13 @@ export async function completeCandidateOnboarding(
     // An employer finishing candidate onboarding would write a candidate profile they can't reach.
     return { ok: false, error: "You're signed in as a company. Sign out first to build a work profile." };
   } else {
+    // This path creates an account, so it needs the same limit as the sign-up form — otherwise
+    // the limiter is simply walked around by posting to onboarding instead.
+    const limited = rateLimit("signUpByIp", await callerKey());
+    if (!limited.allowed) {
+      return { ok: false, error: `That's a lot of accounts from one place. ${retryMessage(limited.retryAfterSeconds)}` };
+    }
+
     const created = await signUp({ email, password: input.password ?? "", name, role: "talent" });
     if (!created.ok) return { ok: false, error: created.error };
 

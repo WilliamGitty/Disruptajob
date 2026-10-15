@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { get, run } from "../db";
 import { track } from "../analytics";
 import { EVENTS, type EventName } from "@/lib/events";
+import { rateLimit, retryMessage } from "../rate-limit";
+import { callerKey } from "../request-identity";
 
 /**
  * The client half of measurement.
@@ -45,6 +47,12 @@ export async function registerInterest(formData: FormData): Promise<InterestResu
 
   if (!email.includes("@") || email.length < 5) {
     return { ok: false, error: "That doesn't look like an email address." };
+  }
+
+  // Unauthenticated and a single field, so the easiest thing on the site to spam.
+  const limited = rateLimit("interestByIp", await callerKey());
+  if (!limited.allowed) {
+    return { ok: false, error: `That's a lot of addresses from one place. ${retryMessage(limited.retryAfterSeconds)}` };
   }
 
   const existing = get<{ id: string }>("SELECT id FROM interest WHERE email = ?", email);

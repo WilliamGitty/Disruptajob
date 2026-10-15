@@ -3,12 +3,40 @@
 import { redirect } from "next/navigation";
 import { signIn, signOut, signUp } from "../auth";
 import { SIGNUP_ENABLED } from "../config";
+import { clearRateLimit, rateLimit, retryMessage } from "../rate-limit";
+import { callerKey } from "../request-identity";
+
+/**
+ * Sign-in and sign-up, rate limited.
+ *
+ * Limits are applied per email *and* per machine. Per-email alone lets someone try one password
+ * against ten thousand addresses; per-machine alone lets a shared office IP lock out a colleague.
+ * Together they cover the two attacks a prototype actually sees.
+ */
 
 export async function signInAction(formData: FormData) {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
+  const ip = await callerKey();
+
+  const byIp = rateLimit("signInByIp", ip);
+  if (!byIp.allowed) {
+    redirect(`/signin?error=${encodeURIComponent(`Too many attempts. ${retryMessage(byIp.retryAfterSeconds)}`)}`);
+  }
+
+  const byEmail = rateLimit("signInByEmail", email);
+  if (!byEmail.allowed) {
+    // Deliberately the same wording whether or not the address exists — a different message here
+    // would turn the rate limiter into an account-enumeration oracle.
+    redirect(`/signin?error=${encodeURIComponent(`Too many attempts. ${retryMessage(byEmail.retryAfterSeconds)}`)}`);
+  }
+
   const ok = await signIn(email, password || undefined);
   if (!ok) redirect("/signin?error=1");
+
+  // A successful sign-in clears the slate, so someone who fumbled their password twice and then
+  // got it right isn't carrying a near-lockout around for the next quarter of an hour.
+  clearRateLimit("signInByEmail", email);
   redirect("/");
 }
 
@@ -20,6 +48,16 @@ export async function signUpAction(formData: FormData) {
   }
 
   const role = formData.get("role") === "employer" ? "employer" : "talent";
+
+  const limited = rateLimit("signUpByIp", await callerKey());
+  if (!limited.allowed) {
+    redirect(
+      `/signup?error=${encodeURIComponent(
+        `That's a lot of accounts from one place. ${retryMessage(limited.retryAfterSeconds)}`
+      )}&role=${role}`
+    );
+  }
+
   const result = await signUp({
     email: String(formData.get("email") ?? ""),
     password: String(formData.get("password") ?? ""),

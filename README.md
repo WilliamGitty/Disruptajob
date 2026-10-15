@@ -72,6 +72,10 @@ src/
     actions/            writes — every one re-derives the actor from the session
 ```
 
+Sign-in, sign-up and the interest form are rate limited per email and per machine, counted in
+SQLite. Every account can export everything held about it as JSON and delete itself permanently —
+real deletion, no `deleted_at` column.
+
 Tests cover the two places a bug is genuinely costly — the privacy gate and capability matching —
 and are checked against deliberate mutations: flipping the discoverability default, dropping the
 blocklist from the search gate, and changing the schema default all turn the suite red.
@@ -104,9 +108,6 @@ the database is a file on disk, and Vercel's filesystem is ephemeral.
 This is a working prototype, not a production service. Honest list of what's missing:
 
 - **No email**, so no verification or notifications. Sign-up accepts any address.
-- **No rate limiting** on sign-in or sign-up.
-- **No GDPR export or account deletion**, both of which are legally required in the UK before real
-  users exist.
 - **Not registered with the ICO**, and there's no privacy policy or terms.
 - **Onboarding drafts are still per-browser.** Both wizards keep progress in `localStorage` until
   the final step writes everything to the database, so a half-finished profile doesn't follow you

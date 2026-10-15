@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { get, run, transaction } from "../db";
 import { getCurrentAccount, signUp } from "../auth";
 import { isSafeHttpUrl } from "@/lib/project-input";
+import { rateLimit, retryMessage } from "../rate-limit";
+import { callerKey } from "../request-identity";
 import type { CompanyStage, EmployerTerms, WorkArrangement, WorkExample } from "@/types";
 
 /**
@@ -105,6 +107,12 @@ export async function completeCompanySetup(
   } else {
     const email = clean(input.contactEmail, 160).toLowerCase();
     if (!email.includes("@")) return { ok: false, error: "We need a work email to set the account up." };
+
+    // Same reasoning as the candidate flow: this creates an account, so it carries the limit.
+    const limited = rateLimit("signUpByIp", await callerKey());
+    if (!limited.allowed) {
+      return { ok: false, error: `That's a lot of accounts from one place. ${retryMessage(limited.retryAfterSeconds)}` };
+    }
 
     const created = await signUp({ email, password: input.password ?? "", name, role: "employer" });
     if (!created.ok) return { ok: false, error: created.error };

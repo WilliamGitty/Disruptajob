@@ -27,6 +27,7 @@ const EMPLOYER_LINKS = [
   { label: "Pipeline", href: "/employer/pipeline" },
   { label: "Saved", href: "/employer/saved" },
   { label: "Conversations", href: "/employer/responses" },
+  { label: "Account", href: "/employer/settings" },
 ];
 
 export function Header({

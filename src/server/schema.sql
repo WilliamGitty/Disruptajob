@@ -305,3 +305,17 @@ CREATE TABLE IF NOT EXISTS interest (
   note       TEXT,
   created_at TEXT NOT NULL
 );
+
+-- Rate limiting.
+--
+-- One row per attempt, pruned as it goes. The identifier is either an email address already being
+-- submitted, or a salted hash of the caller's IP — never the address itself, which the rest of
+-- this application deliberately does not store.
+CREATE TABLE IF NOT EXISTS rate_attempt (
+  id         TEXT PRIMARY KEY,
+  bucket     TEXT NOT NULL,
+  subject    TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_lookup ON rate_attempt(bucket, subject, created_at);

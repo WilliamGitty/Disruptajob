@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { YourData } from "@/components/settings/your-data";
 import { cn } from "@/lib/utils";
 import type { Discoverability } from "@/types";
 
@@ -265,6 +266,8 @@ export default async function SettingsPage() {
           </Button>
         </form>
       </section>
+
+      <YourData email={account.email} />
 
       <p className="mt-8 text-sm text-ink-soft">
         <Link href={`/profile/${me.slug}`} className="text-ink underline-grow">
