@@ -19,8 +19,9 @@ they lead to *described work the person tags themselves*, never to a claim.
 ## Before you say something works
 
 1. `npm test` — 116 tests and counting.
-2. `npx tsc --noEmit` and `npm run lint`. Two pre-existing lint errors live in
-   `src/lib/client-store.ts`; anything beyond those is yours.
+2. `npx tsc --noEmit` and `npm run lint`. **Both must exit zero** — check the exit code, not just
+   the output. Two "pre-existing" lint errors were tolerated here for weeks precisely because
+   their output was being read and their exit status wasn't.
 3. **Drive it in a browser.** Typechecking proves it compiles, not that it works. Several bugs in
    this repo passed all three checks above and were still broken end to end.
 4. For anything touching privacy or data, **mutation-test it**: break the rule on purpose and

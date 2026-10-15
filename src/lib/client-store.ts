@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import type {
   CompanySetupDraft,
   Invite,
@@ -133,45 +133,93 @@ function readList<T>(key: string): T[] {
 
 function writeList<T>(key: string, value: T[]) {
   window.localStorage.setItem(key, JSON.stringify(value));
-  window.dispatchEvent(new StorageEvent("storage", { key }));
+  notifyListeners();
 }
 
-function useLocalList<T>(key: string) {
-  const [items, setItems] = useState<T[]>([]);
+/**
+ * Subscription plumbing shared by both stores.
+ *
+ * localStorage is an external system, so it is read with useSyncExternalStore rather than copied
+ * into React state inside an effect. The effect version worked but caused a render, then a state
+ * update, then a second render on every mount — and was flagged by the lint rule about setState in
+ * effects, which was correct: this is exactly the case that hook exists for.
+ */
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    seedDemoDataIfNeeded();
-    setItems(readList<T>(key));
-    const handler = (e: StorageEvent) => {
-      if (e.key === key || e.key === null) setItems(readList<T>(key));
-    };
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
-  }, [key]);
+function notifyListeners() {
+  for (const listener of listeners) listener();
+}
+
+function subscribeToStorage(onChange: () => void) {
+  // Demo data is seeded here rather than during render: subscribe runs after mount, and seeding
+  // writes through writeList, which notifies and triggers a fresh read.
+  seedDemoDataIfNeeded();
+
+  listeners.add(onChange);
+  // Also listen for writes from other tabs, which never reach our in-process listener set.
+  window.addEventListener("storage", onChange);
+  return () => {
+    listeners.delete(onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+/** Never fires. Used for values that are constant after hydration. */
+function subscribeNever() {
+  return () => {};
+}
+
+/**
+ * Snapshots must be referentially stable or useSyncExternalStore re-renders forever, so each
+ * parsed value is cached against the raw string it came from and only reparsed when that changes.
+ */
+const snapshotCache = new Map<string, { raw: string | null; parsed: unknown }>();
+
+function cachedParse<T>(key: string, fallback: T): T {
+  const raw = window.localStorage.getItem(key);
+  const cached = snapshotCache.get(key);
+  if (cached && cached.raw === raw) return cached.parsed as T;
+
+  let parsed: T = fallback;
+  if (raw) {
+    try {
+      parsed = JSON.parse(raw) as T;
+    } catch {
+      parsed = fallback;
+    }
+  }
+  snapshotCache.set(key, { raw, parsed });
+  return parsed;
+}
+
+/** One shared empty array, so the server snapshot is referentially stable too. */
+const EMPTY_LIST: never[] = [];
+
+function useLocalList<T>(key: string) {
+  const items = useSyncExternalStore(
+    subscribeToStorage,
+    () => cachedParse<T[]>(key, EMPTY_LIST as unknown as T[]),
+    // The server has no localStorage; it renders the empty state and hydration fills it in.
+    () => EMPTY_LIST as unknown as T[]
+  );
 
   const add = useCallback(
     (item: T) => {
-      const next = [item, ...readList<T>(key)];
-      writeList(key, next);
-      setItems(next);
+      writeList(key, [item, ...readList<T>(key)]);
     },
     [key]
   );
 
   const remove = useCallback(
     (predicate: (item: T) => boolean) => {
-      const next = readList<T>(key).filter((i) => !predicate(i));
-      writeList(key, next);
-      setItems(next);
+      writeList(key, readList<T>(key).filter((i) => !predicate(i)));
     },
     [key]
   );
 
   const update = useCallback(
     (predicate: (item: T) => boolean, updater: (item: T) => T) => {
-      const next = readList<T>(key).map((i) => (predicate(i) ? updater(i) : i));
-      writeList(key, next);
-      setItems(next);
+      writeList(key, readList<T>(key).map((i) => (predicate(i) ? updater(i) : i)));
     },
     [key]
   );
@@ -179,58 +227,40 @@ function useLocalList<T>(key: string) {
   return { items, add, remove, update };
 }
 
-function readObject<T>(key: string): T | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : null;
-  } catch {
-    return null;
-  }
-}
-
 function writeObject<T>(key: string, value: T) {
   window.localStorage.setItem(key, JSON.stringify(value));
-  window.dispatchEvent(new StorageEvent("storage", { key }));
+  notifyListeners();
 }
 
 /** Single-object localStorage store (vs. useLocalList). Used for resumable onboarding progress. */
 function useLocalObject<T>(key: string, initial: T) {
-  const [value, setValue] = useState<T>(initial);
-  const [hydrated, setHydrated] = useState(false);
+  const value = useSyncExternalStore(
+    subscribeToStorage,
+    () => cachedParse<T>(key, initial),
+    // `initial` is a module-level constant in every call site, so this reference is stable.
+    () => initial
+  );
 
-  useEffect(() => {
-    const stored = readObject<T>(key);
-    if (stored) setValue(stored);
-    setHydrated(true);
-    const handler = (e: StorageEvent) => {
-      if (e.key === key || e.key === null) {
-        const next = readObject<T>(key);
-        if (next) setValue(next);
-      }
-    };
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
-  }, [key]);
+  // True only once the client has taken over. Callers render a placeholder until then rather than
+  // flashing the empty default over a resumed draft.
+  const hydrated = useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false
+  );
 
   const patch = useCallback(
     (partial: Partial<T>) => {
-      setValue((prev) => {
-        const next = { ...prev, ...partial };
-        writeObject(key, next);
-        return next;
-      });
+      writeObject(key, { ...cachedParse<T>(key, initial), ...partial });
     },
+    // `initial` is a stable module constant; including it would churn the callback identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [key]
   );
 
   const reset = useCallback(() => {
-    if (typeof window !== "undefined") window.localStorage.removeItem(key);
-    setValue(initial);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new StorageEvent("storage", { key }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.removeItem(key);
+    notifyListeners();
   }, [key]);
 
   return { value, patch, reset, hydrated };

@@ -119,5 +119,5 @@ This is a working prototype, not a production service. Honest list of what's mis
   the final step writes everything to the database, so a half-finished profile doesn't follow you
   to another device — and the password, deliberately never stored with the draft, has to be
   re-entered if you close the tab.
-- `src/lib/client-store.ts` is largely superseded by the server layer and is where the two
-  remaining lint warnings live.
+- `src/lib/client-store.ts` is largely superseded by the server layer and now only holds the
+  resumable onboarding drafts and the demo-only invite/pipeline lists.
