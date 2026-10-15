@@ -96,6 +96,7 @@ Deliberate choices worth knowing:
 
 | | |
 |---|---|
+| [CLAUDE.md](CLAUDE.md) | The rules for changing this codebase, and the bugs that produced each one. Read before touching anything. |
 | [docs/strategy.md](docs/strategy.md) | The thesis in Innovator's Dilemma terms — job to be done, why incumbents can't follow, what the strategy forbids, and OKRs. Start here. |
 | [docs/design-principles.md](docs/design-principles.md) | Why the interface looks and reads the way it does. |
 | [docs/candidate-onboarding-flow-spec.md](docs/candidate-onboarding-flow-spec.md) | The original build spec for candidate onboarding. |

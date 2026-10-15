@@ -1,0 +1,43 @@
+name: CI
+
+# Runs on every push and every pull request, so a broken main branch is visible within a minute
+# rather than on the next deploy. Free for public repositories, and needs no secrets — the whole
+# application runs from `npm ci` with no external services, which is what makes this possible.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # 22 is a hard floor, not a preference: the app uses node:sqlite, and the tests rely on
+          # native TypeScript type stripping. Neither exists in 20.
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      # Catches what the three above cannot: a schema or import error that only appears when Next
+      # actually compiles every route. The onboarding bug that shipped a broken migration would
+      # have been caught here.
+      - name: Production build
+        run: npm run build
+        env:
+          DISRUPTAJOB_DB: ":memory:"
