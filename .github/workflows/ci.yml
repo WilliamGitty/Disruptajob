@@ -47,3 +47,28 @@ jobs:
         run: npm run build
         env:
           DISRUPTAJOB_DB: ":memory:"
+
+  # Deploys main to Fly once checks pass, so changes built from any machine — including a phone
+  # via Claude Code on the web — reach the live site without a laptop in the loop. The token is
+  # a deploy-scoped Fly token (repo Settings → Secrets → Actions → FLY_API_TOKEN); it can deploy
+  # this one app and nothing else. Skipped entirely on pull requests and forks, where the secret
+  # is absent.
+  deploy:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      # One deploy at a time, newest wins — two merges in quick succession must not race.
+      group: fly-deploy
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

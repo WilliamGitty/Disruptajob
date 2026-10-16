@@ -85,6 +85,15 @@ Worth knowing what was ruled out, so it doesn't get relitigated:
    ```
    You'll get `https://disruptajob-preview.fly.dev`. Browser asks for the site password first.
 
+## Deploys after the first one
+
+You never run `fly deploy` again by hand. CI deploys `main` automatically once typecheck, lint,
+tests and the production build pass — so a change merged from any machine, including a Claude
+Code session on a phone, is live about four minutes later. This needs one secret in GitHub
+(repo Settings → Secrets and variables → Actions): `FLY_API_TOKEN`, a deploy-scoped token that
+can release this one app and nothing else. Create a fresh one anytime with
+`flyctl tokens create deploy -a disruptajob`.
+
 ## Custom domain (optional)
 
 Buy the domain anywhere (Cloudflare and Namecheap are cheapest), then:
