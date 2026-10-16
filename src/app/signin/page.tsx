@@ -30,10 +30,9 @@ export default async function SignInPage({
       <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
         Sign in
       </p>
-      <h1 className="font-serif-display text-3xl text-ink">Who are you today?</h1>
+      <h1 className="font-serif-display text-3xl text-ink">Welcome back.</h1>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-        Both sides of the marketplace share one database now, so you can open this in a second
-        browser, sign in as the other side, and watch things appear.
+        Your work is where you left it.
       </p>
 
       <form action={signInAction} className="mt-8 space-y-4">
@@ -81,7 +80,7 @@ export default async function SignInPage({
         </p>
       )}
 
-      {accounts.length > 0 && (
+      {DEMO_MODE && accounts.length > 0 && (
         <div className="mt-10 border-t border-ink/10 pt-6">
           <p className="text-xs font-medium uppercase tracking-[0.12em] text-ink-faint">
             Demo accounts
@@ -98,9 +97,7 @@ export default async function SignInPage({
             ))}
           </ul>
           <p className="mt-4 text-xs text-ink-faint">
-            {DEMO_MODE
-              ? "These are the way in. Ask whoever shared this link for the password."
-              : "Accounts created before passwords existed can still sign in without one — a real credential is required before this is genuinely public."}
+            These are the way in. Ask whoever shared this link for the password.
           </p>
         </div>
       )}
