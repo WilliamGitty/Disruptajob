@@ -112,14 +112,14 @@ the database is a file on disk, and Vercel's filesystem is ephemeral.
 
 ## State of the build
 
-This is a working prototype, not a production service. Honest list of what's missing:
+Live at **https://disruptajob.com** since 16 October 2026 — sign-up open, email working,
+legal pages complete. Honest list of what's still missing:
 
-- **Email works but needs a key.** Password reset, email verification at sign-up, and both
-  invite notifications (candidate: you have an invite; employer: it was answered) are built and
-  tested, delivered through Resend's API — the one external service this project talks to, a
-  decision recorded in `docs/strategy.md` §5b. With no `RESEND_API_KEY` set, sends degrade to a
-  logged no-op and every flow still completes; real delivery to strangers additionally needs a
-  verified sending domain in Resend (see DEPLOY.md).
+- **Search engines are still blocked** (`ALLOW_INDEXING` unset) — deliberate until the funnel
+  shows the pitch converts; being indexed is a decision, not a default. Email is fully live:
+  password reset, sign-up verification, and both invite notifications send from
+  hello@disruptajob.com (Resend, eu-west-1, domain verified); without a `RESEND_API_KEY` the
+  code still degrades to logged no-ops, so dev machines need no keys.
 - **CV and LinkedIn import don't exist yet** and say so in the interface. GitHub import is real and
   needs no key.
 - **Not registered with the ICO.** A privacy policy and terms exist at `/privacy` and `/terms`,

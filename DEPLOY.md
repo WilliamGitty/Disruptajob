@@ -1,7 +1,26 @@
 # Deploying Disruptajob
 
-Everything in this repo is ready to deploy. What's left needs a card and an email address, so
-it has to be you — about 15 minutes.
+**Launched 16 October 2026.** Live at https://disruptajob.com — sign-up open, demo mode off.
+This file is now two things: the record of what is set up (below), and the recipe to rebuild it
+from nothing on a new machine.
+
+## What is live, and where it's controlled
+
+| Piece | Where | Account |
+|---|---|---|
+| App + database | Fly.io, app `disruptajob`, region lhr, 1GB volume | Fly account (to move off the BC email) |
+| Domain + DNS | Cloudflare, zone `disruptajob.com` | personal Outlook |
+| Outbound email | Resend, domain verified, region eu-west-1 | personal Outlook |
+| Inbound email | Cloudflare Email Routing: hello@ -> personal Outlook; catch-all drops | personal Outlook |
+| Code, CI, deploys | GitHub `WilliamGitty/Disruptajob` — push to main deploys itself | personal GitHub |
+
+Secrets set on Fly: `DEMO_ACCOUNT_PASSWORD`, `RATE_LIMIT_SALT`, `ADMIN_EMAILS`,
+`RESEND_API_KEY`, `EMAIL_FROM`. Local gitignored copies of the API tokens live in `.env.*`
+files on the founder's machine; every one of them can be re-minted from its dashboard, so losing
+the laptop loses nothing.
+
+DNS on Cloudflare, all DNS-only (grey cloud): A/AAAA for apex and www to Fly's IPs; TXT
+`resend._domainkey` + CNAMEs `rsend`/`send` for Resend; MX + SPF added by Email Routing.
 
 ## Why not Vercel
 
