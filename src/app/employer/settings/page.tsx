@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCurrentAccount } from "@/server/auth";
+import { VerifyEmailNotice } from "@/components/settings/verify-email-notice";
 import { YourData } from "@/components/settings/your-data";
 
 export const metadata: Metadata = { title: "Account — Disruptajob" };
@@ -14,7 +15,12 @@ export const dynamic = "force-dynamic";
  * the account, and that person has an email address and a password here whichever door they came
  * through.
  */
-export default async function EmployerSettingsPage() {
+export default async function EmployerSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verification?: string }>;
+}) {
+  const { verification } = await searchParams;
   const account = await getCurrentAccount();
 
   if (account?.role !== "employer") {
@@ -30,6 +36,7 @@ export default async function EmployerSettingsPage() {
 
   return (
     <main className="mx-auto max-w-[760px] px-6 py-14">
+      <VerifyEmailNotice accountId={account.id} email={account.email} sent={verification === "sent"} />
       <h1 className="font-serif-display text-3xl text-ink">Account</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
         Signed in as {account.email}.

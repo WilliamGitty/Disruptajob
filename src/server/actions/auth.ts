@@ -83,6 +83,22 @@ export async function signUpAction(formData: FormData) {
   redirect(role === "talent" ? "/talent/onboarding" : "/employer/setup");
 }
 
+export async function resendVerificationAction() {
+  const { requireAccount } = await import("../auth");
+  const { isEmailVerified, createEmailVerification } = await import("../email-verification");
+  const account = await requireAccount();
+
+  if (!isEmailVerified(account.id)) {
+    // Same shape as the sign-up send; a failure is logged inside sendEmail and the user can
+    // simply press the button again.
+    const token = createEmailVerification(account.id);
+    await sendEmail(verifyEmailEmail(account.email, token));
+  }
+
+  const back = account.role === "talent" ? "/talent/settings" : "/employer/settings";
+  redirect(`${back}?verification=sent`);
+}
+
 export async function signOutAction() {
   await signOut();
   redirect("/signin");

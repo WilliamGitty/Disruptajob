@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Eye, Lock } from "lucide-react";
 import { getCurrentAccount } from "@/server/auth";
+import { VerifyEmailNotice } from "@/components/settings/verify-email-notice";
 import { getCandidateById } from "@/server/repositories/candidates";
 import { updateBasics, updateTerms, updateVisibility } from "@/server/actions/profile";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,12 @@ const VISIBILITY: { value: Discoverability; label: string; body: string }[] = [
  * Visibility comes first on the page deliberately — it's the thing people come here worried
  * about, and burying it under profile fields would be its own kind of dark pattern.
  */
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verification?: string }>;
+}) {
+  const { verification } = await searchParams;
   const account = await getCurrentAccount();
 
   if (!account?.candidateId) {
@@ -67,6 +73,7 @@ export default async function SettingsPage() {
 
   return (
     <main className="mx-auto max-w-[760px] px-6 py-14 lg:py-20">
+      <VerifyEmailNotice accountId={account.id} email={account.email} sent={verification === "sent"} />
       <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
         Your settings
       </p>
