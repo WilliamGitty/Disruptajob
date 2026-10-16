@@ -23,9 +23,23 @@ const editorialSerif = Newsreader({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://disruptajob.com"),
   title: "Disruptajob — Your job title doesn't do you justice",
   description:
     "If your CV flattens three jobs into one line, show the work instead. Build a profile from what you've actually built and let companies come to you. Free for candidates, hidden until you choose otherwise.",
+  openGraph: {
+    siteName: "Disruptajob",
+    type: "website",
+    title: "Disruptajob — Your job title doesn't do you justice",
+    description:
+      "Show the work instead of the CV. Evidence-backed profiles, free for candidates, hidden until you choose otherwise.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Disruptajob — Your job title doesn't do you justice",
+    description:
+      "Show the work instead of the CV. Evidence-backed profiles, free for candidates, hidden until you choose otherwise.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

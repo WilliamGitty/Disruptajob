@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { getCandidateBySlug } from "@/server/repositories/candidates";
+import { viewerMaySeeCandidate } from "@/server/candidate-gate";
+import { getCurrentAccount } from "@/server/auth";
 import { getProjectBySlug } from "@/server/repositories/projects";
 import { ProjectDetailView } from "@/components/profile/project-detail-view";
 
@@ -17,8 +19,13 @@ export async function generateMetadata({
   const { slug, projectSlug } = await params;
   const candidate = getCandidateBySlug(slug);
   const project = candidate ? getProjectBySlug(candidate.id, projectSlug) : undefined;
-  if (!project) return {};
-  return { title: `${project.title} — Disruptajob`, description: project.description };
+  if (!candidate || !project) return {};
+  if (!(await viewerMaySeeCandidate(candidate.id))) return {};
+  return {
+    title: `${project.title} — Disruptajob`,
+    description: project.description,
+    alternates: { canonical: `/profile/${candidate.slug}/projects/${project.slug}` },
+  };
 }
 
 export default async function ProjectDetailPage({
@@ -30,8 +37,17 @@ export default async function ProjectDetailPage({
   const candidate = getCandidateBySlug(slug);
   if (!candidate) notFound();
 
+  // The same wall the profile page has: a hidden person's project is as private as their page.
+  if (!(await viewerMaySeeCandidate(candidate.id))) notFound();
+
   const project = getProjectBySlug(candidate.id, projectSlug);
   if (!project) notFound();
+
+  // Drafts (unreviewed imports) are visible to their owner only, even on an open profile.
+  if (project.status === "draft") {
+    const viewer = await getCurrentAccount();
+    if (viewer?.candidateId !== candidate.id) notFound();
+  }
 
   return (
     <main>

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCandidateBySlug } from "@/server/repositories/candidates";
+import { viewerMaySeeCandidate } from "@/server/candidate-gate";
 import { getCurrentAccount } from "@/server/auth";
 import { isCandidateVisibleTo } from "@/server/repositories/discovery";
 import { getCompanyById } from "@/server/repositories/companies";
@@ -29,9 +30,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const candidate = getCandidateBySlug(slug);
   if (!candidate) return {};
+  // Metadata renders even into a 404 response, so it needs the page's own gate.
+  if (!(await viewerMaySeeCandidate(candidate.id))) return {};
   return {
     title: `${candidate.name} — Disruptajob`,
-    description: candidate.shortDescription,
+    description: candidate.headline || candidate.shortDescription,
+    alternates: { canonical: `/profile/${candidate.slug}` },
+    openGraph: {
+      title: `${candidate.name} — ${candidate.headline || "Disruptajob"}`,
+      description: candidate.shortDescription,
+      type: "profile",
+    },
   };
 }
 
@@ -67,8 +76,21 @@ export default async function ProfilePage({
     ? listProjectsForCandidate(candidate.id)
     : listPublishedProjects(candidate.id);
 
+    const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: {
+      "@type": "Person",
+      name: candidate.name,
+      jobTitle: candidate.headline || undefined,
+      description: candidate.shortDescription || undefined,
+      url: `https://disruptajob.com/profile/${candidate.slug}`,
+    },
+  };
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       {/* The nudge is for your own profile only — nobody needs prompting about someone else's. */}
       {isOwnProfile && <EvidenceNudge candidate={candidate} />}
       <ProfileHeader candidate={candidate} isOwnProfile={isOwnProfile} />

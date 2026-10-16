@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LegalPage, NotYetReviewed, Rows, Section } from "@/components/legal/legal-page";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/terms" },
   title: "Terms — Disruptajob",
   description: "The agreement between you and Disruptajob, in plain English.",
 };

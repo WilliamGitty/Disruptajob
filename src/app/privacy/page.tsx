@@ -4,6 +4,7 @@ import { LegalPage, NotYetReviewed, Rows, Section } from "@/components/legal/leg
 import { RETENTION } from "@/server/retention";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy" },
   title: "Privacy — Disruptajob",
   description: "What this site collects, why, how long it keeps it, and how to get rid of it.",
 };

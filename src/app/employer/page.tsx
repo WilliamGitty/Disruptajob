@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hire on evidence — Disruptajob",
+  description: "Search proven capability instead of job titles. Define a role by the work it contains and see only people whose published projects back it up.",
+  alternates: { canonical: "/employer" },
+};
+
 import Link from "next/link";
 import { listCandidates } from "@/server/repositories/candidates";
 import { countEvidence, countPublishedProjects } from "@/server/repositories/projects";

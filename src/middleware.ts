@@ -48,6 +48,15 @@ function visitorResponse(request: NextRequest): NextResponse {
 }
 
 export function middleware(request: NextRequest) {
+  // One site, one address: www serves a byte-identical duplicate that search engines would
+  // treat as a competing copy of every page. 301 it to the apex before anything else runs.
+  const host = request.headers.get("host") ?? "";
+  if (host.startsWith("www.")) {
+    const url = new URL(request.url);
+    url.host = host.slice(4);
+    return NextResponse.redirect(url, 301);
+  }
+
   const expected = process.env.SITE_PASSWORD;
   if (!expected) return visitorResponse(request);
 

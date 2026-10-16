@@ -9,6 +9,28 @@ import { ProofAboveFold } from "@/components/landing/proof-above-fold";
 import { InterestCapture } from "@/components/landing/interest-capture";
 import { EmployerBand } from "@/components/landing/employer-band";
 import { EVENTS, track } from "@/server/analytics";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
+// Machine-readable identity for search engines. Kept to facts already on the page.
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Disruptajob",
+      url: "https://disruptajob.com",
+      email: "hello@disruptajob.com",
+      description: "Evidence-based hiring. Candidates show real work instead of CVs; companies search proof, not titles.",
+    },
+    {
+      "@type": "WebSite",
+      name: "Disruptajob",
+      url: "https://disruptajob.com",
+    },
+  ],
+};
 
 // The preview grid reads live candidates, so the landing page renders per request.
 export const dynamic = "force-dynamic";
@@ -23,6 +45,7 @@ export default async function Home() {
 
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <Hero />
       <ProofAboveFold />
       <NotYourFault />
