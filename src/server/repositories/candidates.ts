@@ -36,11 +36,12 @@ interface CandidateRow {
   discoverability: string;
   comp_floor: string | null;
   location_constraint: string | null;
+  demo: number;
 }
 
 const SELECT_CANDIDATE = `
   SELECT id, slug, name, headline, short_description, about, location, availability,
-         avatar_initials, accent_index, discoverability, comp_floor, location_constraint
+         avatar_initials, accent_index, discoverability, comp_floor, location_constraint, demo
     FROM candidate`;
 
 /** `?,?,?` for an IN clause. SQLite has no array parameter type. */
@@ -204,6 +205,7 @@ function hydrateMany(rows: CandidateRow[]): CandidateProfile[] {
       experience: experience.get(row.id) ?? [],
       education: education.get(row.id) ?? [],
       discoverability: row.discoverability as Discoverability,
+      isDemo: row.demo === 1,
       blockedCompanies: blocked.get(row.id) ?? [],
       nonNegotiables: hasTerms
         ? {

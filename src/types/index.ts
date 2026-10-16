@@ -146,6 +146,8 @@ export interface CandidateProfile {
   discoverability?: Discoverability;
   /** Company names / domains the candidate has blocked from ever seeing their profile. */
   blockedCompanies?: string[];
+  /** Part of the invented demo population. Set by seeding only — no user path can ever set it. */
+  isDemo?: boolean;
 }
 
 export interface Employer {
@@ -179,6 +181,8 @@ export interface CompanyProfile {
   accentIndex: number;
   /** Whether the company has published — unpublished companies are invisible to candidates. */
   published?: boolean;
+  /** Part of the invented demo population. Set by seeding only — no user path can ever set it. */
+  isDemo?: boolean;
 }
 
 /** A file or link a company attaches to a work example (the real brief, a screenshot, a doc). */

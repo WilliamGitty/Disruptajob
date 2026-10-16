@@ -1,5 +1,6 @@
 "use client";
 
+import { DemoBadge } from "@/components/ui/demo-badge";
 import { useState, useTransition } from "react";
 import { Bookmark, BookmarkCheck, MessageSquarePlus } from "lucide-react";
 import type { CandidateProfile } from "@/types";
@@ -45,7 +46,10 @@ export function ProfileHeader({
           <div className="flex gap-5">
             <InitialsMark initials={candidate.avatarInitials} index={candidate.accentIndex} size="lg" />
             <div>
-              <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">{candidate.name}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">{candidate.name}</h1>
+                {candidate.isDemo && <DemoBadge />}
+              </div>
               <p className="mt-1.5 text-[15px] font-medium text-ink-soft">{candidate.headline}</p>
               <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
                 {candidate.shortDescription ? `“${candidate.shortDescription}”` : null}

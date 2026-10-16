@@ -1,3 +1,4 @@
+import { DemoBadge } from "@/components/ui/demo-badge";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Minus } from "lucide-react";
@@ -70,7 +71,10 @@ export default async function CandidateMatchPage({
             <div className="flex gap-4">
               <InitialsMark initials={candidate.avatarInitials} index={candidate.accentIndex} size="lg" />
               <div>
-                <h1 className="font-serif-display text-3xl text-ink">{candidate.name}</h1>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="font-serif-display text-3xl text-ink">{candidate.name}</h1>
+                  {candidate.isDemo && <DemoBadge />}
+                </div>
                 <p className="mt-1 text-sm text-ink-soft">{candidate.headline}</p>
                 <p className="mt-1 text-xs text-ink-faint">{candidate.location}</p>
               </div>

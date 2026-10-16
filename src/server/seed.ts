@@ -23,8 +23,8 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
       insert(
         `INSERT INTO candidate (id, slug, name, headline, short_description, location,
                                 availability, avatar_initials, accent_index, discoverability,
-                                comp_floor, location_constraint, created_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                                comp_floor, location_constraint, demo, created_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,?)`,
         c.id,
         c.slug,
         c.name,
@@ -134,8 +134,8 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
     for (const co of COMPANIES) {
       insert(
         `INSERT INTO company (id, slug, name, blurb, website, stage, team_size, location,
-                              avatar_initials, accent_index, published, created_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+                              avatar_initials, accent_index, published, demo, created_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,1,?)`,
         co.id,
         co.slug,
         co.name,

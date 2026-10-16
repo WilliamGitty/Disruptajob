@@ -28,6 +28,7 @@ interface CompanyRow {
   avatar_initials: string;
   accent_index: number;
   published: number;
+  demo: number;
 }
 
 function hydrateCompany(row: CompanyRow): CompanyProfile {
@@ -43,12 +44,13 @@ function hydrateCompany(row: CompanyRow): CompanyProfile {
     avatarInitials: row.avatar_initials,
     accentIndex: row.accent_index,
     published: row.published === 1,
+    isDemo: row.demo === 1,
   };
 }
 
 const SELECT_COMPANY = `
   SELECT id, slug, name, blurb, website, stage, team_size, location,
-         avatar_initials, accent_index, published
+         avatar_initials, accent_index, published, demo
     FROM company`;
 
 export function listCompanies(): CompanyProfile[] {

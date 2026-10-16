@@ -1,3 +1,4 @@
+import { DemoBadge } from "@/components/ui/demo-badge";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import type { CandidateMatch, CandidateProfile } from "@/types";
@@ -26,6 +27,7 @@ export function ResultCard({
           <div>
             <Link href={`/employer/candidate/${candidate.slug}?q=${encodeURIComponent(match.query)}`}>
               <h3 className="font-serif-display text-xl text-ink underline-grow">{candidate.name}</h3>
+              {candidate.isDemo && <DemoBadge />}
             </Link>
             <p className="mt-0.5 text-sm text-ink-soft">{candidate.headline}</p>
             <p className="mt-0.5 text-xs text-ink-faint">{candidate.location}</p>

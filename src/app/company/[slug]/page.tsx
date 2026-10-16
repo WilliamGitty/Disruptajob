@@ -1,3 +1,4 @@
+import { DemoBadge } from "@/components/ui/demo-badge";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -53,7 +54,10 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
           <div className="flex flex-wrap items-start gap-5">
             <InitialsMark initials={company.avatarInitials} index={company.accentIndex} size="lg" />
             <div className="min-w-0 flex-1">
-              <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">{company.name}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">{company.name}</h1>
+                {company.isDemo && <DemoBadge kind="company" />}
+              </div>
               <p className="mt-3 max-w-2xl text-lg leading-relaxed text-ink-soft">
                 {company.blurb}
               </p>

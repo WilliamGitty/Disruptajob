@@ -1,4 +1,5 @@
 import type { DatabaseSync } from "node:sqlite";
+import { CANDIDATES, COMPANIES } from "@/lib/mock-data";
 
 /**
  * Schema migrations.
@@ -53,6 +54,23 @@ const MIGRATIONS: Migration[] = [
     id: "003-candidate-about",
     up: (db) => {
       addColumn(db, "candidate", "about", "TEXT");
+    },
+  },
+  {
+    // Real people are about to share a database with the invented demo population, and a real
+    // user must never mistake seeded fiction for a colleague. The flag is set here for databases
+    // seeded before it existed (the ids are the seed's own, so the match is exact), and by
+    // seed.ts for fresh installs. Nothing a user does can ever set it.
+    id: "005-demo-population-flag",
+    up: (db) => {
+      addColumn(db, "candidate", "demo", "INTEGER NOT NULL DEFAULT 0");
+      addColumn(db, "company", "demo", "INTEGER NOT NULL DEFAULT 0");
+      const mark = (table: string, ids: string[]) => {
+        const marks = ids.map(() => "?").join(",");
+        db.prepare(`UPDATE ${table} SET demo = 1 WHERE id IN (${marks})`).run(...ids);
+      };
+      mark("candidate", CANDIDATES.map((c) => c.id));
+      mark("company", COMPANIES.map((c) => c.id));
     },
   },
   {

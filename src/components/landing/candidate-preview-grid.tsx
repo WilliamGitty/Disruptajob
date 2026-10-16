@@ -1,3 +1,4 @@
+import { DemoBadge } from "@/components/ui/demo-badge";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { listDiscoverableCandidates } from "@/server/repositories/discovery";
@@ -47,7 +48,10 @@ export function CandidatePreviewGrid() {
                   <InitialsMark initials={c.avatarInitials} index={c.accentIndex} />
                   <ArrowUpRight className="h-4 w-4 text-ink-faint transition-colors group-hover:text-accent" />
                 </div>
-                <h3 className="mt-5 font-serif-display text-lg text-ink">{c.name}</h3>
+                <div className="mt-5 flex flex-wrap items-center gap-2">
+                  <h3 className="font-serif-display text-lg text-ink">{c.name}</h3>
+                  {c.isDemo && <DemoBadge />}
+                </div>
                 <p className="mt-1 text-sm leading-snug text-ink-soft">{c.headline}</p>
                 <p className="mt-2 text-xs text-ink-faint">{c.location}</p>
               </div>
