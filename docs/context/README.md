@@ -32,3 +32,34 @@ If you're picking this project up on a different machine or account:
   development runs without configuration.
 
 So a move is: clone, `npm ci`, `npm run dev`. Nothing else is lost.
+
+## Running the dev server through Claude's preview pane
+
+`.claude/launch.json` is gitignored because it contains an absolute path to one machine's Node
+install. If the preview pane can't start the server on a new machine, recreate it — the only
+unusual part is that Turbopack spawns child workers that don't inherit a shell PATH, so `node` has
+to be put on PATH explicitly:
+
+```json
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "disruptajob-dev",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": [
+        "PATH=/ABSOLUTE/PATH/TO/node/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "node",
+        "node_modules/next/dist/bin/next",
+        "dev",
+        "-p",
+        "3000"
+      ],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}
+```
+
+Find the path with `dirname $(which node)`. Plain `npm run dev` in a terminal needs none of this.
