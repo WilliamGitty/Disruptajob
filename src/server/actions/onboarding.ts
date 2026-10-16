@@ -4,6 +4,8 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { get, run, transaction } from "../db";
 import { getCurrentAccount, signUp } from "../auth";
+import { createEmailVerification } from "../email-verification";
+import { sendEmail, verifyEmailEmail } from "../email";
 import { isSafeHttpUrl } from "@/lib/project-input";
 import { rateLimit, retryMessage } from "../rate-limit";
 import { callerKey } from "../request-identity";
@@ -129,6 +131,10 @@ export async function completeCandidateOnboarding(
     const account = await getCurrentAccount();
     if (!account?.candidateId) return { ok: false, error: "Account created but the profile didn't attach. Try signing in." };
     candidateId = account.candidateId;
+
+    // Same confirmation email the sign-up form sends — best-effort, and resendable from settings.
+    const token = createEmailVerification(account.id);
+    await sendEmail(verifyEmailEmail(account.email, token));
   }
 
   const row = get<{ slug: string }>("SELECT slug FROM candidate WHERE id = ?", candidateId);

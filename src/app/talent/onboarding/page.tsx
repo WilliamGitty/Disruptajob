@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
+import { ConversationFlow } from "@/components/onboarding/conversation-flow";
 import { getCurrentAccount } from "@/server/auth";
 import { EVENTS, track } from "@/server/analytics";
 
@@ -25,7 +25,7 @@ export default async function OnboardingPage() {
 
   return (
     <main>
-      <OnboardingFlow session={session} />
+      <ConversationFlow session={session} />
     </main>
   );
 }
