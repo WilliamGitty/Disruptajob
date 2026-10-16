@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listAccounts } from "@/server/auth";
+import { listDemoAccounts } from "@/server/auth";
 import { DEMO_MODE, SIGNUP_ENABLED } from "@/server/config";
 import { signInAction } from "@/server/actions/auth";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ export default async function SignInPage({
   searchParams: Promise<{ error?: string; reset?: string }>;
 }) {
   const { error, reset } = await searchParams;
-  const accounts = listAccounts();
+  const accounts = listDemoAccounts();
 
   return (
     <main className="mx-auto max-w-[480px] px-6 py-20">

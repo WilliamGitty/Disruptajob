@@ -49,9 +49,20 @@ function hydrate(row: AccountRow): Account {
   };
 }
 
-export function listAccounts(): Account[] {
+/**
+ * Accounts for the sign-in page's demo list — ONLY the invented population, enforced in the
+ * query. This once returned every account, which was harmless while all accounts were seeded
+ * fiction and became a public email leak the day sign-up opened. A real person's address must
+ * never render on a page anyone can load.
+ */
+export function listDemoAccounts(): Account[] {
   return all<AccountRow>(
-    "SELECT id, email, display_name, role, candidate_id, company_id FROM account ORDER BY role, display_name"
+    `SELECT a.id, a.email, a.display_name, a.role, a.candidate_id, a.company_id
+       FROM account a
+       LEFT JOIN candidate c ON c.id = a.candidate_id
+       LEFT JOIN company  co ON co.id = a.company_id
+      WHERE c.demo = 1 OR co.demo = 1
+      ORDER BY a.role, a.display_name`
   ).map(hydrate);
 }
 
