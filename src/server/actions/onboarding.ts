@@ -68,6 +68,8 @@ export interface CompleteOnboardingInput {
   availability: string;
   /** The candidate's own words about what their title hides. Becomes the profile summary. */
   titleGap: string;
+  /** Optional longer piece in their own words. Never scored. */
+  about?: string;
   nonNegotiables: NonNegotiables;
   discoverability: Discoverability;
   blockedCompanies: string[];
@@ -163,12 +165,13 @@ export async function completeCandidateOnboarding(
   transaction(() => {
     run(
       `UPDATE candidate
-          SET name = ?, headline = ?, short_description = ?, location = ?,
+          SET name = ?, headline = ?, short_description = ?, about = ?, location = ?,
               availability = ?, discoverability = ?, comp_floor = ?, location_constraint = ?
         WHERE id = ?`,
       name,
       clean(input.currentTitle, 160),
       clean(input.titleGap, MAX_SHORT),
+      clean(input.about, MAX_LONG) || null,
       clean(input.location, 120),
       availability,
       discoverability,

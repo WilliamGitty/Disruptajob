@@ -20,7 +20,7 @@ const STEPS = [
     n: "01",
     Mark: DescribeOneThing,
     heading: "Describe one thing you built.",
-    body: "A process you fixed, a tool you made, a mess you untangled. Plain words are fine — this isn’t a cover letter and nobody is marking your grammar.",
+    body: "A process you fixed, a tool you made, a mess you untangled. Plain words are fine — and if you'd rather speak than write, you can dictate it. Got public code? Connect GitHub and bring repos in as drafts.",
   },
   {
     n: "02",

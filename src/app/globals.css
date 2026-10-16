@@ -5,6 +5,9 @@
   --paper: #f7f5f0;
   --paper-dim: #efebe2;
   --paper-line: #e0dbcd;
+  /* A cooler, greyer paper used only for the employer band on the landing page, so a candidate
+     can see at a glance that the page has started talking to somebody else. */
+  --paper-company: #e6e5e0;
   --ink: #15140f;
   --ink-soft: #46443c;
   --ink-faint: #8a8676;
@@ -22,6 +25,7 @@
   --color-paper: var(--paper);
   --color-paper-dim: var(--paper-dim);
   --color-paper-line: var(--paper-line);
+  --color-paper-company: var(--paper-company);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-ink-faint: var(--ink-faint);
@@ -102,3 +106,4 @@ body {
     animation: none;
   }
 }
+

@@ -6,7 +6,6 @@ import { ArrowLeft, ArrowRight, Check, Loader2, SkipForward } from "lucide-react
 import type { Project } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useCustomProjects, useOnboardingDraft } from "@/lib/client-store";
-import { proposeCapabilities } from "@/lib/capabilities";
 import { completeCandidateOnboarding } from "@/server/actions/onboarding";
 import { trackEvent } from "@/server/actions/track";
 import { EVENTS } from "@/lib/events";
@@ -17,7 +16,6 @@ import {
   DRAFT_OWNER_ID,
   EvidenceStep,
   HookStep,
-  HypothesisStep,
   IdentityStep,
   NonNegotiablesStep,
   ScoreRevealStep,
@@ -36,11 +34,19 @@ interface StepMeta {
   optional?: boolean;
 }
 
+/**
+ * Eight steps, not nine.
+ *
+ * There used to be a "Capabilities" step that showed a guess at what you're good at, before you'd
+ * shown us anything. It fed no score — it only pre-ticked the capability boxes on imported work,
+ * which meant every repository someone imported arrived already tagged with the same two guesses.
+ * A pre-ticked box that gets clicked past is a declared capability wearing a disguise, so the step
+ * is gone rather than moved. Capabilities are chosen per piece of work, where the evidence is.
+ */
 const STEPS: StepMeta[] = [
   { label: "Your work" },
   { label: "Basics" },
   { label: "Your terms", optional: true },
-  { label: "Capabilities", optional: true },
   { label: "Shortcuts", optional: true },
   { label: "Evidence" },
   { label: "Your scores", optional: true },
@@ -89,18 +95,13 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
       // than sprung on someone at the end after they've done all the work.
       return identified && (Boolean(session) || password.length >= 10);
     }
-    if (step === 5) return published.length > 0; // need at least one real piece of evidence
+    if (step === 4) return published.length > 0; // need at least one real piece of evidence
     return true;
   })();
 
   function goTo(next: number) {
     const clamped = Math.max(0, Math.min(LAST_STEP, next));
-    const partial: Partial<typeof draft> = { step: clamped, updatedAt: new Date().toISOString() };
-    // When arriving at the capability step, seed the hypothesis from the candidate's own words.
-    if (clamped === 3 && draft.hypothesisTags.length === 0 && draft.titleGap.trim()) {
-      partial.hypothesisTags = proposeCapabilities(draft.titleGap);
-    }
-    patch(partial);
+    patch({ step: clamped, updatedAt: new Date().toISOString() });
     // Which step someone reaches is the whole point of measuring this: the drop-off tells you
     // which question is too much to ask, which no amount of looking at the page will.
     void trackEvent(EVENTS.onboardingStep, { step: clamped, label: STEPS[clamped].label });
@@ -135,6 +136,7 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
         currentTitle: draft.currentTitle,
         availability: draft.availability,
         titleGap: draft.titleGap,
+        about: draft.about,
         nonNegotiables: draft.nonNegotiables,
         discoverability: draft.discoverability,
         blockedCompanies: draft.blockedCompanies,
@@ -177,8 +179,15 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
     add(project);
     void trackEvent(EVENTS.onboardingProject);
   }
-  function publishDraft(id: string, capabilities: string[]) {
-    update((p) => p.id === id, (p) => ({ ...p, capabilities, status: "published" }));
+  function publishDraft(
+    id: string,
+    capabilities: string[],
+    fields: { description: string; whatIBuilt: string; outcome: string }
+  ) {
+    update(
+      (p) => p.id === id,
+      (p) => ({ ...p, ...fields, capabilities, status: "published" })
+    );
   }
   function removeProject(id: string) {
     remove((p) => p.id === id);
@@ -203,9 +212,8 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
           />
         )}
         {step === 2 && <NonNegotiablesStep draft={draft} patch={patch} />}
-        {step === 3 && <HypothesisStep draft={draft} patch={patch} />}
-        {step === 4 && <AcceleratorsStep draft={draft} patch={patch} onImportGitHub={importGitHub} />}
-        {step === 5 && (
+        {step === 3 && <AcceleratorsStep draft={draft} patch={patch} onImportGitHub={importGitHub} />}
+        {step === 4 && (
           <EvidenceStep
             draft={draft}
             patch={patch}
@@ -215,9 +223,9 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
             onRemoveProject={removeProject}
           />
         )}
-        {step === 6 && <ScoreRevealStep draft={draft} patch={patch} ownProjects={ownProjects} />}
-        {step === 7 && <BackgroundStep draft={draft} patch={patch} />}
-        {step === 8 && <VisibilityStep draft={draft} patch={patch} />}
+        {step === 5 && <ScoreRevealStep draft={draft} patch={patch} ownProjects={ownProjects} />}
+        {step === 6 && <BackgroundStep draft={draft} patch={patch} />}
+        {step === 7 && <VisibilityStep draft={draft} patch={patch} />}
       </div>
 
       {error && (

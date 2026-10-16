@@ -19,8 +19,10 @@ export function Hero() {
           <p className="mb-6 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             For people whose title says one thing
           </p>
+          {/* The accent lands on the two words that carry the argument, not the whole line —
+              colour marks one thing or it marks nothing. */}
           <h1 className="font-serif-display text-[2.75rem] leading-[1.05] tracking-tight text-ink sm:text-[3.5rem] lg:text-[4.25rem]">
-            Your job title doesn&rsquo;t do you justice.
+            Your <span className="text-accent">job title</span> doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
             You run the ops, build the automations and own half of product. Your CV has room for
@@ -32,7 +34,7 @@ export function Hero() {
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button asChild size="lg" variant="accent">
               <Link href="/talent/onboarding">
-                Show what you can do
+                Add your first project
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

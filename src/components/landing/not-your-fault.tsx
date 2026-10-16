@@ -40,7 +40,7 @@ export function NotYourFault() {
             If the search has been long
           </p>
           <h2 className="font-serif-display text-3xl leading-tight text-ink sm:text-4xl lg:text-[2.75rem]">
-            It probably isn&rsquo;t you.
+            Applying the traditional way is the outdated part.
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-ink-soft">
             Months of silence will make anyone think they&rsquo;re the problem. Usually the

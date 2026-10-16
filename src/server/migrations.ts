@@ -47,6 +47,14 @@ const MIGRATIONS: Migration[] = [
       addColumn(db, "invite", "followup_detail", "TEXT");
     },
   },
+  {
+    // A longer, optional piece in the candidate's own words. Context for a human who is already
+    // interested — it never reaches a capability score, like everything else self-written.
+    id: "003-candidate-about",
+    up: (db) => {
+      addColumn(db, "candidate", "about", "TEXT");
+    },
+  },
 ];
 
 function appliedIds(db: DatabaseSync): Set<string> {

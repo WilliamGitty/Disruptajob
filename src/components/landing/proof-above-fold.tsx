@@ -65,8 +65,18 @@ export function ProofAboveFold() {
               <div className="min-w-0">
                 <h3 className="font-serif-display text-xl text-ink">{candidate.name}</h3>
                 <p className="mt-1 text-sm text-ink-soft">{candidate.headline}</p>
+                {candidate.location && (
+                  <p className="mt-1 text-xs text-ink-faint">{candidate.location}</p>
+                )}
               </div>
             </div>
+
+            {/* Their own words, so the card isn't only a scoreboard. */}
+            {candidate.shortDescription && (
+              <p className="border-b border-ink/10 px-6 py-4 text-[15px] leading-relaxed text-ink-soft">
+                &ldquo;{candidate.shortDescription}&rdquo;
+              </p>
+            )}
 
             {/* The claim. */}
             <div className="flex items-center justify-between gap-4 px-6 py-5">

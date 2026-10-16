@@ -131,6 +131,8 @@ export interface CandidateProfile {
   name: string;
   headline: string;
   shortDescription: string;
+  /** Optional longer piece in their own words. Never scored — context for a human. */
+  about?: string;
   location: string;
   availability: AvailabilityStatus;
   avatarInitials: string;
@@ -342,11 +344,20 @@ export interface OnboardingDraft {
   availability: AvailabilityStatus;
   // Step 3 — non-negotiables
   nonNegotiables: NonNegotiables;
-  // Step 4 — proposed capability hypothesis (candidate confirms/edits)
-  hypothesisTags: string[];
+  /**
+   * Formerly a capability guess shown before any evidence existed. Removed — it fed no score and
+   * only pre-ticked the boxes on imported work. Kept optional so saved drafts still parse.
+   */
+  hypothesisTags?: string[];
   // Step 5 — optional accelerators (background only; never capabilities/evidence)
   cvImported: boolean;
+  /** Pasted CV text. Context for a human; never parsed into capabilities. */
+  cvText?: string;
+  /** Up to 500 words in their own words. Never scored. */
+  about?: string;
   linkedinConnected: boolean;
+  /** A link, not an import — LinkedIn does not permit reading profiles. */
+  linkedinUrl?: string;
   githubConnected: boolean;
   importedExperience: ExperienceEntry[];
   importedEducation: EducationEntry[];

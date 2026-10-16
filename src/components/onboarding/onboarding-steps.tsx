@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { ChipInput } from "@/components/ui/chip-input";
 import { CapabilityPicker } from "@/components/ui/capability-picker";
 import { WorkPromptDeck } from "@/components/onboarding/work-prompt-deck";
+import { DictateButton } from "@/components/onboarding/dictate-button";
 import type { WorkPrompt } from "@/lib/work-prompts";
 import { StrengthBar } from "@/components/ui/strength-bar";
 import { capabilityLabel } from "@/lib/capabilities";
@@ -101,6 +102,12 @@ export function HookStep({ draft, patch }: StepProps) {
         value={draft.titleGap}
         onChange={(e) => patch({ titleGap: e.target.value })}
       />
+      <DictateButton
+        onTranscript={(text) =>
+          patch({ titleGap: draft.titleGap ? `${draft.titleGap.trim()} ${text}` : text })
+        }
+      />
+
       <p className="flex items-center gap-2 text-sm text-ink-faint">
         <Lock className="h-3.5 w-3.5" />
         Private by default. Your current employer will never see this unless you choose to be found.
@@ -266,45 +273,8 @@ export function NonNegotiablesStep({ draft, patch }: StepProps) {
   );
 }
 
-// --- Step 4: Capability hypothesis ---------------------------------------
-
-export function HypothesisStep({ draft, patch }: StepProps) {
-  return (
-    <div className="space-y-6">
-      <StepIntro
-        eyebrow="Your starting scoreboard"
-        title="Here's what we think you're good at."
-        body="Based on what you told us. These bars are empty on purpose — you'll fill them with real evidence next. Adjust the set so it feels like you."
-      />
-      <div className="divide-y divide-ink/10 border-y border-ink/10">
-        {draft.hypothesisTags.length === 0 && (
-          <p className="py-5 text-sm text-ink-faint">
-            No capabilities selected yet — pick a few below to start your scoreboard.
-          </p>
-        )}
-        {draft.hypothesisTags.map((tag) => (
-          <div key={tag} className="flex items-center gap-6 py-4">
-            <span className="w-48 shrink-0 text-[15px] font-medium text-ink sm:w-56">
-              {capabilityLabel(tag)}
-            </span>
-            <StrengthBar score={0} className="flex-1" />
-            <span className="w-28 shrink-0 text-right text-xs text-ink-faint">no evidence yet</span>
-          </div>
-        ))}
-      </div>
-      <Field label="Adjust your capabilities">
-        <CapabilityPicker
-          selected={draft.hypothesisTags}
-          onChange={(hypothesisTags) => patch({ hypothesisTags })}
-        />
-      </Field>
-    </div>
-  );
-}
-
-// --- Step 5: Accelerators -------------------------------------------------
-
 export function AcceleratorsStep({
+  draft,
   patch,
   onImportGitHub,
 }: StepProps & { onImportGitHub: (projects: Project[]) => void }) {
@@ -395,18 +365,56 @@ export function AcceleratorsStep({
       </div>
 
       {/*
-        CV and LinkedIn both need something we don't have yet — a parser and an OAuth app
-        respectively. They used to be buttons that returned a seeded demo person's job history,
-        which meant a real candidate could watch somebody else's career appear as their own. An
-        honest "not yet" is worth more than a button that lies.
+        CV and LinkedIn, honestly.
+        We cannot import from LinkedIn — it blocks it, and an OAuth app we don't have wouldn't
+        return work history anyway. We can't reliably parse a PDF CV without a dependency this
+        project doesn't carry. What we *can* do is take both as context: a link an employer can
+        follow, and CV text the candidate pastes. Neither touches a capability, which is stated
+        on the page rather than merely true.
       */}
-      <div className="border border-dashed border-ink/20 p-5">
-        <p className="text-sm font-medium text-ink">Coming later: CV and LinkedIn</p>
+      <div className="border border-ink/15 p-5">
+        <p className="text-sm font-medium text-ink">Your CV and LinkedIn, if you want</p>
         <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          Both will fill in your work history and education only — never your capabilities. For now
-          you can add those by hand on the background step, and honestly, the work you describe
-          matters far more than either of them.
+          Entirely optional. Neither affects your capability scores — only work you describe and tag
+          does that. These are context for a human who&rsquo;s already interested.
         </p>
+
+        <div className="mt-4 space-y-4">
+          <Field label="LinkedIn profile URL">
+            <Input
+              type="url"
+              placeholder="https://www.linkedin.com/in/your-name"
+              value={draft.linkedinUrl ?? ""}
+              onChange={(e) => patch({ linkedinUrl: e.target.value, linkedinConnected: Boolean(e.target.value.trim()) })}
+            />
+            <p className="mt-1.5 text-xs text-ink-faint">
+              We don&rsquo;t read it — LinkedIn doesn&rsquo;t allow that. It&rsquo;s a link on your
+              profile for anyone who wants the conventional version too.
+            </p>
+          </Field>
+
+          <Field label="Paste your CV">
+            <Textarea
+              rows={4}
+              placeholder="Paste the text of your CV here, or drop a .txt file below…"
+              value={draft.cvText ?? ""}
+              onChange={(e) => patch({ cvText: e.target.value, cvImported: Boolean(e.target.value.trim()) })}
+              onDrop={async (e) => {
+                const file = e.dataTransfer.files[0];
+                if (!file) return;
+                e.preventDefault();
+                const text = await file.text();
+                patch({ cvText: text.slice(0, 20000), cvImported: true });
+              }}
+              onDragOver={(e) => e.preventDefault()}
+            />
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-faint">
+              Kept as background and shown to nobody until you&rsquo;re visible. We deliberately
+              don&rsquo;t turn it into capabilities — a CV is a list of claims, and claims are the
+              thing this site exists to replace.
+            </p>
+          </Field>
+        </div>
       </div>
     </div>
   );
@@ -415,7 +423,6 @@ export function AcceleratorsStep({
 // --- Step 6: First evidence ----------------------------------------------
 
 export function EvidenceStep({
-  draft,
   ownProjects,
   onAddProject,
   onPublishDraft,
@@ -423,7 +430,7 @@ export function EvidenceStep({
 }: StepProps & {
   ownProjects: Project[];
   onAddProject: (project: Project) => void;
-  onPublishDraft: (id: string, capabilities: string[]) => void;
+  onPublishDraft: (id: string, capabilities: string[], fields: DraftFields) => void;
   onRemoveProject: (id: string) => void;
 }) {
   const drafts = ownProjects.filter((p) => p.status === "draft");
@@ -447,8 +454,7 @@ export function EvidenceStep({
             <DraftProjectReview
               key={p.id}
               project={p}
-              suggestedTags={draft.hypothesisTags}
-              onPublish={(caps) => onPublishDraft(p.id, caps)}
+              onPublish={(caps, fields) => onPublishDraft(p.id, caps, fields)}
               onDiscard={() => onRemoveProject(p.id)}
             />
           ))}
@@ -499,37 +505,114 @@ export function EvidenceStep({
   );
 }
 
+/** The fields a repo arrives without, which only the person who wrote it can supply. */
+export interface DraftFields {
+  description: string;
+  whatIBuilt: string;
+  outcome: string;
+}
+
 function DraftProjectReview({
   project,
-  suggestedTags,
   onPublish,
   onDiscard,
 }: {
   project: Project;
-  suggestedTags: string[];
-  onPublish: (capabilities: string[]) => void;
+  onPublish: (capabilities: string[], fields: DraftFields) => void;
   onDiscard: () => void;
 }) {
-  const [caps, setCaps] = useState<string[]>(
-    project.capabilities.length ? project.capabilities : suggestedTags.slice(0, 2)
-  );
+  // Nothing is pre-ticked. Imported work arrived from a machine that has not read it, so a
+  // suggested tag here would be a guess the person clicks past — which is how an unexamined
+  // capability ends up on a profile claiming to contain only demonstrated ones.
+  const [caps, setCaps] = useState<string[]>(project.capabilities);
+
+  // A repository gives us a name, a language and sometimes one line of description. None of that
+  // tells an employer what the thing was for or whether it worked, so the import is a starting
+  // point and these are the fields that make it evidence.
+  const [description, setDescription] = useState(project.description);
+  const [whatIBuilt, setWhatIBuilt] = useState(project.whatIBuilt);
+  const [outcome, setOutcome] = useState(project.outcome);
+  const [expanded, setExpanded] = useState(false);
+
+  const thin = description.trim().length < 20;
+
   return (
     <div className="border border-ink/15 p-4">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <p className="text-sm font-medium text-ink">{project.title}</p>
-          <p className="mt-1 text-xs text-ink-faint">{project.description}</p>
+          {project.tools.length > 0 && (
+            <p className="mt-0.5 text-xs text-ink-faint">{project.tools.join(" · ")}</p>
+          )}
         </div>
         <span className="shrink-0 border border-ink/15 px-2 py-0.5 text-[10px] uppercase tracking-wide text-ink-faint">
-          Draft
+          From GitHub
         </span>
       </div>
-      <div className="mt-3">
+
+      <div className="mt-4 space-y-3">
+        <Field label="What is it, in one line?">
+          <Input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="A tool that routes inbound invoices automatically."
+          />
+          {thin && (
+            <p className="mt-1.5 text-xs text-ink-faint">
+              A repo name on its own tells an employer nothing. One plain sentence is enough.
+            </p>
+          )}
+        </Field>
+
+        {expanded ? (
+          <>
+            <Field label="What did you build?">
+              <Textarea
+                rows={3}
+                value={whatIBuilt}
+                onChange={(e) => setWhatIBuilt(e.target.value)}
+                placeholder="What you actually made, and the part that was yours."
+              />
+            </Field>
+            <Field label="What changed because of it?">
+              <Input
+                value={outcome}
+                onChange={(e) => setOutcome(e.target.value)}
+                placeholder="Cut a two-hour daily job to ten minutes."
+              />
+              <p className="mt-1.5 text-xs text-ink-faint">
+                A number here is what makes it believable to someone who&rsquo;s never met you.
+              </p>
+            </Field>
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setExpanded(true)}
+            className="text-sm text-ink-soft underline-grow hover:text-ink"
+          >
+            Add more detail — what you built, what changed
+          </button>
+        )}
+      </div>
+
+      <div className="mt-4">
         <Label className="mb-2 block text-xs">What does this demonstrate?</Label>
         <CapabilityPicker selected={caps} onChange={setCaps} />
+        <p className="mt-2 text-xs text-ink-faint">
+          Nothing is pre-selected — we haven&rsquo;t read your code, and a guess here would end up
+          on your profile as though you&rsquo;d proved it.
+        </p>
       </div>
+
       <div className="mt-4 flex gap-2">
-        <Button type="button" variant="accent" size="sm" onClick={() => onPublish(caps)} disabled={caps.length === 0}>
+        <Button
+          type="button"
+          variant="accent"
+          size="sm"
+          onClick={() => onPublish(caps, { description, whatIBuilt, outcome })}
+          disabled={caps.length === 0 || !description.trim()}
+        >
           Publish to profile
         </Button>
         <Button type="button" variant="ghost" size="sm" onClick={onDiscard}>
@@ -699,6 +782,30 @@ export function BackgroundStep({ draft, patch }: StepProps) {
         title="Your background."
         body="Useful context — but it sits behind your capabilities, not in front of them. Your title describes where you've been; your evidence describes what you can do."
       />
+
+      {/*
+        The long-form answer. Optional, capped, and explicitly not scored — someone who writes a
+        beautiful 500 words and no projects still has an empty capability graph, which is the
+        whole point. It exists because a human who is already interested wants context a list of
+        projects doesn't give.
+      */}
+      <Field label="Anything else, in your own words">
+        <Textarea
+          rows={6}
+          maxLength={3200}
+          placeholder="What you're looking for, what you're good at that's hard to evidence, what you'd rather never do again…"
+          value={draft.about ?? ""}
+          onChange={(e) => patch({ about: e.target.value })}
+        />
+        <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-2">
+          <p className="text-xs leading-relaxed text-ink-faint">
+            Optional, and it never affects your capability scores — only tagged work does that.
+          </p>
+          <p className="text-xs text-ink-faint">
+            {(draft.about ?? "").trim().split(/\s+/).filter(Boolean).length} / 500 words
+          </p>
+        </div>
+      </Field>
       {hasImport ? (
         <div className="space-y-5">
           {draft.importedExperience.length > 0 && (

@@ -28,6 +28,7 @@ interface CandidateRow {
   name: string;
   headline: string;
   short_description: string;
+  about: string | null;
   location: string;
   availability: string;
   avatar_initials: string;
@@ -38,7 +39,7 @@ interface CandidateRow {
 }
 
 const SELECT_CANDIDATE = `
-  SELECT id, slug, name, headline, short_description, location, availability,
+  SELECT id, slug, name, headline, short_description, about, location, availability,
          avatar_initials, accent_index, discoverability, comp_floor, location_constraint
     FROM candidate`;
 
@@ -193,6 +194,7 @@ function hydrateMany(rows: CandidateRow[]): CandidateProfile[] {
       name: row.name,
       headline: row.headline,
       shortDescription: row.short_description,
+      about: row.about ?? undefined,
       location: row.location,
       availability: row.availability as AvailabilityStatus,
       avatarInitials: row.avatar_initials,

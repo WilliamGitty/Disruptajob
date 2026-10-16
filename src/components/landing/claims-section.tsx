@@ -27,7 +27,7 @@ const WHAT_YOU_GET = [
 
 export function ClaimsSection() {
   return (
-    <section className="border-b border-ink/10 bg-paper-dim/60">
+    <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <div>

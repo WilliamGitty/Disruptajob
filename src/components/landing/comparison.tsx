@@ -6,7 +6,7 @@ const DISRUPTAJOB = ["Work", "Capabilities", "Evidence", "Match", "Conversation"
 
 export function Comparison() {
   return (
-    <section className="border-b border-ink/10 bg-paper-dim/60">
+    <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
         <div className="mb-14 max-w-2xl">
           <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">

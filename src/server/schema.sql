@@ -322,3 +322,17 @@ CREATE TABLE IF NOT EXISTS rate_attempt (
 );
 
 CREATE INDEX IF NOT EXISTS idx_rate_lookup ON rate_attempt(bucket, subject, created_at);
+
+-- Password resets.
+--
+-- Only a hash of the token is stored: the plain token goes in the link and nowhere else, so a
+-- leaked database cannot be used to take over accounts. Rows are single-use and short-lived.
+CREATE TABLE IF NOT EXISTS password_reset (
+  token_hash TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES account(id) ON DELETE CASCADE,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  used_at    TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_reset_account ON password_reset(account_id);

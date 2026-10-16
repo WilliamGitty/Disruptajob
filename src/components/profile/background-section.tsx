@@ -10,6 +10,19 @@ export function BackgroundSection({ candidate }: { candidate: CandidateProfile }
             <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
             Background
           </summary>
+          {/* Their own words, above the chronology. Context for someone already interested —
+              and explicitly marked as unscored, so it can't be mistaken for evidence. */}
+          {candidate.about && (
+            <div className="ml-6 mt-6 border-l-2 border-ink/10 pl-5">
+              <h4 className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-faint">
+                In their own words
+              </h4>
+              <p className="max-w-2xl whitespace-pre-line text-[15px] leading-relaxed text-ink-soft">
+                {candidate.about}
+              </p>
+            </div>
+          )}
+
           <div className="ml-6 mt-6 grid grid-cols-1 gap-10 sm:grid-cols-2">
             <div>
               <h4 className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-faint">Experience</h4>
