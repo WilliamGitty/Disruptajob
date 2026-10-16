@@ -31,14 +31,14 @@ export default function PrivacyPage() {
     >
       <Section id="who" heading="Who is responsible">
         <p>
-          Disruptajob is operated by <strong>[FULL LEGAL NAME]</strong>, a sole trader based in the
+          Disruptajob is operated by <strong>William Peter Sandford</strong>, a sole trader based in the
           United Kingdom, who is the data controller for the information described here. Under the
           ICO&rsquo;s own self-assessment this service is not yet required to pay the data
           protection fee; that will be revisited the moment trading begins. UK GDPR applies to us
           either way, and this policy is written against what the code actually does.
         </p>
         <p>
-          For anything in this policy, write to <strong>[CONTACT EMAIL]</strong>.
+          For anything in this policy, write to <strong>hello@disruptajob.com</strong>.
         </p>
       </Section>
 
@@ -215,7 +215,7 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          For anything else, write to <strong>[CONTACT EMAIL]</strong> and we&rsquo;ll respond
+          For anything else, write to <strong>hello@disruptajob.com</strong> and we&rsquo;ll respond
           within one month. If you think we&rsquo;ve handled your data badly you can complain to
           the{" "}
           <a

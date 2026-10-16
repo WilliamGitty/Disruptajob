@@ -34,7 +34,7 @@ export default function TermsPage() {
     >
       <Section id="agreement" heading="The agreement">
         <p>
-          These terms are between you and <strong>[FULL LEGAL NAME]</strong>, a sole trader based
+          These terms are between you and <strong>William Peter Sandford</strong>, a sole trader based
           in the United Kingdom. Using this site means accepting them. They&rsquo;re
           governed by the law of England and Wales.
         </p>
@@ -196,7 +196,7 @@ export default function TermsPage() {
 
       <Section id="contact" heading="Contact">
         <p>
-          <strong>[CONTACT EMAIL]</strong>
+          <strong>hello@disruptajob.com</strong>
         </p>
       </Section>
 
