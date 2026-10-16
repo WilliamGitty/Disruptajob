@@ -175,6 +175,17 @@ product invents when it has no real feedback to give. We have real feedback.
 
 ---
 
+### 5b. The zero-API-key seal, broken once, deliberately
+
+From the first commit this codebase ran with no external services at all — no ORM, no database
+host, no keys — so it could be handed to anyone and run anywhere. In October 2026 that seal was
+broken exactly once, for email (Resend), because opening sign-up to real people without password
+recovery and address verification would be irresponsible, and both require delivery. The terms of
+the breach: no SDK (the API is one `fetch`), everything degrades to a logged no-op when the key is
+absent so `npm ci && npm run dev` still works on a bare machine, and plain-text messages only — a
+product whose pitch is "nobody is watching you" does not send HTML with tracking pixels. Any
+further external service gets argued about here first.
+
 ## 6. Objectives and key results
 
 Deliberately leading indicators. Revenue is a lagging measure of whether the two below are true.

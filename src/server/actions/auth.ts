@@ -1,8 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { signIn, signOut, signUp } from "../auth";
+import { findAccountByEmail, signIn, signOut, signUp } from "../auth";
 import { SIGNUP_ENABLED } from "../config";
+import { createEmailVerification } from "../email-verification";
+import { sendEmail, verifyEmailEmail } from "../email";
 import { clearRateLimit, rateLimit, retryMessage } from "../rate-limit";
 import { callerKey } from "../request-identity";
 
@@ -67,6 +69,14 @@ export async function signUpAction(formData: FormData) {
 
   if (!result.ok) {
     redirect(`/signup?error=${encodeURIComponent(result.error)}&role=${role}`);
+  }
+
+  // Confirm the address works while it's fresh. Best-effort: a failed or undeliverable send
+  // must never block the account — verification gates nothing, it future-proofs recovery.
+  const created = findAccountByEmail(String(formData.get("email") ?? ""));
+  if (created) {
+    const token = createEmailVerification(created.id);
+    await sendEmail(verifyEmailEmail(created.email, token));
   }
 
   // Straight into the thing they came to do, rather than a dead-end "account created" screen.

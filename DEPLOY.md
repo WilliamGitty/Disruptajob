@@ -19,7 +19,8 @@ Fly.io is configured here. Railway, Render or any VPS would work the same way.
 | Domain — optional; `.fly.dev` is free and fine for a prototype | £0–11/year |
 | **Total year one** | **~£36**, or ~£47 with a domain |
 
-Nothing else is needed. Email, payments and OAuth only matter once real people use it.
+Email (Resend) adds £0 — the free tier (100 emails/day) is far beyond early needs. Payments and
+OAuth still only matter once real people use it.
 
 ### Why not £0
 
@@ -109,10 +110,30 @@ once all of these are true:
 
 - [ ] Privacy policy and terms published
 - [ ] Registered with the ICO as a data controller (~£52/year, legally required in the UK)
-- [ ] Email verification on sign-up (needs a mail provider — Resend's free tier covers this)
+- [ ] Email verification on sign-up — **built**; needs `RESEND_API_KEY` set (see Email below)
 - [ ] Rate limiting on sign-in and sign-up
 - [ ] GDPR data export and account deletion
 - [ ] `ALLOW_INDEXING=true` set, so search engines are explicitly invited rather than accidentally let in
+
+## Email (Resend)
+
+Password reset, sign-up verification and invite notifications are wired and send through Resend.
+Without a key everything still works — sends become stderr log lines — so this is only needed
+when real people should actually receive mail.
+
+1. Create an account at resend.com (free tier: 100 emails/day, 3,000/month).
+2. Create an API key (Sending access only) and set it:
+   ```
+   fly secrets set RESEND_API_KEY='re_...'
+   ```
+3. **Test mode:** that alone sends from `onboarding@resend.dev`, which Resend only delivers to
+   your own account email — enough to prove the loop end to end, useless for real users.
+4. **Real mode:** verify a domain you own in Resend (Domains → Add, add their DNS records), then:
+   ```
+   fly secrets set EMAIL_FROM='Disruptajob <hello@yourdomain.com>'
+   ```
+   This is the step that makes sign-up verification and password reset work for strangers — do it
+   before opening sign-up, or recovery emails to real users will silently not arrive.
 
 ## Backups
 
@@ -132,3 +153,6 @@ fly ssh console -C "cat /data/disruptajob.db" > backup-$(date +%F).db
 | `SITE_USER` | Username for the gate. Defaults to `preview`. |
 | `DEMO_ACCOUNT_PASSWORD` | Password for the seeded demo accounts. Leave unset locally. |
 | `ALLOW_INDEXING` | `"true"` lets search engines index the public pages. Anything else blocks all crawling. |
+| `RESEND_API_KEY` | Enables real email delivery. Unset, sends are logged to stderr and every flow still completes. |
+| `EMAIL_FROM` | Sender address, once a domain is verified in Resend. Defaults to Resend's test-only address. |
+| `APP_URL` | Where links in outbound email point. Set in `fly.toml`; defaults to localhost in dev. |

@@ -7,6 +7,7 @@ import { getCurrentAccount, requireCandidate, requireEmployer } from "../auth";
 import { isCandidateVisibleTo } from "../repositories/discovery";
 import { isFollowupChannel } from "@/lib/followup";
 import { getCompanyById } from "../repositories/companies";
+import { inviteAnsweredEmail, inviteReceivedEmail, sendEmail } from "../email";
 import type { PipelineStage } from "@/types";
 
 /**
@@ -247,6 +248,16 @@ export async function sendInvite(input: {
     );
   });
 
+  // After the commit, so a notification can never describe an invite that didn't save.
+  // Best-effort: sendEmail logs its own failures and never throws.
+  const recipient = get<{ email: string }>(
+    "SELECT email FROM account WHERE candidate_id = ?",
+    input.candidateId
+  );
+  if (recipient) {
+    await sendEmail(inviteReceivedEmail(recipient.email, company.name, input.roleTitle));
+  }
+
   revalidatePath("/employer/responses");
   revalidatePath("/employer/pipeline");
 }
@@ -269,8 +280,8 @@ export async function respondToInvite(
 ) {
   const { candidateId } = await requireCandidate();
 
-  const invite = get<{ company_id: string }>(
-    "SELECT company_id FROM invite WHERE id = ? AND candidate_id = ?",
+  const invite = get<{ company_id: string; role_title: string }>(
+    "SELECT company_id, role_title FROM invite WHERE id = ? AND candidate_id = ?",
     inviteId,
     candidateId
   );
@@ -311,6 +322,16 @@ export async function respondToInvite(
       );
     }
   });
+
+  // The employer hears the moment there's an answer — the candidate's identity and contact
+  // details still only flow through the accept path (repositories/handoff.ts), never this email.
+  const employer = get<{ email: string }>(
+    "SELECT email FROM account WHERE company_id = ?",
+    invite.company_id
+  );
+  if (employer) {
+    await sendEmail(inviteAnsweredEmail(employer.email, invite.role_title, decision));
+  }
 
   revalidatePath("/talent/opportunities");
   revalidatePath("/employer/responses");

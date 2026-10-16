@@ -114,10 +114,12 @@ the database is a file on disk, and Vercel's filesystem is ephemeral.
 
 This is a working prototype, not a production service. Honest list of what's missing:
 
-- **No email**, so no verification, no notifications, and **no password reset** — a forgotten
-  password currently locks someone out permanently. This is the largest functional gap: a candidate
-  is never told they have an invite, and an employer is never told it was accepted, so the two-sided
-  loop depends on people happening to log back in.
+- **Email works but needs a key.** Password reset, email verification at sign-up, and both
+  invite notifications (candidate: you have an invite; employer: it was answered) are built and
+  tested, delivered through Resend's API — the one external service this project talks to, a
+  decision recorded in `docs/strategy.md` §5b. With no `RESEND_API_KEY` set, sends degrade to a
+  logged no-op and every flow still completes; real delivery to strangers additionally needs a
+  verified sending domain in Resend (see DEPLOY.md).
 - **CV and LinkedIn import don't exist yet** and say so in the interface. GitHub import is real and
   needs no key.
 - **Not registered with the ICO.** A privacy policy and terms exist at `/privacy` and `/terms`,

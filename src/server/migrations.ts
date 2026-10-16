@@ -55,6 +55,16 @@ const MIGRATIONS: Migration[] = [
       addColumn(db, "candidate", "about", "TEXT");
     },
   },
+  {
+    // When (if ever) the account's email address was confirmed by clicking a link we sent to it.
+    // Nullable: accounts from before email existed, and the seeded demo accounts, have no value
+    // and nothing is gated on it — see email-verification.ts for what verification does and
+    // deliberately doesn't do.
+    id: "004-account-email-verified",
+    up: (db) => {
+      addColumn(db, "account", "email_verified_at", "TEXT");
+    },
+  },
 ];
 
 function appliedIds(db: DatabaseSync): Set<string> {

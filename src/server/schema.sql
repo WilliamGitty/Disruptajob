@@ -336,3 +336,11 @@ CREATE TABLE IF NOT EXISTS password_reset (
 );
 
 CREATE INDEX IF NOT EXISTS idx_reset_account ON password_reset(account_id);
+
+-- Email verification. Same design as password_reset, same reasons: hashed single-use tokens.
+CREATE TABLE IF NOT EXISTS email_verification (
+  token_hash TEXT PRIMARY KEY,
+  account_id TEXT NOT NULL REFERENCES account(id) ON DELETE CASCADE,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL
+);

@@ -20,9 +20,9 @@ export const dynamic = "force-dynamic";
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; reset?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, reset } = await searchParams;
   const accounts = listAccounts();
 
   return (
@@ -49,9 +49,19 @@ export default async function SignInPage({
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <div className="flex items-baseline justify-between">
+            <Label htmlFor="password">Password</Label>
+            <Link href="/forgot-password" className="text-xs text-ink-soft underline-grow">
+              Forgotten it?
+            </Link>
+          </div>
           <Input id="password" name="password" type="password" autoComplete="current-password" />
         </div>
+        {reset && (
+          <p className="border border-ink/15 bg-paper-dim px-3 py-2 text-sm text-ink-soft">
+            New password saved. Sign in with it below.
+          </p>
+        )}
         {error && (
           <p className="border border-accent/30 bg-accent-soft px-3 py-2 text-sm text-accent-dark">
             That email and password don&rsquo;t match an account.

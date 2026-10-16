@@ -31,6 +31,10 @@ export const LIMITS = {
   signUpByIp: { max: 5, windowMs: 60 * 60 * 1000 },
   /** The interest form, which is unauthenticated and therefore the easiest thing to spam. */
   interestByIp: { max: 10, windowMs: 60 * 60 * 1000 },
+  /** Reset requests cause email to be sent, so one machine can't use us as a spam cannon. */
+  resetByIp: { max: 10, windowMs: 60 * 60 * 1000 },
+  /** And one address can't be flooded with reset mail it never asked for. */
+  resetByEmail: { max: 3, windowMs: 60 * 60 * 1000 },
 } as const satisfies Record<string, Limit>;
 
 export type LimitName = keyof typeof LIMITS;

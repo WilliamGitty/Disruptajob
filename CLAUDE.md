@@ -46,9 +46,12 @@ the fresh install, the new account, the empty state, the phone.
 
 ## Architecture rules
 
-- **Zero runtime dependencies** beyond React, Next and Radix. No ORM, no database service, no API
-  keys. `npm ci && npm run dev` must work on any machine with Node 22. This constraint is why the
-  thing can be handed to anyone — protect it.
+- **Zero runtime dependencies** beyond React, Next and Radix. No ORM, no database service, and
+  one external API: email via Resend (`server/email.ts`, decision recorded in strategy §5b) —
+  called with `fetch`, no SDK, and every flow must survive the key being absent, because
+  `npm ci && npm run dev` must still work on any machine with Node 22 and no configuration.
+  This constraint is why the thing can be handed to anyone — protect it. Any new external
+  service needs the same argument email got, in writing, first.
 - **Privacy is enforced in SQL**, not in page code a call site could forget. See
   `repositories/discovery.ts`. If you add a read path for candidates, it goes through there.
 - **Trust boundaries are enforced by type.** CV and LinkedIn imports return `BackgroundImport`,
