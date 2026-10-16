@@ -44,7 +44,7 @@ export default async function SignInPage({
             type="email"
             required
             autoComplete="email"
-            placeholder="will@example.com"
+            placeholder="you@example.com"
           />
         </div>
         <div className="space-y-2">

@@ -55,7 +55,7 @@ export default async function ForgotPasswordPage({
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="will@example.com"
+                placeholder="you@example.com"
               />
             </div>
             {error && (
