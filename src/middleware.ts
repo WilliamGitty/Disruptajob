@@ -53,7 +53,11 @@ export function middleware(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
   if (host.startsWith("www.")) {
     const url = new URL(request.url);
+    // Behind Fly's proxy, request.url carries the internal port (3000) and plain http —
+    // rebuild the public address explicitly or the redirect leaks both.
+    url.protocol = "https:";
     url.host = host.slice(4);
+    url.port = "";
     return NextResponse.redirect(url, 301);
   }
 
