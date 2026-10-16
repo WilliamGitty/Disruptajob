@@ -47,7 +47,7 @@ the fresh install, the new account, the empty state, the phone.
 ## Architecture rules
 
 - **Zero runtime dependencies** beyond React, Next and Radix. No ORM, no database service, and
-  one external API: email via Resend (`server/email.ts`, decision recorded in strategy §5b) —
+  two external APIs: email via Resend (`server/email.ts`) and AI drafting via Claude (`server/ai.ts`), both argued into strategy §5b first —
   called with `fetch`, no SDK, and every flow must survive the key being absent, because
   `npm ci && npm run dev` must still work on any machine with Node 22 and no configuration.
   This constraint is why the thing can be handed to anyone — protect it. Any new external

@@ -178,3 +178,4 @@ fly ssh console -C "cat /data/disruptajob.db" > backup-$(date +%F).db
 | `RESEND_API_KEY` | Enables real email delivery. Unset, sends are logged to stderr and every flow still completes. |
 | `EMAIL_FROM` | Sender address, once a domain is verified in Resend. Defaults to Resend's test-only address. |
 | `APP_URL` | Where links in outbound email point. Set in `fly.toml`; defaults to localhost in dev. |
+| `ANTHROPIC_API_KEY` | Enables AI drafting of GitHub imports (Claude reads the README, drafts the write-up, suggests tags the human must tick). Unset, imports arrive as bare drafts — everything still works. |

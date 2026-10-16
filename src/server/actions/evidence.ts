@@ -136,3 +136,61 @@ export async function removeProject(projectId: string): Promise<void> {
   run("DELETE FROM project WHERE id = ? AND owner_id = ?", projectId, candidateId);
   revalidatePath("/profile/[slug]", "page");
 }
+
+export interface PublishDraftInput {
+  projectId: string;
+  description: string;
+  whatIBuilt?: string;
+  problem?: string;
+  outcome?: string;
+  /** The human's explicit ticks. AI suggestions that were never ticked never reach this array. */
+  capabilities: string[];
+}
+
+/**
+ * Turn a reviewed draft (typically a GitHub import) into published, scoring evidence.
+ *
+ * The gate every draft must pass: a human owner, editing the words, choosing at least one
+ * capability by hand. This is the moment "AI drafts, humans claim" becomes enforceable — and
+ * the owner check re-derives identity from the session, never from the payload.
+ */
+export async function publishDraftProject(
+  input: PublishDraftInput
+): Promise<{ ok: boolean; error?: string }> {
+  const account = await requireCandidate();
+
+  const row = get<{ id: string; status: string }>(
+    "SELECT id, status FROM project WHERE id = ? AND owner_id = ?",
+    input.projectId,
+    account.candidateId
+  );
+  if (!row) return { ok: false, error: "That draft isn't yours or no longer exists." };
+  if (row.status !== "draft") return { ok: false, error: "That project is already published." };
+
+  const capabilities = [...new Set(input.capabilities)].filter(Boolean);
+  if (capabilities.length === 0) {
+    return { ok: false, error: "Tag at least one capability this work actually proves — that's what makes it evidence." };
+  }
+  const description = clean(input.description, MAX_SHORT);
+  if (!description) {
+    return { ok: false, error: "Say what this is in a sentence — imports shouldn't publish unexplained." };
+  }
+
+  transaction(() => {
+    run(
+      `UPDATE project SET description = ?, what_i_built = ?, problem = ?, outcome = ?, status = 'published'
+        WHERE id = ?`,
+      description,
+      clean(input.whatIBuilt ?? "", MAX_LONG),
+      clean(input.problem ?? "", MAX_LONG),
+      clean(input.outcome ?? "", MAX_SHORT),
+      row.id
+    );
+    for (const tag of capabilities) {
+      run("INSERT OR IGNORE INTO project_capability (project_id, tag) VALUES (?,?)", row.id, tag);
+    }
+  });
+
+  revalidatePath("/profile/[slug]", "page");
+  return { ok: true };
+}

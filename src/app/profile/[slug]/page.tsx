@@ -11,6 +11,7 @@ import {
 } from "@/server/repositories/projects";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ShareProfileBar } from "@/components/profile/share-profile-bar";
+import { GitHubImportPanel } from "@/components/profile/github-import-panel";
 import { FeaturedWorkSection } from "@/components/profile/featured-work-section";
 import { CapabilitiesSection } from "@/components/profile/capabilities-section";
 import { BackgroundSection } from "@/components/profile/background-section";
@@ -100,6 +101,9 @@ export default async function ProfilePage({
         />
       )}
       {isOwnProfile && <EvidenceNudge candidate={candidate} />}
+      {isOwnProfile && (
+        <GitHubImportPanel drafts={projects.filter((p) => p.status === "draft")} />
+      )}
       <ProfileHeader candidate={candidate} isOwnProfile={isOwnProfile} />
       <FeaturedWorkSection
         candidate={candidate}

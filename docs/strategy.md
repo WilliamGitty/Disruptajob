@@ -186,6 +186,16 @@ absent so `npm ci && npm run dev` still works on a bare machine, and plain-text 
 product whose pitch is "nobody is watching you" does not send HTML with tracking pixels. Any
 further external service gets argued about here first.
 
+The second break came later the same month, also argued here first: Claude, for drafting.
+The founder asked for AI layers; the constraint that survived the argument is **AI drafts,
+humans claim, evidence scores**. The model reads a GitHub README and proposes a write-up and
+up to three capability tags from the fixed taxonomy; the person edits the words and the tags
+render unchecked — a suggestion that is never ticked never existed, because a pre-ticked box
+clicked past is a declared capability in disguise (the hypothesis step died for this). Matching
+itself stays deterministic and explainable on purpose: an employer asking "why this person?"
+gets pointed at actual work, and an opaque ranking model would trade that answer for a score
+nobody can defend. Same degradation rule as email: no key, no behaviour change.
+
 ## 6. Objectives and key results
 
 Deliberately leading indicators. Revenue is a lagging measure of whether the two below are true.

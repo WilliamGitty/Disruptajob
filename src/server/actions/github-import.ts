@@ -112,3 +112,133 @@ export async function importGitHubRepos(rawUsername: string): Promise<GitHubImpo
 
   return { ok: true, projects, skipped };
 }
+
+// --- Profile-side import (the feature's home since onboarding became four questions) ---------
+
+export interface ProfileImportResult {
+  ok: boolean;
+  error?: string;
+  imported?: number;
+  skipped?: number;
+  /** AI-suggested tags per created draft id — rendered UNCHECKED, never written to the DB. */
+  suggestions?: Record<string, string[]>;
+  aiEnriched?: number;
+}
+
+/** How many imported repos get the AI treatment per run — bounded for cost and rate limits. */
+const ENRICH_LIMIT = 6;
+
+/**
+ * Import repos as DB draft projects on the signed-in candidate's profile and, when an
+ * ANTHROPIC_API_KEY is configured, draft each write-up from the repo's README.
+ *
+ * Boundaries, restated because they're the product:
+ *  - Drafts only. Nothing here publishes, nothing here scores.
+ *  - `project_capability` is untouched. AI tag suggestions travel in the RETURN VALUE to be
+ *    shown unchecked; if the page is never submitted they never existed.
+ *  - No key, or any AI failure → the import still lands, as bare drafts. Same for READMEs
+ *    GitHub won't give us.
+ */
+export async function importGitHubToProfile(rawUsername: string): Promise<ProfileImportResult> {
+  const { requireCandidate } = await import("../auth");
+  const { get, run } = await import("../db");
+  const { draftProjectFromReadme } = await import("../ai");
+  const { randomUUID } = await import("node:crypto");
+
+  const account = await requireCandidate();
+  const fetched = await importGitHubRepos(rawUsername);
+  if (!fetched.ok) return { ok: false, error: fetched.error };
+
+  const username = rawUsername.trim().replace(/^@/, "").replace(/^https?:\/\/github\.com\//, "").replace(/\/$/, "");
+  const now = new Date().toISOString();
+  const suggestions: Record<string, string[]> = {};
+  let imported = 0;
+  let aiEnriched = 0;
+
+  for (const [i, p] of fetched.projects.entries()) {
+    // Re-importing shouldn't duplicate: one draft per repo slug per owner.
+    const exists = get<{ id: string }>(
+      "SELECT id FROM project WHERE owner_id = ? AND slug = ?",
+      account.candidateId,
+      p.slug
+    );
+    if (exists) continue;
+
+    let description = p.description;
+    let problem = "";
+    let whatIBuilt = "";
+    let outcome = "";
+
+    if (i < ENRICH_LIMIT) {
+      const readme = await fetchReadme(username, p.title);
+      if (readme) {
+        const draft = await draftProjectFromReadme(p.title, p.tools[0], readme);
+        if (draft) {
+          description = draft.description || description;
+          problem = draft.problem;
+          whatIBuilt = draft.whatIBuilt;
+          outcome = draft.outcome;
+          aiEnriched += 1;
+          if (draft.suggestedTags.length > 0) suggestions[`gh-${p.slug}`] = draft.suggestedTags;
+        }
+      }
+    }
+
+    const id = `proj-${randomUUID()}`;
+    run(
+      `INSERT INTO project (id, owner_id, slug, title, description, thumbnail_seed, outcome,
+                            problem, what_i_built, my_contribution, demo_url, status, source, created_at)
+       VALUES (?,?,?,?,?,?,?,?,?,'',?,'draft','github-import',?)`,
+      id,
+      account.candidateId,
+      p.slug,
+      p.title,
+      description,
+      p.slug,
+      outcome,
+      problem,
+      whatIBuilt,
+      p.demoUrl ?? null,
+      now
+    );
+    run(
+      "INSERT INTO evidence (id, project_id, type, label, url, sort_order) VALUES (?,?,?,?,?,0)",
+      `ev-${randomUUID()}`,
+      id,
+      "demo-link",
+      "Repository",
+      p.evidence[0]?.url ?? `https://github.com/${username}/${p.title}`
+    );
+    for (const tool of p.tools) {
+      run("INSERT OR IGNORE INTO project_tool (project_id, tool) VALUES (?,?)", id, tool);
+    }
+    // The suggestions key must match the draft the UI renders, so re-key by real id.
+    if (suggestions[`gh-${p.slug}`]) {
+      suggestions[id] = suggestions[`gh-${p.slug}`];
+      delete suggestions[`gh-${p.slug}`];
+    }
+    imported += 1;
+  }
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath("/profile/[slug]", "page");
+
+  if (imported === 0) {
+    return { ok: false, error: "Everything there is already on your profile as a draft or project." };
+  }
+  return { ok: true, imported, skipped: fetched.skipped, suggestions, aiEnriched };
+}
+
+async function fetchReadme(username: string, repo: string): Promise<string | null> {
+  try {
+    const res = await fetch(`${API}/repos/${username}/${encodeURIComponent(repo)}/readme`, {
+      headers: { Accept: "application/vnd.github.raw+json", "User-Agent": "disruptajob" },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    const text = await res.text();
+    return text.trim() ? text : null;
+  } catch {
+    return null;
+  }
+}
