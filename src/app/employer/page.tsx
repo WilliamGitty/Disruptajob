@@ -65,6 +65,36 @@ export default async function EmployerPage() {
         </div>
       </section>
 
+      <section className="border-b border-ink/10 bg-paper-dim">
+        <div className="mx-auto max-w-[900px] px-6 py-14 lg:px-10">
+          <div className="grid gap-10 sm:grid-cols-2">
+            <div>
+              <h2 className="font-serif-display text-2xl text-ink">See it before you sign up</h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
+                Every profile on the{" "}
+                <Link href="/people" className="text-ink underline-grow">
+                  public people page
+                </Link>{" "}
+                is real published work you can read right now, no account needed. An account is
+                for the part that has to be accountable: searching by capability and reaching
+                out happen as a named company, because candidates can block specific companies
+                and we check your name against those lists.
+              </p>
+            </div>
+            <div>
+              <h2 className="font-serif-display text-2xl text-ink">What it costs</h2>
+              <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
+                <strong className="text-ink">Free while we&rsquo;re in beta</strong> — search,
+                shortlist and contact without a card. When we charge, companies will pay (likely
+                per filled role or a flat subscription — we&rsquo;ll say plainly before anything
+                changes, and nothing is charged retroactively). Candidates never pay; that isn&rsquo;t
+                generosity, it&rsquo;s what keeps the supply side honest and here.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <RolesOverview />
     </main>
   );

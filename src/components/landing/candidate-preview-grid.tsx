@@ -27,7 +27,7 @@ export function CandidatePreviewGrid() {
               CV wasn&rsquo;t doing them justice.
             </p>
           </div>
-          <Link href="/employer" className="text-sm font-medium text-ink underline-grow">
+          <Link href="/people" className="text-sm font-medium text-ink underline-grow">
             Browse everyone &rarr;
           </Link>
         </Reveal>
