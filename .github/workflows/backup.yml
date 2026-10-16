@@ -24,15 +24,17 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       # VACUUM INTO produces a transactionally consistent copy even while the app is writing —
-      # copying the live file directly can capture a torn, mid-write state.
+      # copying the live file directly can capture a torn, mid-write state. Staged on /data, not
+      # /tmp: each fly ssh session gets a fresh /tmp, so a file written there is gone by sftp time
+      # (found the hard way, testing this against the live machine).
       - name: Snapshot the database on the machine
         run: |
-          flyctl ssh console -a disruptajob -C "node -e \"const{DatabaseSync}=require('node:sqlite');const fs=require('node:fs');try{fs.unlinkSync('/tmp/backup.db')}catch{};new DatabaseSync('/data/disruptajob.db',{readOnly:true}).exec(\\\"VACUUM INTO '/tmp/backup.db'\\\")\""
+          flyctl ssh console -a disruptajob -C "node -e \"const{DatabaseSync}=require('node:sqlite');const fs=require('node:fs');try{fs.unlinkSync('/data/backup-tmp.db')}catch{};new DatabaseSync('/data/disruptajob.db',{readOnly:true}).exec(\\\"VACUUM INTO '/data/backup-tmp.db'\\\")\""
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Fetch the snapshot
-        run: flyctl ssh sftp get /tmp/backup.db backup.db -a disruptajob
+        run: flyctl ssh sftp get /data/backup-tmp.db -a disruptajob && mv backup-tmp.db backup.db
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
@@ -62,6 +64,6 @@ jobs:
 
       - name: Clean up on the machine
         if: always()
-        run: flyctl ssh console -a disruptajob -C "rm -f /tmp/backup.db" || true
+        run: flyctl ssh console -a disruptajob -C "rm -f /data/backup-tmp.db" || true
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
