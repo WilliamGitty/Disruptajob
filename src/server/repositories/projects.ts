@@ -88,6 +88,22 @@ export function listPublishedProjects(candidateId: string): Project[] {
   return listProjectsForCandidate(candidateId).filter((p) => p.status !== "draft");
 }
 
+/** Published projects across the whole platform — an aggregate for honest landing stats. */
+export function countPublishedProjects(): number {
+  return get<{ n: number }>("SELECT COUNT(*) AS n FROM project WHERE status = 'published'")?.n ?? 0;
+}
+
+/** Evidence artefacts attached to published projects, platform-wide. */
+export function countEvidence(): number {
+  return (
+    get<{ n: number }>(
+      `SELECT COUNT(*) AS n FROM evidence e
+        JOIN project p ON p.id = e.project_id
+       WHERE p.status = 'published'`
+    )?.n ?? 0
+  );
+}
+
 export function getProjectById(id: string): Project | undefined {
   const row = get<ProjectRow>(`${SELECT_PROJECT} WHERE id = ?`, id);
   return row ? hydrate(row) : undefined;

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Minus } from "lucide-react";
-import { PROJECTS } from "@/lib/mock-data";
 import { getCandidateById } from "@/server/repositories/candidates";
 import { capabilitiesForRole, getCompanyById, getRoleById } from "@/server/repositories/companies";
 import { pipelineCandidateIds } from "@/server/repositories/pipeline";
+import { getProjectById } from "@/server/repositories/projects";
 import { matchCandidatesForRole } from "@/server/matching";
 import { assessMutualFit } from "@/lib/role-matching";
 import { capabilityLabel } from "@/lib/capabilities";
@@ -108,8 +108,11 @@ export default async function RoleMatchesPage({ params }: { params: Promise<{ id
               const candidate = getCandidateById(match.candidateId);
               if (!candidate) return null;
               const mutual = assessMutualFit(role.terms, candidate);
+              // From the database, not the demo module (audit D1) — with the old lookup a real
+              // candidate's supporting work silently vanished on the page where an employer
+              // decides whether to reach out.
               const projects = match.supportingProjectIds
-                .map((pid) => PROJECTS.find((p) => p.id === pid))
+                .map((pid) => getProjectById(pid))
                 .filter((p): p is NonNullable<typeof p> => Boolean(p))
                 .slice(0, 3);
 

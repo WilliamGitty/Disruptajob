@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { PROJECTS } from "@/lib/mock-data";
 import { listCandidates } from "@/server/repositories/candidates";
+import { countEvidence, countPublishedProjects } from "@/server/repositories/projects";
 import { capabilitiesForRole, getOpenRolesForCompany } from "@/server/repositories/companies";
 import { matchCandidatesForRole } from "@/server/matching";
 import { getCurrentAccount } from "@/server/auth";
@@ -11,8 +11,11 @@ import type { Role } from "@/types";
 export const dynamic = "force-dynamic";
 
 export default async function EmployerPage() {
-  const evidenceCount = PROJECTS.reduce((sum, p) => sum + p.evidence.length, 0);
+  // Real numbers from the database (audit D1): the previous ones were computed from the demo
+  // fixtures module, so they would have stayed frozen while real people joined.
   const candidateCount = listCandidates().length;
+  const projectCount = countPublishedProjects();
+  const evidenceCount = countEvidence();
 
   return (
     <main>
@@ -36,7 +39,7 @@ export default async function EmployerPage() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-ink-faint">
             <span>{candidateCount} people on the platform</span>
             <span className="h-1 w-1 rounded-full bg-ink-faint/50" />
-            <span>{PROJECTS.length} documented projects</span>
+            <span>{projectCount} documented projects</span>
             <span className="h-1 w-1 rounded-full bg-ink-faint/50" />
             <span>{evidenceCount} pieces of evidence</span>
           </div>

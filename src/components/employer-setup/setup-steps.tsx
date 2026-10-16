@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Check, Globe } from "lucide-react";
+import { Check, Globe, Loader2 } from "lucide-react";
 import type { CompanySetupDraft, CompanyStage, WorkArrangement, WorkExample } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +13,8 @@ import { WorkExampleEditor } from "@/components/employer-setup/work-example-edit
 import { JobDescriptionDrop } from "@/components/employer-setup/job-description-drop";
 import type { JobDescriptionDraft } from "@/lib/job-description";
 import { companyNameFromDomain } from "@/lib/company-imports";
-import { matchCandidatesForCapabilities } from "@/lib/role-matching";
+import { previewMatchCount, type MatchPreview } from "@/server/actions/match-preview";
 import { capabilityLabel } from "@/lib/capabilities";
-import { CANDIDATES } from "@/lib/mock-data";
-import { InitialsMark } from "@/components/ui/initials-mark";
 import { cn } from "@/lib/utils";
 
 export interface StepProps {
@@ -359,14 +358,38 @@ export function TermsStep({ setup, patch }: StepProps) {
 
 export function ReviewStep({ setup }: StepProps) {
   const required = [...new Set(setup.workExamples.flatMap((w) => w.capabilities))];
-  const matches = matchCandidatesForCapabilities(required).slice(0, 4);
+
+  /*
+   * Real numbers or nothing (audit D1). This step used to render four invented people from the
+   * demo dataset as "who already has evidence for this" — at the exact moment a real company
+   * decides whether to publish. Now it fetches the actual aggregate: identities stay behind the
+   * signed-in gate and appear on the role page after publishing.
+   */
+  // The fetched count is stored WITH the capability set it answered, and rendered only while
+  // that set is still current — no state resets in effects, no stale number for a changed set.
+  const [fetched, setFetched] = useState<{ key: string; data: MatchPreview } | null>(null);
+  const requiredKey = required.join("|");
+  const preview = fetched && fetched.key === requiredKey ? fetched.data : null;
+
+  useEffect(() => {
+    if (!requiredKey) return;
+    let cancelled = false;
+    previewMatchCount(requiredKey.split("|"), setup.name).then((data) => {
+      if (!cancelled) setFetched({ key: requiredKey, data });
+    });
+    return () => {
+      cancelled = true;
+    };
+    // setup.name changes shouldn't refire a count mid-typing; the capabilities are the signal.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requiredKey]);
 
   return (
     <div className="space-y-8">
       <StepIntro
         eyebrow="Before you publish"
-        title="Here's who already has evidence for this."
-        body="Matched on the capabilities your work actually demands — not a keyword search of CVs. Every one of these people has projects backing it up."
+        title="Who you'll be matched against."
+        body="Matching is a set overlap between the capabilities your work demands and the evidence people have published — not a keyword search of CVs."
       />
 
       {required.length === 0 ? (
@@ -386,50 +409,41 @@ export function ReviewStep({ setup }: StepProps) {
             ))}
           </div>
 
-          {matches.length === 0 ? (
-            <p className="text-sm text-ink-soft">
-              Nobody discoverable matches this combination yet.
+          {preview === null ? (
+            <p className="flex items-center gap-2 text-sm text-ink-faint">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" /> Counting real matches…
             </p>
+          ) : preview.matching > 0 ? (
+            <div className="border border-evidence/30 bg-evidence-soft/40 p-6">
+              <p className="font-serif-display text-2xl text-ink">
+                {preview.matching} {preview.matching === 1 ? "person" : "people"} here already{" "}
+                {preview.matching === 1 ? "has" : "have"} evidence for this work.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                Out of {preview.discoverable} discoverable {preview.discoverable === 1 ? "profile" : "profiles"}
+                {preview.total > preview.discoverable
+                  ? ` (${preview.total - preview.discoverable} more are keeping themselves hidden)`
+                  : ""}
+                . Publish, and you&rsquo;ll see them ranked with the actual projects behind each score.
+              </p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 sm:grid-cols-2">
-              {matches.map((m) => {
-                const candidate = CANDIDATES.find((c) => c.id === m.candidateId);
-                if (!candidate) return null;
-                return (
-                  <div key={m.candidateId} className="bg-paper p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex gap-3">
-                        <InitialsMark
-                          initials={candidate.avatarInitials}
-                          index={candidate.accentIndex}
-                        />
-                        <div>
-                          <p className="font-serif-display text-base text-ink">{candidate.name}</p>
-                          <p className="text-xs text-ink-faint">{candidate.location}</p>
-                        </div>
-                      </div>
-                      <span className="shrink-0 border border-accent/30 bg-accent-soft px-2 py-1 text-xs font-medium text-accent-dark">
-                        {m.fitScore}%
-                      </span>
-                    </div>
-                    <p className="mt-3 text-xs text-ink-soft">
-                      Evidence for {m.matchedCapabilities.length} of {required.length} —{" "}
-                      {m.matchedCapabilities.slice(0, 2).map(capabilityLabel).join(", ")}
-                      {m.matchedCapabilities.length > 2 ? "…" : ""}
-                    </p>
-                  </div>
-                );
-              })}
+            <div className="border border-ink/15 bg-paper-dim/50 p-6">
+              <p className="font-serif-display text-xl text-ink">
+                Nobody here has evidenced this combination yet — you&rsquo;d be early.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                We&rsquo;re new and we won&rsquo;t pretend otherwise: {preview.discoverable}{" "}
+                discoverable {preview.discoverable === 1 ? "profile is" : "profiles are"} on the
+                platform today. Publishing costs nothing, your role is matched against every new
+                profile as it arrives, and early roles are what tell candidates which evidence is
+                worth writing up.
+              </p>
             </div>
           )}
 
           <p className="text-sm text-ink-soft">
-            Publish and you can open any of these, see the actual projects behind the score, and
-            start a conversation.{" "}
-            <Link href="/employer" className="text-ink underline-grow">
-              Or search more broadly
-            </Link>
-            .
+            Publish to see the ranked people and the work behind their scores.
           </p>
         </>
       )}

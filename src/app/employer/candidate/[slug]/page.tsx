@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Minus } from "lucide-react";
-import { PROJECTS } from "@/lib/mock-data";
 import { getCandidateBySlug } from "@/server/repositories/candidates";
 import { matchCandidate } from "@/lib/search";
+import { getProjectById } from "@/server/repositories/projects";
 import { CompanyGate } from "@/components/employer/company-gate";
 import { isCandidateVisibleTo } from "@/server/repositories/discovery";
 import { pipelineCandidateIds } from "@/server/repositories/pipeline";
@@ -128,7 +128,7 @@ export default async function CandidateMatchPage({
           <div className="space-y-4">
             {match.matchedRequirements.map((req) => {
               const projects = req.evidenceProjectIds
-                .map((id) => PROJECTS.find((p) => p.id === id))
+                .map((id) => getProjectById(id))
                 .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
               return (
