@@ -590,8 +590,9 @@ function PayoffView({
       </div>
       <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
         Your page is live — and <strong className="text-ink">hidden</strong>. No employer can see
-        it until you decide they can. Every project you add from here makes the picture harder to
-        argue with.
+        it until you decide they can. Even hidden, it&rsquo;s already useful: it&rsquo;s a link
+        you can put in applications and on LinkedIn the moment you open it up — evidence where
+        everyone else attaches a PDF.
       </p>
       {signedUpFresh && (
         <p className="mt-3 text-sm text-ink-faint">

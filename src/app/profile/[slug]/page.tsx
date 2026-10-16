@@ -10,6 +10,7 @@ import {
   listPublishedProjects,
 } from "@/server/repositories/projects";
 import { ProfileHeader } from "@/components/profile/profile-header";
+import { ShareProfileBar } from "@/components/profile/share-profile-bar";
 import { FeaturedWorkSection } from "@/components/profile/featured-work-section";
 import { CapabilitiesSection } from "@/components/profile/capabilities-section";
 import { BackgroundSection } from "@/components/profile/background-section";
@@ -92,6 +93,12 @@ export default async function ProfilePage({
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       {/* The nudge is for your own profile only — nobody needs prompting about someone else's. */}
+      {isOwnProfile && (
+        <ShareProfileBar
+          slug={candidate.slug}
+          hidden={(candidate.discoverability ?? "hidden") === "hidden"}
+        />
+      )}
       {isOwnProfile && <EvidenceNudge candidate={candidate} />}
       <ProfileHeader candidate={candidate} isOwnProfile={isOwnProfile} />
       <FeaturedWorkSection

@@ -28,8 +28,10 @@ export function Hero() {
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
             You run the ops, build the automations and own half of product. Your CV has room for
             one line of that. If you&rsquo;ve sent two hundred applications and heard back from
-            four, the problem isn&rsquo;t you — it&rsquo;s the format. Here you show the work
-            instead.
+            four, the problem isn&rsquo;t you — it&rsquo;s the format. Build your evidence here
+            and it&rsquo;s a link you can use everywhere today — in applications, on LinkedIn,
+            under your email signature. Companies searching this place and finding you is the
+            upside, not the ask.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -52,7 +54,7 @@ export function Hero() {
               Hidden until you say otherwise
             </Reassurance>
             <Reassurance icon={<Clock className="h-3.5 w-3.5" />}>
-              Start with one project, about 10 minutes
+              One piece of work, about 10 minutes
             </Reassurance>
           </ul>
         </div>
