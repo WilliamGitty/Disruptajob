@@ -31,10 +31,11 @@ export default function PrivacyPage() {
     >
       <Section id="who" heading="Who is responsible">
         <p>
-          Disruptajob is operated by <strong>[LEGAL ENTITY NAME]</strong>, registered in England and
-          Wales (company number <strong>[NUMBER]</strong>), at <strong>[REGISTERED ADDRESS]</strong>.
-          We are the data controller for the information described here, registered with the
-          Information Commissioner&rsquo;s Office under <strong>[ICO REGISTRATION NUMBER]</strong>.
+          Disruptajob is operated by <strong>[FULL LEGAL NAME]</strong>, a sole trader based in the
+          United Kingdom, who is the data controller for the information described here. Under the
+          ICO&rsquo;s own self-assessment this service is not yet required to pay the data
+          protection fee; that will be revisited the moment trading begins. UK GDPR applies to us
+          either way, and this policy is written against what the code actually does.
         </p>
         <p>
           For anything in this policy, write to <strong>[CONTACT EMAIL]</strong>.

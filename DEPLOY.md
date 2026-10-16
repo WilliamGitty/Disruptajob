@@ -109,7 +109,10 @@ The access gate exists because the site isn't ready to be open yet. Remove `SITE
 once all of these are true:
 
 - [ ] Privacy policy and terms published
-- [ ] Registered with the ICO as a data controller (~£52/year, legally required in the UK)
+- [x] ICO position settled — their self-assessment (run 16 Oct 2026, answer: not yet trading)
+      says no fee is due pre-trading. **Retake it the week commercial activity starts**; the fee
+      is then ~£52/year. Fee-exempt is not law-exempt: UK GDPR applies regardless, which is what
+      the privacy policy, export, deletion and retention code are for.
 - [ ] Email verification on sign-up — **built**; needs `RESEND_API_KEY` set (see Email below)
 - [ ] Rate limiting on sign-in and sign-up
 - [ ] GDPR data export and account deletion

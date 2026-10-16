@@ -34,9 +34,8 @@ export default function TermsPage() {
     >
       <Section id="agreement" heading="The agreement">
         <p>
-          These terms are between you and <strong>[LEGAL ENTITY NAME]</strong>, registered in
-          England and Wales (company number <strong>[NUMBER]</strong>), at{" "}
-          <strong>[REGISTERED ADDRESS]</strong>. Using this site means accepting them. They&rsquo;re
+          These terms are between you and <strong>[FULL LEGAL NAME]</strong>, a sole trader based
+          in the United Kingdom. Using this site means accepting them. They&rsquo;re
           governed by the law of England and Wales.
         </p>
         <p>
@@ -170,7 +169,7 @@ export default function TermsPage() {
           Beyond that, we are not liable for indirect or consequential loss, or for lost
           opportunities, profits or data. Where liability cannot be excluded, it is limited to the
           greater of the amount you paid us in the twelve months before the claim, or{" "}
-          <strong>[AMOUNT]</strong>. Candidates pay nothing, so for a candidate this is the stated
+          <strong>£100</strong>. Candidates pay nothing, so for a candidate this is the stated
           amount.
         </p>
       </Section>
