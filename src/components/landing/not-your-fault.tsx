@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/landing/reveal";
 import {
   IdenticalOnPaper,
   SentIntoSilence,
@@ -35,7 +36,7 @@ export function NotYourFault() {
   return (
     <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
-        <div className="mb-14 max-w-2xl">
+        <Reveal className="mb-14 max-w-2xl">
           <p className="mb-5 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             If the search has been long
           </p>
@@ -46,9 +47,13 @@ export function NotYourFault() {
             Months of silence will make anyone think they&rsquo;re the problem. Usually the
             problem is that hiring reads a summary of you instead of the work itself.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 sm:grid-cols-3">
+        <Reveal
+          className="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 sm:grid-cols-3"
+          stagger
+          delay={120}
+        >
           {REALITIES.map(({ heading, body, Mark }) => (
             <div key={heading} className="flex flex-col bg-paper p-8">
               <Mark className="mb-6 h-20 w-full" />
@@ -56,7 +61,7 @@ export function NotYourFault() {
               <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{body}</p>
             </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

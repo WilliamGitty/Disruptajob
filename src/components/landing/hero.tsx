@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Eye, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TitleVsWork } from "@/components/illustrations/title-vs-work";
+import { Reveal } from "@/components/landing/reveal";
 
 /**
  * Two doors, candidate first.
@@ -59,7 +60,10 @@ export function Hero() {
         {/* The thesis, drawn — someone should understand this company before reading a word. */}
         <div className="relative hidden lg:block">
           <div className="absolute -inset-4 border border-ink/10" />
-          <TitleVsWork className="h-full w-full" />
+          {/* The argument assembles in the order it's made: the small box, then what it hides. */}
+          <Reveal className="h-full w-full" stagger="svg > g, svg > text" delay={200}>
+            <TitleVsWork className="h-full w-full" />
+          </Reveal>
           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between border border-ink/10 bg-paper/95 px-4 py-3 text-xs">
             <span className="text-ink-faint">One line on a CV</span>
             <span className="font-medium text-ink">Six months of real work</span>

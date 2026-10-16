@@ -3,6 +3,7 @@ import { ArrowUpRight, Check } from "lucide-react";
 import { listDiscoverableCandidates } from "@/server/repositories/discovery";
 import { listPublishedProjects } from "@/server/repositories/projects";
 import { InitialsMark } from "@/components/ui/initials-mark";
+import { Reveal } from "@/components/landing/reveal";
 
 /**
  * The mechanism, shown rather than described.
@@ -38,7 +39,7 @@ export function ProofAboveFold() {
     <section className="border-b border-ink/10 bg-paper-dim/60">
       <div className="mx-auto max-w-[1400px] px-6 py-16 lg:px-10 lg:py-20">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <div>
+          <Reveal>
             <p className="mb-5 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
               What a profile looks like
             </p>
@@ -57,9 +58,9 @@ export function ProofAboveFold() {
               See the whole profile
               <ArrowUpRight className="h-4 w-4" />
             </Link>
-          </div>
+          </Reveal>
 
-          <div className="border border-ink/15 bg-paper">
+          <Reveal className="border border-ink/15 bg-paper" delay={180}>
             <div className="flex items-start gap-4 border-b border-ink/10 p-6">
               <InitialsMark initials={candidate.avatarInitials} index={candidate.accentIndex} />
               <div className="min-w-0">
@@ -107,7 +108,7 @@ export function ProofAboveFold() {
                 ))}
               </ul>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

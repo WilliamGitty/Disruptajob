@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { listDiscoverableCandidates } from "@/server/repositories/discovery";
 import { InitialsMark } from "@/components/ui/initials-mark";
 import { StrengthBar } from "@/components/ui/strength-bar";
+import { Reveal } from "@/components/landing/reveal";
 
 export function CandidatePreviewGrid() {
   // A public page, so only people who have opted into being discoverable appear here. Passing an
@@ -12,7 +13,7 @@ export function CandidatePreviewGrid() {
   return (
     <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
-        <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+        <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-xl">
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
               People already here
@@ -28,9 +29,13 @@ export function CandidatePreviewGrid() {
           <Link href="/employer" className="text-sm font-medium text-ink underline-grow">
             Browse everyone &rarr;
           </Link>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal
+          className="grid grid-cols-1 gap-px border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4"
+          stagger
+          delay={100}
+        >
           {candidates.map((c) => (
             <Link
               key={c.slug}
@@ -60,7 +65,7 @@ export function CandidatePreviewGrid() {
               </div>
             </Link>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -101,9 +101,48 @@ body {
   width: 100%;
 }
 
+/*
+ * Scroll reveals — see components/landing/reveal.tsx for the why.
+ *
+ * A plain block hides and rises as one; a block marked data-reveal-stagger stays visible itself
+ * while its chosen children arrive in sequence, each delayed by its index. SVG children take CSS
+ * transforms too, which is what lets a hand-drawn illustration assemble piece by piece.
+ */
+[data-reveal="pending"]:not([data-reveal-stagger]) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+[data-reveal="in"]:not([data-reveal-stagger]) {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal="pending"] [data-ri] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+[data-reveal="in"] [data-ri] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: calc(var(--ri, 0) * 90ms + var(--reveal-delay, 0ms));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {
     animation: none;
+  }
+  [data-reveal],
+  [data-ri] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 

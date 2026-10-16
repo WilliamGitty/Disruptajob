@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/landing/reveal";
 
 /**
  * The employer door.
@@ -30,7 +31,7 @@ export function ClaimsSection() {
     <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
-          <div>
+          <Reveal>
             <p className="mb-5 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
               If you&rsquo;re hiring
             </p>
@@ -51,16 +52,20 @@ export function ClaimsSection() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 gap-px self-start border border-ink/10 bg-ink/10">
+          <Reveal
+            className="grid grid-cols-1 gap-px self-start border border-ink/10 bg-ink/10"
+            stagger
+            delay={150}
+          >
             {WHAT_YOU_GET.map((item) => (
               <div key={item.heading} className="bg-paper p-7">
                 <h3 className="font-serif-display text-lg text-ink">{item.heading}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{item.body}</p>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

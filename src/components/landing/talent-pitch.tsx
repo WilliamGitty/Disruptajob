@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/landing/reveal";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,7 @@ export function TalentPitch() {
   return (
     <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
-        <div className="mb-14 max-w-2xl">
+        <Reveal className="mb-14 max-w-2xl">
           <p className="mb-5 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             How it works for you
           </p>
@@ -51,9 +52,10 @@ export function TalentPitch() {
             You don&rsquo;t write anything here to impress anyone. You show something you
             actually did, and companies come to you because of it.
           </p>
-        </div>
+        </Reveal>
 
-        <ol className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:gap-14">
+        <Reveal stagger=":scope > ol > li" delay={120}>
+          <ol className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:gap-14">
           {STEPS.map(({ n, heading, body, Mark }) => (
             <li key={n}>
               <Mark className="mb-5 h-16 w-full" />
@@ -63,8 +65,9 @@ export function TalentPitch() {
             </li>
           ))}
         </ol>
+        </Reveal>
 
-        <div className="mt-14 flex flex-wrap items-center gap-5">
+        <Reveal className="mt-14 flex flex-wrap items-center gap-5" delay={200}>
           <Button asChild size="lg" variant="accent">
             <Link href="/talent/onboarding">
               Start with one project
@@ -74,7 +77,7 @@ export function TalentPitch() {
           <p className="text-sm text-ink-soft">
             Free forever. Leave halfway and your progress will be waiting.
           </p>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

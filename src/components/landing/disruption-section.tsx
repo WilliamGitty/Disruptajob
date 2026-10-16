@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/landing/reveal";
+
 const PRECEDENTS = [
   { n: "01", text: "Indeed improved the job board." },
   { n: "02", text: "LinkedIn digitised the professional profile." },
@@ -10,7 +12,7 @@ export function DisruptionSection() {
         <p className="mb-10 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
           The shift
         </p>
-        <div className="space-y-7">
+        <Reveal className="space-y-7" stagger delay={80}>
           {PRECEDENTS.map((step) => (
             <div key={step.n} className="flex items-baseline gap-6 border-b border-ink/10 pb-7">
               <span className="font-serif-display text-sm text-ink-faint">{step.n}</span>
@@ -24,7 +26,7 @@ export function DisruptionSection() {
               seriously.
             </p>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

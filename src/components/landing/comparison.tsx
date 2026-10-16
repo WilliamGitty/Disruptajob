@@ -1,5 +1,6 @@
 import { ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/landing/reveal";
 
 const TRADITIONAL = ["Job title", "CV", "Keywords", "Application", "Screening"];
 const DISRUPTAJOB = ["Work", "Capabilities", "Evidence", "Match", "Conversation"];
@@ -8,7 +9,7 @@ export function Comparison() {
   return (
     <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 py-20 lg:px-10 lg:py-28">
-        <div className="mb-14 max-w-2xl">
+        <Reveal className="mb-14 max-w-2xl">
           <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             Two different routes
           </p>
@@ -19,12 +20,12 @@ export function Comparison() {
             One route judges a document about you. The other starts from something you actually
             made.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
+        <Reveal className="grid grid-cols-1 gap-10 sm:grid-cols-2" stagger delay={120}>
           <Flow heading="The usual route" items={TRADITIONAL} />
           <Flow heading="Here" items={DISRUPTAJOB} accent />
-        </div>
+        </Reveal>
       </div>
     </section>
   );
