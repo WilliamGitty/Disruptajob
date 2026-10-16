@@ -159,11 +159,28 @@ when real people should actually receive mail.
 
 ## Backups
 
-The database is one file on the volume. Fly snapshots volumes daily by default, but take your own
-before anything risky:
+Three layers, because on 16 Oct 2026 the machine's host went down before the volume's first
+daily snapshot existed:
+
+1. **Nightly off-site** — `.github/workflows/backup.yml` pulls a consistent copy (VACUUM INTO)
+   every night, encrypts it (AES-256, passphrase in the repo secret `BACKUP_PASSPHRASE` and the
+   founder's password manager), and stores it as a GitHub Actions artifact for 30 days. Run it
+   on demand from the Actions tab before anything risky.
+2. **Fly volume snapshots** — daily, automatic, kept 5 days.
+3. **Manual**, any time:
 ```
 fly ssh console -C "cat /data/disruptajob.db" > backup-$(date +%F).db
 ```
+
+**Restore from a nightly backup:** download the artifact from the Actions run, then:
+```
+openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in disruptajob-YYYY-MM-DD.db.enc -out restored.db -pass pass:THE_PASSPHRASE
+fly ssh sftp put restored.db /data/disruptajob.db -a disruptajob
+fly machine restart <machine-id> -a disruptajob
+```
+Without the passphrase the artifact is unreadable — which is the point, since the repository is
+public. Losing the passphrase means losing the backups; it lives in the repo secrets and the
+founder's password manager, nowhere else.
 
 ## Environment variables
 

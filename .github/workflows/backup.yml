@@ -1,0 +1,67 @@
+name: Nightly database backup
+
+# The database is one SQLite file on one Fly volume on one physical host — and on 16 Oct 2026
+# that host went down before the volume's first daily snapshot existed. This job is the lesson:
+# every night, pull a consistent copy of the database off the machine and keep it where no
+# single host's health can touch it.
+#
+# The repository is PUBLIC, so the backup is encrypted (AES-256, PBKDF2) with a passphrase that
+# exists only in this repo's secrets and the founder's password manager. The artifact without
+# the passphrase is noise. Restore instructions live in DEPLOY.md under "Backups".
+
+on:
+  schedule:
+    # 03:17 UTC nightly — odd minute to dodge the top-of-hour cron stampede.
+    - cron: "17 3 * * *"
+  workflow_dispatch: # and on demand, e.g. before anything risky
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # VACUUM INTO produces a transactionally consistent copy even while the app is writing —
+      # copying the live file directly can capture a torn, mid-write state.
+      - name: Snapshot the database on the machine
+        run: |
+          flyctl ssh console -a disruptajob -C "node -e \"const{DatabaseSync}=require('node:sqlite');const fs=require('node:fs');try{fs.unlinkSync('/tmp/backup.db')}catch{};new DatabaseSync('/data/disruptajob.db',{readOnly:true}).exec(\\\"VACUUM INTO '/tmp/backup.db'\\\")\""
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Fetch the snapshot
+        run: flyctl ssh sftp get /tmp/backup.db backup.db -a disruptajob
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Sanity-check before trusting it
+        run: |
+          test -s backup.db
+          # A valid SQLite file starts with this exact 16-byte header.
+          head -c 15 backup.db | grep -q "SQLite format 3"
+          ls -la backup.db
+
+      - name: Encrypt
+        run: |
+          openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt \
+            -in backup.db -out "disruptajob-$(date -u +%F).db.enc" \
+            -pass env:BACKUP_PASSPHRASE
+          rm backup.db
+        env:
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+
+      - name: Store
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-backup-${{ github.run_id }}
+          path: "*.db.enc"
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Clean up on the machine
+        if: always()
+        run: flyctl ssh console -a disruptajob -C "rm -f /tmp/backup.db" || true
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
