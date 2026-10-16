@@ -1,97 +1,129 @@
-import test from "node:test";
+import test, { before, beforeEach } from "node:test";
 import assert from "node:assert/strict";
-import { matchCandidatesForCapabilities } from "@/lib/role-matching";
-import { CANDIDATES } from "@/lib/mock-data";
-import { isVisibleTo } from "@/lib/visibility";
 
 /**
- * Where matching meets privacy.
+ * Where matching meets privacy — tested against the engine production actually runs.
  *
- * Both halves can be individually correct and the product still fail: a search that ranks people
- * beautifully and forgets to apply the gate is the worst outcome this codebase can produce. These
- * tests assert the join — that nothing reaches a result set which the viewer was not allowed to
- * see — rather than trusting that each side behaves.
+ * The first version of this file imported the demo-data matcher and asserted its behaviour, which
+ * the audit called confidence theatre (D2/R8): the suite that claimed to guard the core promise
+ * exercised an engine no page used. This version seeds a real in-memory database and calls
+ * server/matching.ts, the function behind /employer and /employer/roles/[id].
  */
 
-const VIEWERS = ["Meridian Robotics", "Halcyon Systems", "Nordstar Analytics"];
-const ALL_TAGS = [...new Set(CANDIDATES.flatMap((c) => c.capabilities.map((cap) => cap.tag)))];
+process.env.DISRUPTAJOB_DB = ":memory:";
 
-test("the fixture population actually contains people who are not discoverable", () => {
-  // Without this, every assertion below could pass vacuously.
-  const hidden = CANDIDATES.filter((c) => (c.discoverability ?? "hidden") === "hidden");
-  assert.ok(hidden.length > 0, "fixtures must include at least one hidden candidate");
+let matchCandidatesForCapabilities: typeof import("@/server/matching").matchCandidatesForCapabilities;
+let run: typeof import("@/server/db").run;
+
+before(async () => {
+  matchCandidatesForCapabilities = (await import("@/server/matching")).matchCandidatesForCapabilities;
+  run = (await import("@/server/db")).run;
 });
 
-test("no match is ever returned for a candidate the viewer cannot see", () => {
-  for (const viewer of VIEWERS) {
-    const matches = matchCandidatesForCapabilities(ALL_TAGS, viewer);
+const NOW = new Date().toISOString();
 
-    for (const match of matches) {
-      const person = CANDIDATES.find((c) => c.id === match.candidateId);
-      assert.ok(person, `match referenced an unknown candidate: ${match.candidateId}`);
-      assert.equal(
-        isVisibleTo(person, viewer),
-        true,
-        `"${viewer}" was shown ${person.name}, who is not visible to them`
-      );
-    }
-  }
-});
-
-test("a candidate blocking a company is absent from that company's matches and present elsewhere", () => {
-  const blocker = CANDIDATES.find(
-    (c) => (c.blockedCompanies ?? []).length > 0 && (c.discoverability ?? "hidden") !== "hidden"
+/** A candidate with one published, tagged project per capability given. */
+function addCandidate(
+  id: string,
+  discoverability: string,
+  capabilities: string[],
+  blocked: string[] = []
+) {
+  run(
+    `INSERT INTO candidate (id, slug, name, avatar_initials, accent_index, discoverability, created_at)
+     VALUES (?,?,?,?,0,?,?)`,
+    id, id, id, "XX", discoverability, NOW
   );
-
-  if (!blocker) {
-    // Stated rather than silently skipped: if fixtures lose this case, the gap should be visible.
-    assert.fail("fixtures must include a discoverable candidate with a blocklist");
+  capabilities.forEach((tag, i) => {
+    const pid = `${id}-p${i}`;
+    run(
+      `INSERT INTO project (id, owner_id, slug, title, description, thumbnail_seed, outcome,
+                            problem, what_i_built, my_contribution, status, source, created_at)
+       VALUES (?,?,?,?,'','','','','','','published','manual',?)`,
+      pid, id, pid, `Work ${i}`, NOW
+    );
+    run("INSERT INTO project_capability (project_id, tag) VALUES (?,?)", pid, tag);
+  });
+  for (const name of blocked) {
+    run("INSERT INTO blocked_company (candidate_id, company_name) VALUES (?,?)", id, name);
   }
+}
 
-  const blockedCompany = blocker.blockedCompanies![0];
-  const tags = blocker.capabilities.map((c) => c.tag);
+beforeEach(() => {
+  run("DELETE FROM candidate");
+  run("DELETE FROM project");
+});
 
-  const blockedView = matchCandidatesForCapabilities(tags, blockedCompany);
+test("a hidden candidate never reaches the ranking, whatever they could score", () => {
+  addCandidate("hidden-ace", "hidden", ["automation", "operations", "growth"]);
+  addCandidate("open-mid", "open", ["automation"]);
+
+  const ids = matchCandidatesForCapabilities(["automation", "operations"], "Acme").map((m) => m.candidateId);
+  assert.deepEqual(ids, ["open-mid"]);
+});
+
+test("a candidate is absent from the blocking company's matches and present for everyone else", () => {
+  addCandidate("blocker", "open", ["automation"], ["Meridian Robotics"]);
+
   assert.equal(
-    blockedView.some((m) => m.candidateId === blocker.id),
+    matchCandidatesForCapabilities(["automation"], "Meridian Robotics").some((m) => m.candidateId === "blocker"),
     false,
-    `${blocker.name} appeared in results for ${blockedCompany}, whom they blocked`
+    "shown to the company they blocked"
   );
-
-  const otherView = matchCandidatesForCapabilities(tags, "An Unrelated Company Ltd");
   assert.equal(
-    otherView.some((m) => m.candidateId === blocker.id),
+    matchCandidatesForCapabilities(["automation"], "Halcyon Systems").some((m) => m.candidateId === "blocker"),
     true,
-    `${blocker.name} should still be matchable by companies they did not block`
+    "hidden from a company they did not block"
   );
+});
+
+test("blocking matches the forms a company name actually takes, in the production path", () => {
+  addCandidate("blocker", "open", ["automation"], ["Meridian Robotics"]);
+  for (const typed of ["meridian robotics", "Meridian Robotics Ltd", "meridian-robotics.com", "Meridian"]) {
+    assert.deepEqual(
+      matchCandidatesForCapabilities(["automation"], typed),
+      [],
+      `"${typed}" should see nothing`
+    );
+  }
+});
+
+test("draft projects produce no capabilities, so an unreviewed import can't rank anyone", () => {
+  addCandidate("open-empty", "open", []);
+  run(
+    `INSERT INTO project (id, owner_id, slug, title, description, thumbnail_seed, outcome,
+                          problem, what_i_built, my_contribution, status, source, created_at)
+     VALUES ('draft-p','open-empty','draft-p','Draft','','','','','','','draft','github-import',?)`,
+    NOW
+  );
+  run("INSERT INTO project_capability (project_id, tag) VALUES ('draft-p','automation')");
+
+  assert.deepEqual(matchCandidatesForCapabilities(["automation"], "Acme"), []);
 });
 
 test("asking for no capabilities returns nothing rather than everyone", () => {
-  // A dropped filter must fail closed. Returning the whole population here would quietly turn
-  // an empty search into a people directory.
-  assert.deepEqual(matchCandidatesForCapabilities([], "Meridian Robotics"), []);
+  addCandidate("open-mid", "open", ["automation"]);
+  assert.deepEqual(matchCandidatesForCapabilities([], "Acme"), []);
 });
 
-test("results are ordered by fit, strongest first", () => {
-  const matches = matchCandidatesForCapabilities(ALL_TAGS, "An Unrelated Company Ltd");
-  const scores = matches.map((m) => m.fitScore);
+test("coverage beats single-capability strength, and results come strongest first", () => {
+  // Three automation projects = deep but narrow; one each of the two required = broad.
+  addCandidate("narrow-deep", "open", ["automation", "automation", "automation"]);
+  addCandidate("broad", "open", ["automation", "operations"]);
 
+  const ranked = matchCandidatesForCapabilities(["automation", "operations"], "Acme");
+  assert.equal(ranked[0].candidateId, "broad", "full coverage should outrank depth in one");
+  const scores = ranked.map((m) => m.fitScore);
   assert.deepEqual(scores, [...scores].sort((a, b) => b - a));
 });
 
-test("every match explains itself — matched tags, gaps, and the work behind them", () => {
-  // "Explainable by construction" is a product claim, not a nicety: an employer is told why.
-  const matches = matchCandidatesForCapabilities(ALL_TAGS, "An Unrelated Company Ltd");
-  assert.ok(matches.length > 0, "expected at least one match from the fixture population");
+test("every match explains itself and never contradicts itself", () => {
+  addCandidate("open-mid", "open", ["automation"]);
+  const [m] = matchCandidatesForCapabilities(["automation", "operations"], "Acme");
 
-  for (const match of matches) {
-    assert.ok(match.matchedCapabilities.length > 0, "a match with no matched capability is not a match");
-    assert.ok(match.supportingProjectIds.length > 0, "a match must point at the work behind it");
-    assert.equal(
-      match.matchedCapabilities.some((t) => match.missingCapabilities.includes(t)),
-      false,
-      "a capability cannot be both matched and missing"
-    );
-    assert.ok(match.fitScore > 0 && match.fitScore <= 98);
-  }
+  assert.ok(m.matchedCapabilities.includes("automation"));
+  assert.ok(m.missingCapabilities.includes("operations"));
+  assert.equal(m.matchedCapabilities.some((t) => m.missingCapabilities.includes(t)), false);
+  assert.ok(m.supportingProjectIds.length > 0, "a match must point at the work behind it");
+  assert.ok(m.fitScore > 0 && m.fitScore <= 98);
 });

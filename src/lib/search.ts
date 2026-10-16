@@ -1,8 +1,5 @@
 import type { CandidateMatch, CandidateProfile, MatchStrength, MatchedRequirement } from "@/types";
-import { CANDIDATES, getProjectsForCapability } from "./mock-data";
-import { partitionByVisibility } from "./visibility";
 import { assessTerms } from "./terms";
-import { CURRENT_EMPLOYER_COMPANY } from "./current-user";
 
 interface RequirementTemplate {
   id: string;
@@ -124,7 +121,9 @@ function buildMatchedRequirement(
 ): MatchedRequirement {
   const relevantCapabilities = candidate.capabilities.filter((c) => template.tags.includes(c.tag));
   const evidenceProjectIds = Array.from(
-    new Set(relevantCapabilities.flatMap((c) => getProjectsForCapability(candidate, c.tag).map((p) => p.id)))
+    // The ids are already on the hydrated capability — the old helper resolved them through the
+    // demo dataset and back, which also meant a real candidate's ids resolved to nothing.
+    new Set(relevantCapabilities.flatMap((c) => c.projectIds))
   ).slice(0, 3);
   const totalEvidence = relevantCapabilities.reduce((sum, c) => sum + c.evidenceCount, 0);
 
@@ -179,37 +178,4 @@ export function matchCandidate(candidate: CandidateProfile, query: string): Cand
     // Intent data, computed alongside but never mixed into fitScore.
     termsFit: assessTerms(candidate, query),
   };
-}
-
-export interface SearchResults {
-  matches: CandidateMatch[];
-  /**
-   * How many profiles were withheld by their owners' privacy settings. Aggregate only — never
-   * broken down by person or reason, so an employer can't infer who hid from them.
-   */
-  withheldCount: number;
-}
-
-/**
- * Search the candidates this employer is actually allowed to see.
- *
- * Visibility is applied *before* ranking, not as a post-filter on a ranked list, so a hidden
- * candidate never influences ordering or counts.
- */
-export function searchCandidates(
-  query: string,
-  viewingCompany: string = CURRENT_EMPLOYER_COMPANY
-): SearchResults {
-  if (!query.trim()) return { matches: [], withheldCount: 0 };
-  const { visible, withheldCount } = partitionByVisibility(CANDIDATES, viewingCompany);
-  const matches = visible
-    .map((c) => matchCandidate(c, query))
-    .sort((a, b) => b.fitScore - a.fitScore);
-  return { matches, withheldCount };
-}
-
-export function getMatchForCandidate(candidateId: string, query: string): CandidateMatch | undefined {
-  const candidate = CANDIDATES.find((c) => c.id === candidateId);
-  if (!candidate) return undefined;
-  return matchCandidate(candidate, query);
 }

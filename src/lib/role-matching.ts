@@ -1,65 +1,14 @@
-import type { CandidateProfile, EmployerTerms, Role, TermsVerdict } from "@/types";
-import { CANDIDATES, capabilitiesForRole } from "./mock-data";
-import { partitionByVisibility } from "./visibility";
-import { CURRENT_EMPLOYER_COMPANY } from "./current-user";
+import type { CandidateProfile, EmployerTerms, TermsVerdict } from "@/types";
 
 /**
- * Matching a role to candidates by capability overlap.
+ * Mutual fit between a company's posted terms and a candidate's private non-negotiables.
  *
- * This is the point of posting real work instead of a job description: both sides of the match
- * are expressed in the same vocabulary. A role's requirements come from the work examples a
- * company wrote; a candidate's capabilities come from evidence they attached. So matching is a
- * set overlap weighted by proof — no keyword guessing, and every number is explainable.
+ * This file used to also hold a candidate-matching engine fed by the demo dataset, with a default
+ * "viewing company" argument pointing at a seeded employer. Production matching lives in
+ * server/matching.ts against the database; the demo engine's last consumer was the fabricated
+ * setup payoff, and both were removed by the audit fixes (D2). What remains is the one part that
+ * was always pure: comparing terms, with the candidate's floor never leaving as a number.
  */
-
-export interface RoleMatch {
-  candidateId: string;
-  /** 0-100. Coverage of what the work demands, weighted by how well-evidenced each one is. */
-  fitScore: number;
-  matchedCapabilities: string[];
-  missingCapabilities: string[];
-  supportingProjectIds: string[];
-}
-
-function scoreCandidate(candidate: CandidateProfile, required: string[]): RoleMatch | null {
-  const matched = candidate.capabilities.filter((c) => required.includes(c.tag));
-  if (matched.length === 0) return null;
-
-  const coverage = matched.length / required.length;
-  const avgStrength = matched.reduce((sum, c) => sum + c.score, 0) / matched.length;
-
-  // Coverage dominates — someone strong in one of five required capabilities is a worse fit than
-  // someone decent across four — but strength still separates candidates with equal coverage.
-  const fitScore = Math.round(Math.min(98, coverage * 70 + (avgStrength / 100) * 30));
-
-  return {
-    candidateId: candidate.id,
-    fitScore,
-    matchedCapabilities: matched.map((c) => c.tag),
-    missingCapabilities: required.filter((t) => !matched.some((c) => c.tag === t)),
-    supportingProjectIds: [...new Set(matched.flatMap((c) => c.projectIds))],
-  };
-}
-
-/** Rank the candidates this employer may see against a set of required capabilities. */
-export function matchCandidatesForCapabilities(
-  required: string[],
-  viewingCompany: string = CURRENT_EMPLOYER_COMPANY
-): RoleMatch[] {
-  if (required.length === 0) return [];
-  const { visible } = partitionByVisibility(CANDIDATES, viewingCompany);
-  return visible
-    .map((c) => scoreCandidate(c, required))
-    .filter((m): m is RoleMatch => m !== null)
-    .sort((a, b) => b.fitScore - a.fitScore);
-}
-
-export function matchCandidatesForRole(
-  role: Role,
-  viewingCompany: string = CURRENT_EMPLOYER_COMPANY
-): RoleMatch[] {
-  return matchCandidatesForCapabilities(capabilitiesForRole(role), viewingCompany);
-}
 
 // --- Mutual fit ------------------------------------------------------------
 

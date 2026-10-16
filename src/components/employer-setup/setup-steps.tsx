@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Check, Globe, Loader2 } from "lucide-react";
 import type { CompanySetupDraft, CompanyStage, WorkArrangement, WorkExample } from "@/types";
 import { Button } from "@/components/ui/button";
