@@ -50,9 +50,11 @@ export function Reveal({
      * ends up blank for the one browser you didn't test.
      */
     let observer: IntersectionObserver;
+    const deadline: { id?: number } = {};
     const show = () => {
       el.setAttribute("data-reveal", "in");
       observer.disconnect();
+      if (deadline.id !== undefined) window.clearTimeout(deadline.id);
     };
 
     try {
@@ -82,6 +84,13 @@ export function Reveal({
     // Hidden only now — after the observer that will unhide it provably exists.
     el.setAttribute("data-reveal", "pending");
 
+    // Fail OPEN on a deadline. In webviews (a profile link opened inside LinkedIn or a chat
+    // app), prerendered tabs, and screenshotting crawlers, IntersectionObserver can fire late
+    // or never — which turned the grey employer band into thousands of pixels of empty grey in
+    // an external audit. Motion is a nicety; content is the contract. Three seconds without an
+    // intersection and everything simply appears.
+    deadline.id = window.setTimeout(show, 3000);
+
     // A page restored from the back-forward cache, or opened pre-rendered in a background tab,
     // can reach the user with stale intersection state. One cheap nudge covers both.
     const onShow = () => {
@@ -94,6 +103,7 @@ export function Reveal({
 
     return () => {
       observer.disconnect();
+      if (deadline.id !== undefined) window.clearTimeout(deadline.id);
       window.removeEventListener("pageshow", onShow);
       document.removeEventListener("visibilitychange", onShow);
     };
