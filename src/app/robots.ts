@@ -1,5 +1,9 @@
 import type { MetadataRoute } from "next";
 
+// Rendered per request, not baked at build: CI builds without production env (and with an
+// in-memory database), so a static version would freeze the wrong answer into the image.
+export const dynamic = "force-dynamic";
+
 /**
  * Keep the preview out of search results.
  *

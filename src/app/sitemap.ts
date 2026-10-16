@@ -1,4 +1,8 @@
 import type { MetadataRoute } from "next";
+
+// Rendered per request, not baked at build: CI builds without production env (and with an
+// in-memory database), so a static version would freeze the wrong answer into the image.
+export const dynamic = "force-dynamic";
 import { listDiscoverableCandidates } from "@/server/repositories/discovery";
 import { getProjectById } from "@/server/repositories/projects";
 import { listPublishedCompanies } from "@/server/repositories/companies";
