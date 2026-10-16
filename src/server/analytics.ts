@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { all, get, run } from "./db";
 import { EVENTS, type EventName } from "@/lib/events";
 import { maybePrune } from "./retention";
+import { logError } from "./log";
 
 export { EVENTS };
 export type { EventName };
@@ -77,8 +78,10 @@ export async function track(
       options.props ? JSON.stringify(options.props) : null,
       new Date().toISOString()
     );
-  } catch {
-    // Deliberately swallowed.
+  } catch (error) {
+    // Still deliberately non-fatal — measurement must never take a page down — but no longer
+    // silent, which is how a broken funnel would have gone unnoticed for weeks (audit S3).
+    logError("analytics.track", error, { event: name });
   }
 }
 

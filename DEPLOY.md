@@ -58,6 +58,10 @@ Worth knowing what was ruled out, so it doesn't get relitigated:
    ```
    fly secrets set DEMO_MODE=true
    fly secrets set DEMO_ACCOUNT_PASSWORD='pick-something'
+
+> Deploy order no longer matters here: in production, an account with no password cannot be
+> signed into at all (enforced at sign-in, `server/credentials.ts`). Setting this secret is what
+> makes the demo accounts *usable* in production, not what makes them safe.
    ```
 
    **Locked mode — password prompt on every page.** Use this if the site should be reachable only

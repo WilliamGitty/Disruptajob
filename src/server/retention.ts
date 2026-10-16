@@ -1,4 +1,5 @@
 import { run } from "./db";
+import { logError } from "./log";
 
 /**
  * How long things are kept.
@@ -44,8 +45,9 @@ export function maybePrune(): void {
   lastPrune = now;
   try {
     pruneExpiredData();
-  } catch {
-    // Housekeeping must never take a page down.
+  } catch (error) {
+    // Non-fatal, but recorded: silently failing retention is a privacy-policy breach in slow motion.
+    logError("retention.prune", error);
   }
 }
 

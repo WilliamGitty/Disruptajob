@@ -1,7 +1,9 @@
 import { cookies } from "next/headers";
 import { randomUUID } from "node:crypto";
 import { all, get, run, transaction } from "./db";
-import { hashPassword, passwordProblem, verifyPassword } from "./password";
+import { hashPassword, passwordProblem } from "./password";
+import { credentialsAccepted } from "./credentials";
+import { logWarn } from "./log";
 
 /**
  * Sessions.
@@ -73,8 +75,18 @@ export async function signIn(email: string, password?: string): Promise<boolean>
     "SELECT password_hash FROM account WHERE id = ?",
     account.id
   );
-  if (row?.password_hash) {
-    if (!password || !verifyPassword(password, row.password_hash)) return false;
+  // The credential rule itself is pure and lives in credentials.ts so it can be tested without a
+  // request context — see that file for why passwordless accounts are refused in production.
+  const decision = credentialsAccepted(
+    row?.password_hash,
+    password,
+    process.env.NODE_ENV === "production"
+  );
+  if (!decision.ok) {
+    if (decision.reason === "passwordless-in-production") {
+      logWarn("auth", "refused passwordless sign-in in production", { email });
+    }
+    return false;
   }
 
   const token = randomUUID();
