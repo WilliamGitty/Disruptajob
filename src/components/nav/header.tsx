@@ -56,8 +56,18 @@ export function Header({
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/90 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
           <Logo />
-          {/* Two doors, labelled by what the visitor is here to do rather than by our jargon. */}
+          {/* Two doors, labelled by what the visitor is here to do rather than by our jargon,
+              plus the pages that let a careful visitor take our measure before trusting us. */}
           <nav className="flex items-center gap-5">
+            <Link href="/about" className="hidden text-sm text-ink-faint underline-grow lg:inline">
+              About
+            </Link>
+            <Link href="/articles" className="hidden text-sm text-ink-faint underline-grow lg:inline">
+              Articles
+            </Link>
+            <Link href="/faq" className="hidden text-sm text-ink-faint underline-grow lg:inline">
+              FAQ
+            </Link>
             <Link
               href="/talent/onboarding"
               className="hidden text-sm text-ink-soft underline-grow sm:inline"

@@ -18,6 +18,15 @@ export function Footer() {
           <Link href="/employer" className="underline-grow hover:text-ink">
             For employers
           </Link>
+          <Link href="/about" className="underline-grow hover:text-ink">
+            About
+          </Link>
+          <Link href="/articles" className="underline-grow hover:text-ink">
+            Articles
+          </Link>
+          <Link href="/faq" className="underline-grow hover:text-ink">
+            FAQ
+          </Link>
           <Link href="/privacy" className="underline-grow hover:text-ink">
             Privacy
           </Link>

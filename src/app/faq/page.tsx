@@ -1,0 +1,156 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "FAQ — Disruptajob",
+  description:
+    "Straight answers: what it costs, who can see you, how capabilities are scored, where AI is used, and what happens to your data.",
+  alternates: { canonical: "/faq" },
+};
+
+interface QA {
+  q: string;
+  a: React.ReactNode;
+}
+
+const CANDIDATE_QAS: QA[] = [
+  {
+    q: "What does it cost me?",
+    a: "Nothing, ever. Candidates are free for good: companies are the paying side. That is not generosity, it is structural. The platform only works if people with real evidence show up, so charging you would be sawing at our own branch.",
+  },
+  {
+    q: "Who can see my profile?",
+    a: (
+      <>
+        Nobody, until you say otherwise. Every new profile starts hidden: it appears in no search
+        and its link opens only for you. When you choose to be findable, you can also name
+        companies that must never see you, your current employer being the obvious first entry.
+        That blocklist is enforced inside the database query itself.{" "}
+        <Link href="/privacy" className="text-ink underline-grow">
+          The privacy policy
+        </Link>{" "}
+        describes exactly what the code does.
+      </>
+    ),
+  },
+  {
+    q: "How are capabilities scored?",
+    a: "Only from published work. You describe a real project, tag what it genuinely involved, and the tags on published projects are the only thing that can move a capability. There is no field anywhere for typing a skill in directly, so a score here cannot be inflated by better prose.",
+  },
+  {
+    q: "Do I need a CV?",
+    a: "No. You can paste one as background context for a human to read, but it is never parsed into capabilities and never scored. The product exists because CVs compress people badly; we are not going to turn around and score the compression.",
+  },
+  {
+    q: "What if I don't have GitHub or side projects?",
+    a: "Most good evidence is not code. The process you redesigned, the automation you set up, the reporting pack you rebuilt, the event you ran: anything real, described concretely, with the outcome attached. If you did it and can explain it, it counts.",
+  },
+  {
+    q: "Can I use my profile outside Disruptajob?",
+    a: "Yes, and you should. Once you open your profile up, its link works anywhere: job applications, LinkedIn, an email signature. Evidence beats attachments.",
+  },
+  {
+    q: "How do I delete everything?",
+    a: "From settings, in one action, and it is real deletion, not deactivation. You can also export your data first. You never owe us a reason.",
+  },
+];
+
+const EMPLOYER_QAS: QA[] = [
+  {
+    q: "What does it cost a company?",
+    a: "Free during beta, with no card required. When we charge, companies will pay, likely per filled role or a flat subscription, and we will say so plainly before anything changes. Nothing is charged retroactively.",
+  },
+  {
+    q: "Why do I need an account to search?",
+    a: (
+      <>
+        Because search here is accountable. Candidates can block named companies from seeing them,
+        and that check needs to know who is asking. Browsing is open:{" "}
+        <Link href="/people" className="text-ink underline-grow">
+          the people page
+        </Link>{" "}
+        shows everyone who has chosen to be visible, no sign-in needed.
+      </>
+    ),
+  },
+  {
+    q: "What am I actually searching?",
+    a: "Evidence. You define a role by the work it contains and the capabilities that work demands, and results are people whose published projects demonstrate them. Every match is explainable: click through and the supporting work is right there.",
+  },
+  {
+    q: "Why is there no job posting?",
+    a: "Postings attract floods, floods stop being read, and a meaningful share of postings on the open web are not even real roles. Here the costly, honest signal is you reaching out to a specific person about their specific work.",
+  },
+];
+
+const PLATFORM_QAS: QA[] = [
+  {
+    q: "Where do you use AI, honestly?",
+    a: "Two places, both visible. The site itself was largely built by a founder working with AI, and we think that is the new normal rather than a confession. Inside the product, AI drafts: it can turn a GitHub repository's README into a write-up you edit and own, and suggest tags you must tick yourself. It never assigns a capability, never ranks people, and never screens anyone. Matching is deterministic and explainable on purpose.",
+  },
+  {
+    q: "Who is behind this?",
+    a: (
+      <>
+        A solo founder in the UK, operating as a sole trader, with the company structure to follow
+        when the first revenue does. The longer story is on{" "}
+        <Link href="/about" className="text-ink underline-grow">
+          the about page
+        </Link>
+        . Contact: hello@disruptajob.com, and a human reads it.
+      </>
+    ),
+  },
+  {
+    q: "What happens to my data?",
+    a: (
+      <>
+        It stays here. No third-party trackers, no ad networks, no selling of anything to anyone.
+        First-party analytics only, retention periods that are actually enforced in code, export
+        and deletion on demand.{" "}
+        <Link href="/privacy" className="text-ink underline-grow">
+          The privacy policy
+        </Link>{" "}
+        is written against what the code does, not against what a template said.
+      </>
+    ),
+  },
+  {
+    q: "What don't you promise?",
+    a: "A job. We promise that what a company sees of you is backed by evidence, that you are invisible until you choose otherwise, and that nothing you merely claim will ever move a score. Whether the right company shows up is the part we are building toward, not the part we pretend is done.",
+  },
+];
+
+function Section({ title, qas }: { title: string; qas: QA[] }) {
+  return (
+    <section className="mt-12">
+      <h2 className="font-serif-display text-xl text-ink">{title}</h2>
+      <div className="mt-4 space-y-6">
+        {qas.map((qa) => (
+          <div key={qa.q} className="border-t border-ink/10 pt-5">
+            <h3 className="text-[16px] font-medium text-ink">{qa.q}</h3>
+            <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{qa.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function FaqPage() {
+  return (
+    <main className="mx-auto max-w-[680px] px-6 py-14 lg:py-20">
+      <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">FAQ</p>
+      <h1 className="font-serif-display text-3xl leading-tight text-ink sm:text-4xl">
+        Straight answers
+      </h1>
+      <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
+        If a question isn&rsquo;t here, write to hello@disruptajob.com and a human will answer it.
+      </p>
+
+      <Section title="If you're looking for work" qas={CANDIDATE_QAS} />
+      <Section title="If you're hiring" qas={EMPLOYER_QAS} />
+      <Section title="About the platform" qas={PLATFORM_QAS} />
+    </main>
+  );
+}

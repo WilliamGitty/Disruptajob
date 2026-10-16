@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 import { listDiscoverableCandidates } from "@/server/repositories/discovery";
 import { getProjectById } from "@/server/repositories/projects";
 import { listPublishedCompanies } from "@/server/repositories/companies";
+import { ARTICLES } from "@/content/articles";
 
 /**
  * Only what an anonymous visitor can already see.
@@ -21,6 +22,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/`, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/employer`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/people`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${base}/about`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/faq`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/articles`, changeFrequency: "weekly", priority: 0.7 },
+    ...ARTICLES.map((a) => ({
+      url: `${base}/articles/${a.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     { url: `${base}/privacy`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/terms`, changeFrequency: "yearly", priority: 0.2 },
   ];
