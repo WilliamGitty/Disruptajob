@@ -10,6 +10,7 @@ import { SearchBox } from "@/components/employer/search-box";
 import { ResultCard } from "@/components/employer/result-card";
 import { RecordSearch } from "@/components/employer/record-search";
 import { NoMatches } from "@/components/illustrations/empty-states";
+import { CompanyGate } from "@/components/employer/company-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,13 @@ export default async function EmployerSearchResultsPage({
   searchParams: Promise<{ q?: string; page?: string }>;
 }) {
   const { q = "", page } = await searchParams;
+
+  // Audit finding S2: this page was reachable signed out, and an anonymous viewer skips every
+  // blocklist (the landing-page contract, misapplied to a full search tool). Blocklists can only
+  // be honoured against a named company, so the tool requires one.
+  const account = await getCurrentAccount();
+  const company = account?.companyId ? getCompanyById(account.companyId) : undefined;
+  if (!company) return <CompanyGate />;
 
   if (!q.trim()) {
     return (
@@ -36,11 +44,7 @@ export default async function EmployerSearchResultsPage({
     );
   }
 
-  const account = await getCurrentAccount();
-  const company = account?.companyId ? getCompanyById(account.companyId) : undefined;
-  // Signed out, you're nobody in particular — so nobody's blocklist can match you, but hidden
-  // profiles are still hidden.
-  const viewingCompany = company?.name ?? "";
+  const viewingCompany = company.name;
 
   const population = listDiscoverableCandidates(viewingCompany);
   const ranked = population

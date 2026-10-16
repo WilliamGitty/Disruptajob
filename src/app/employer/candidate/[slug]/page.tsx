@@ -4,6 +4,7 @@ import { ArrowLeft, Check, Minus } from "lucide-react";
 import { PROJECTS } from "@/lib/mock-data";
 import { getCandidateBySlug } from "@/server/repositories/candidates";
 import { matchCandidate } from "@/lib/search";
+import { CompanyGate } from "@/components/employer/company-gate";
 import { isCandidateVisibleTo } from "@/server/repositories/discovery";
 import { pipelineCandidateIds } from "@/server/repositories/pipeline";
 import { getCompanyById } from "@/server/repositories/companies";
@@ -41,10 +42,12 @@ export default async function CandidateMatchPage({
   if (!candidate) notFound();
 
   // The search gate is not enough on its own — without this, pasting a profile URL would walk
-  // straight past a candidate's blocklist. Same answer as a missing profile: it does not exist.
+  // straight past a candidate's blocklist. And the blocklist can only be checked against a named
+  // company (audit S2), so this employer view requires one; the check then uses its real name.
   const account = await getCurrentAccount();
   const company = account?.companyId ? getCompanyById(account.companyId) : undefined;
-  if (!isCandidateVisibleTo(candidate.id, company?.name ?? "")) notFound();
+  if (!company) return <CompanyGate title="Sign in to view candidates" />;
+  if (!isCandidateVisibleTo(candidate.id, company.name)) notFound();
 
   const match = matchCandidate(candidate, q);
   const onBoard = account?.companyId

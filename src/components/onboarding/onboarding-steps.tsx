@@ -866,7 +866,7 @@ export function BackgroundStep({ draft, patch }: StepProps) {
 // --- Step 9: Visibility gate ----------------------------------------------
 
 const DISCOVERABILITY_OPTIONS: { value: Discoverability; label: string; body: string }[] = [
-  { value: "hidden", label: "Hidden", body: "No employer can find you. You can still be invited if you share your profile." },
+  { value: "hidden", label: "Hidden", body: "No employer can find you, and your profile page is visible to nobody but you." },
   { value: "selectively-open", label: "Selectively open", body: "Discoverable, but you review every approach." },
   { value: "open", label: "Open", body: "Fully discoverable to employers searching for your capabilities." },
 ];

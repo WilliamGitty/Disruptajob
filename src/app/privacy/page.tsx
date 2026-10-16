@@ -117,8 +117,15 @@ export default function PrivacyPage() {
         <p>
           When you do open up, you can block companies by name — including the one you currently
           work for. Blocked companies cannot find you in search, cannot open your profile by its
-          link, and are never informed that you exist or that you blocked them. Both of these rules
-          are enforced in the database query itself rather than in page code that could forget.
+          link, and are never informed that you exist or that you blocked them. Candidate search
+          and profile pages require a signed-in company account precisely so this check always
+          knows who is asking.
+        </p>
+        <p>
+          Honestly stated: the blocklist protects you from a named company acting as itself. A
+          determined bad actor could register under a different name — no blocklist can prevent
+          that, and we won&rsquo;t pretend otherwise. If that is your threat model, stay hidden:
+          hidden is absolute.
         </p>
         <p>
           If you later hide again, you disappear from searches and from any list a company had

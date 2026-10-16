@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCandidateBySlug } from "@/server/repositories/candidates";
 import { getCurrentAccount } from "@/server/auth";
+import { isCandidateVisibleTo } from "@/server/repositories/discovery";
+import { getCompanyById } from "@/server/repositories/companies";
 import {
   listProjectsForCandidate,
   listPublishedProjects,
@@ -44,6 +46,21 @@ export default async function ProfilePage({
 
   const viewer = await getCurrentAccount();
   const isOwnProfile = viewer?.candidateId === candidate.id;
+
+  /*
+   * The gate the privacy policy promises. Audit finding S1: this page previously rendered any
+   * profile to anyone — a hidden candidate's work was one guessable slug away from the employer
+   * they were hiding from, while /privacy said the opposite.
+   *
+   * Non-owners pass the same check search uses. A signed-in employer is checked against the
+   * candidate's blocklist by name; everyone else is "no company", which can't match a blocklist
+   * but still never sees a hidden profile. 404 rather than 403 — a denial that confirms the
+   * profile exists would itself leak.
+   */
+  if (!isOwnProfile) {
+    const viewerCompany = viewer?.companyId ? getCompanyById(viewer.companyId)?.name ?? "" : "";
+    if (!isCandidateVisibleTo(candidate.id, viewerCompany)) notFound();
+  }
 
   // Your own drafts are yours to see; everyone else gets published work only.
   const projects = isOwnProfile

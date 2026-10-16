@@ -19,7 +19,7 @@ const VISIBILITY: { value: Discoverability; label: string; body: string }[] = [
   {
     value: "hidden",
     label: "Hidden",
-    body: "No employer can find you in search. You can still be invited if you share your profile link yourself.",
+    body: "No employer can find you in search, and your profile page is visible to nobody but you.",
   },
   {
     value: "selectively-open",
