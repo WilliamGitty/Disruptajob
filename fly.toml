@@ -16,7 +16,7 @@ primary_region = "lhr"  # London, closest to the users this is built for
   # Must match the mount below: the database belongs on the volume, never in the image.
   DISRUPTAJOB_DB = "/data/disruptajob.db"
   # Where links in outbound email point. Not a secret — just this app's public address.
-  APP_URL = "https://disruptajob.fly.dev"
+  APP_URL = "https://disruptajob.com"
 
 [[mounts]]
   source = "disruptajob_data"
