@@ -41,7 +41,7 @@ test("a candidate created the way sign-up creates one is not demo", () => {
 
 test("the repository surfaces the flag", async () => {
   const { getCandidateBySlug } = await import("@/server/repositories/candidates");
-  const seeded = getCandidateBySlug("william-sandford");
+  const seeded = getCandidateBySlug("jordan-blake");
   const real = getCandidateBySlug("real-person");
   assert.equal(seeded?.isDemo, true);
   assert.equal(real?.isDemo, false);

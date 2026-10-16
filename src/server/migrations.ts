@@ -83,6 +83,23 @@ const MIGRATIONS: Migration[] = [
       addColumn(db, "account", "email_verified_at", "TEXT");
     },
   },
+  {
+    // The seeded demo candidate wore the founder's real name, which was quaint while the whole
+    // site was fiction and became "two William Sandfords on the homepage" the day the real one
+    // signed up. The invented person gets an invented name. Guarded on demo = 1 so it can never
+    // touch a real account that happens to share the id's slug.
+    id: "006-demo-founder-rename",
+    up: (db) => {
+      db.prepare(
+        `UPDATE candidate SET name = 'Jordan Blake', slug = 'jordan-blake', avatar_initials = 'JB'
+          WHERE id = 'william-sandford' AND demo = 1`
+      ).run();
+      db.prepare(
+        `UPDATE account SET display_name = 'Jordan Blake'
+          WHERE candidate_id = 'william-sandford' AND email = 'will@example.com'`
+      ).run();
+    },
+  },
 ];
 
 function appliedIds(db: DatabaseSync): Set<string> {

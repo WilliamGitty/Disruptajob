@@ -38,7 +38,7 @@ function ev(
 // ---------------------------------------------------------------------------
 
 export const PROJECTS: Project[] = [
-  // William Sandford -----------------------------------------------------
+  // Jordan Blake (demo) ----------------------------------------------------
   {
     id: "ai-daily-signal",
     slug: "ai-daily-signal",
@@ -648,14 +648,14 @@ function projectsFor(ids: string[]) {
 export const CANDIDATES: CandidateProfile[] = [
   {
     id: "william-sandford",
-    slug: "william-sandford",
+    slug: "jordan-blake",
     userId: "u-william",
-    name: "William Sandford",
+    name: "Jordan Blake",
     headline: "Business Operations · AI Enablement · Automation · Product",
     shortDescription: "I build systems that help businesses operate better with AI.",
     location: "London, UK",
     availability: "open",
-    avatarInitials: "WS",
+    avatarInitials: "JB",
     accentIndex: 0,
     capabilities: [
       cap("ai-enablement", "AI Enablement", 7, ["ai-daily-signal", "ai-prototype-portfolio"]),

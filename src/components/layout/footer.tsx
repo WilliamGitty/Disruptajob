@@ -12,7 +12,7 @@ export function Footer() {
           Judge the work before you judge the paper.
         </p>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-faint">
-          <Link href="/profile/william-sandford" className="underline-grow hover:text-ink">
+          <Link href="/profile/jordan-blake" className="underline-grow hover:text-ink">
             Example profile
           </Link>
           <Link href="/employer" className="underline-grow hover:text-ink">

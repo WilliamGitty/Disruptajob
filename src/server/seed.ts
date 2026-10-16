@@ -222,7 +222,7 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
        VALUES (?,?,?,?,?,?,?,?)`,
       "acc-will",
       "will@example.com",
-      "William Sandford",
+      "Jordan Blake",
       "talent",
       "william-sandford",
       null,
