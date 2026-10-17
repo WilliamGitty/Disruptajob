@@ -107,6 +107,14 @@ const MIGRATIONS: Migration[] = [
     id: "007-demo-demand",
     up: seedDemoDemand,
   },
+  {
+    // The founder wanted the demand side expansive for weekend testers; the agreed compromise
+    // (quality over theatre — 200 fake roles would make the Example badge wallpaper) was a
+    // dozen companies with demand across the whole capability taxonomy. seedDemoDemand is
+    // id-guarded, so re-running it only inserts the additions.
+    id: "008-demo-demand-expanded",
+    up: seedDemoDemand,
+  },
 ];
 
 function appliedIds(db: DatabaseSync): Set<string> {

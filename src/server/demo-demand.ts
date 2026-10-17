@@ -1,7 +1,8 @@
 import type { DatabaseSync } from "node:sqlite";
 
 /**
- * Three more invented companies with open roles — the demand side of the demo population.
+ * The invented companies with open roles — the demand side of the demo population (a dozen
+ * companies across sectors, so every capability in the taxonomy has demand pointing at it).
  *
  * Why these exist (17 Oct 2026, founder request before a weekend of testers): a candidate
  * walking through the product should see what demand looks like here, and two seeded companies
@@ -51,6 +52,259 @@ interface DemoCompany {
 }
 
 const DEMO_COMPANIES: DemoCompany[] = [
+  {
+    id: "co-harland",
+    slug: "harland-freight",
+    name: "Harland Freight Services",
+    blurb: "A regional haulier whose paperwork still thinks it is 2009.",
+    stage: "established",
+    teamSize: "80",
+    location: "Leeds, UK",
+    initials: "HF",
+    accent: 3,
+    role: {
+      id: "role-hf-digital",
+      title: "Digitisation lead",
+      whyThisRole:
+        "Proof-of-delivery is paper, invoicing is a rekeying job, and the yard planner lives in one person's head. We know what we are; we need someone who can move it without stopping the trucks.",
+      compRange: "£48,000\u2013£58,000",
+      location: "Leeds, mostly on site",
+      startWindow: "Within three months",
+      arrangements: ["onsite", "hybrid"],
+      constraints: ["Must be comfortable on a depot floor, not just in a deck"],
+      workExamples: [
+        {
+          id: "we-hf-1",
+          title: "Kill the paper proof-of-delivery",
+          description:
+            "Drivers return with paper PODs that get scanned, lost, and disputed. Replace the loop with something drivers will actually use in a cab at 6am.",
+          timeframe: "First 90 days",
+          capabilities: ["workflow-design", "operations", "problem-solving"],
+          whatYoudDo: [
+            "Ride along until you understand why every previous app failed the drivers",
+            "Pick or build the lightest tool that survives contact with the depot",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "co-ferntree",
+    slug: "ferntree-giving",
+    name: "Ferntree Giving",
+    blurb: "A charity that doubled its donors and is drowning in its own admin.",
+    stage: "growth",
+    teamSize: "25",
+    location: "London, UK",
+    initials: "FG",
+    accent: 5,
+    role: {
+      id: "role-fg-ops",
+      title: "Operations and systems manager",
+      whyThisRole:
+        "Every donation triggers an hour of manual steps across three systems. The money we spend on admin is money that was given for something else, and everyone here feels that.",
+      compRange: "£36,000\u2013£42,000",
+      location: "London, hybrid",
+      startWindow: "Flexible",
+      arrangements: ["hybrid", "remote"],
+      constraints: ["Charity sector pay, honestly stated"],
+      workExamples: [
+        {
+          id: "we-fg-1",
+          title: "One donation, zero rekeying",
+          description:
+            "Connect the donation platform, the CRM and the finance system so a gift is recorded once, everywhere, correctly.",
+          timeframe: "First 6 months",
+          capabilities: ["automation", "systems-thinking", "operations"],
+          whatYoudDo: [
+            "Map the triple-entry mess without blaming the people keeping it alive",
+            "Automate the joins and prove the reconciliation balances",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "co-stonebridge",
+    slug: "stonebridge-site-systems",
+    name: "Stonebridge Site Systems",
+    blurb: "Construction software for small builders, built by two ex-site managers.",
+    stage: "seed",
+    teamSize: "9",
+    location: "Birmingham, UK",
+    initials: "SS",
+    accent: 0,
+    role: {
+      id: "role-ss-product",
+      title: "Product generalist",
+      whyThisRole:
+        "The founders know sites, not software processes. Features ship when someone shouts loudest. We need the person who turns shouting into a roadmap without losing the customers' trust.",
+      compRange: "£42,000\u2013£55,000 + options",
+      location: "Birmingham or remote (UK)",
+      startWindow: "As soon as possible",
+      arrangements: ["remote", "hybrid"],
+      constraints: ["Monthly site visits with customers"],
+      workExamples: [
+        {
+          id: "we-ss-1",
+          title: "A roadmap the builders believe",
+          description:
+            "Turn a backlog of promises into a sequenced plan, and own saying no kindly to the customers whose features lost.",
+          timeframe: "First 90 days",
+          capabilities: ["product-thinking", "executive-communication", "problem-solving"],
+          whatYoudDo: [
+            "Interview the ten loudest customers and find the pattern under the noise",
+            "Publish the roadmap and hold it against the next emergency",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "co-quayside",
+    slug: "quayside-hospitality",
+    name: "Quayside Hospitality Group",
+    blurb: "Five venues, one spreadsheet empire, and a rota that breaks every Friday.",
+    stage: "established",
+    teamSize: "140",
+    location: "Newcastle, UK",
+    initials: "QH",
+    accent: 2,
+    role: {
+      id: "role-qh-ops",
+      title: "Group operations analyst",
+      whyThisRole:
+        "Each venue manager reports numbers their own way, so group decisions run three weeks late. We need someone who makes the numbers arrive themselves and mean the same thing everywhere.",
+      compRange: "£34,000\u2013£40,000",
+      location: "Newcastle, hybrid",
+      startWindow: "Within two months",
+      arrangements: ["hybrid", "onsite"],
+      constraints: ["Occasional evening visits when venues are actually busy"],
+      workExamples: [
+        {
+          id: "we-qh-1",
+          title: "Five venues, one truthful dashboard",
+          description:
+            "Standardise what gets counted, automate the collection, and make Monday's group meeting start from the same numbers.",
+          timeframe: "First 90 days",
+          capabilities: ["data-analysis", "automation", "workflow-design"],
+          whatYoudDo: [
+            "Agree the definitions venue managers will actually accept",
+            "Automate the pulls from tills and rota tools",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "co-latchmere",
+    slug: "latchmere-learning",
+    name: "Latchmere Learning",
+    blurb: "An online training business whose courses outsell its systems.",
+    stage: "growth",
+    teamSize: "18",
+    location: "Remote (UK)",
+    initials: "LL",
+    accent: 4,
+    role: {
+      id: "role-ll-growth",
+      title: "Lifecycle and retention lead",
+      whyThisRole:
+        "We are good at selling the first course and bad at everything after it. Completion is low, repeat purchase is lower, and nobody owns the gap.",
+      compRange: "£45,000\u2013£55,000",
+      location: "Remote (UK)",
+      startWindow: "Flexible",
+      arrangements: ["remote"],
+      constraints: ["UK hours overlap"],
+      workExamples: [
+        {
+          id: "we-ll-1",
+          title: "Make finishing the course the default",
+          description:
+            "Find where learners stall, rebuild the nudges and the pacing, and move completion meaningfully without resorting to guilt mechanics.",
+          timeframe: "First 6 months",
+          capabilities: ["growth", "data-analysis", "product-thinking"],
+          whatYoudDo: [
+            "Instrument the stall points before touching the content",
+            "Test pacing, reminders and cohort mechanics honestly",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "co-redgate",
+    slug: "redgate-energy-advisors",
+    name: "Redgate Energy Advisors",
+    blurb: "A consultancy helping mid-size firms cut energy costs, scaling past its founders.",
+    stage: "growth",
+    teamSize: "22",
+    location: "Glasgow, UK",
+    initials: "RE",
+    accent: 1,
+    role: {
+      id: "role-re-delivery",
+      title: "Delivery operations lead",
+      whyThisRole:
+        "Every client project is delivered brilliantly and differently. The founders review everything, which caps us at the size we already are.",
+      compRange: "£50,000\u2013£60,000",
+      location: "Glasgow, hybrid",
+      startWindow: "Within three months",
+      arrangements: ["hybrid", "remote"],
+      constraints: ["Quarterly client site visits"],
+      workExamples: [
+        {
+          id: "we-re-1",
+          title: "A delivery method that survives without the founders",
+          description:
+            "Codify how the best projects actually run, build the templates and checkpoints, and get the founders out of every review without quality dropping.",
+          timeframe: "First 6 months",
+          capabilities: ["systems-thinking", "workflow-design", "executive-communication"],
+          whatYoudDo: [
+            "Shadow three projects end to end and extract the real method",
+            "Pilot the playbook on the next two and measure founder hours saved",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "co-wrenfield",
+    slug: "wrenfield-labs",
+    name: "Wrenfield Labs",
+    blurb: "A two-founder AI product studio shipping fast and documenting nothing.",
+    stage: "pre-seed",
+    teamSize: "4",
+    location: "Remote (UK)",
+    initials: "WL",
+    accent: 5,
+    role: {
+      id: "role-wl-builder",
+      title: "Rapid prototyper",
+      whyThisRole:
+        "We win work by showing a working thing three days after the first call. One of us needs to stop being the only person who can do that.",
+      compRange: "£40,000\u2013£55,000 + meaningful equity",
+      location: "Remote (UK)",
+      startWindow: "As soon as possible",
+      arrangements: ["remote"],
+      constraints: ["Comfort with ambiguity is the job description"],
+      workExamples: [
+        {
+          id: "we-wl-1",
+          title: "Idea on Monday, demo on Thursday",
+          description:
+            "Take a client problem from a call transcript to a clickable working prototype fast enough to test against reality, using AI tooling without hiding behind it.",
+          timeframe: "Ongoing, from week one",
+          capabilities: ["rapid-prototyping", "ai-enablement", "startup-experience"],
+          whatYoudDo: [
+            "Build three prototypes in your first month, with the misses documented",
+            "Turn what repeats into the studio's starter kit",
+          ],
+        },
+      ],
+    },
+  },
+
   {
     id: "co-bramble-field",
     slug: "bramble-and-field",
