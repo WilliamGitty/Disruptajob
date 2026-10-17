@@ -1,6 +1,7 @@
 import type { DatabaseSync } from "node:sqlite";
 import { CANDIDATES, COMPANIES } from "@/lib/mock-data";
 import { seedDemoDemand } from "./demo-demand";
+import { seedGeneratedDemand } from "./demo-demand-generated";
 
 /**
  * Schema migrations.
@@ -114,6 +115,13 @@ const MIGRATIONS: Migration[] = [
     // id-guarded, so re-running it only inserts the additions.
     id: "008-demo-demand-expanded",
     up: seedDemoDemand,
+  },
+  {
+    // ~200 generated roles across ~120 invented companies — founder decision for weekend demo
+    // volume, honesty preserved structurally: demo = 1 everywhere, Example badges, noindex, and
+    // none of it in the sitemap. See demo-demand-generated.ts.
+    id: "009-demo-demand-generated",
+    up: seedGeneratedDemand,
   },
 ];
 

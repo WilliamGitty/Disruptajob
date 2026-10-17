@@ -30,7 +30,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const company = getCompanyBySlug(slug);
   if (!company) return {};
-  return { title: `${company.name} — Disruptajob`, description: company.blurb };
+  return {
+    title: `${company.name} — Disruptajob`,
+    description: company.blurb,
+    // Invented companies are for walking through the product, not for search results.
+    robots: company.isDemo ? { index: false, follow: false } : undefined,
+  };
 }
 
 /**

@@ -51,7 +51,13 @@ export function Header({
 
   const badgedHref = isEmployer ? "/employer/responses" : "/talent/opportunities";
 
-  if (pathname === "/") {
+  // On public pages, a visitor gets the public header: content links and the two doors. The
+  // app navigation (My work, Settings, ...) is a row of dead ends to anyone without an account,
+  // and a signed-in person on a public page still has both doors home.
+  const PUBLIC_PREFIXES = ["/about", "/articles", "/faq", "/people", "/privacy", "/terms", "/signin", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/company"];
+  const isPublicPage = pathname === "/" || PUBLIC_PREFIXES.some((p) => pathname?.startsWith(p));
+
+  if (isPublicPage) {
     return (
       <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/90 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
@@ -59,6 +65,9 @@ export function Header({
           {/* Two doors, labelled by what the visitor is here to do rather than by our jargon,
               plus the pages that let a careful visitor take our measure before trusting us. */}
           <nav className="flex items-center gap-5">
+            <Link href="/people" className="hidden text-sm text-ink-faint underline-grow lg:inline">
+              People
+            </Link>
             <Link href="/about" className="hidden text-sm text-ink-faint underline-grow lg:inline">
               About
             </Link>
@@ -68,17 +77,25 @@ export function Header({
             <Link href="/faq" className="hidden text-sm text-ink-faint underline-grow lg:inline">
               FAQ
             </Link>
-            <Link
-              href="/talent/onboarding"
-              className="hidden text-sm text-ink-soft underline-grow sm:inline"
-            >
-              I&rsquo;m looking for work
-            </Link>
-            <Link href={EMPLOYER_HOME}>
-              <span className="inline-flex h-10 items-center border border-ink/20 px-5 text-sm font-medium text-ink transition-colors hover:border-ink">
-                I&rsquo;m hiring
-              </span>
-            </Link>
+            {signedInAs ? (
+              // A signed-in person on a public page keeps their way home: the mode toggle
+              // carries Looking/Hiring, their name, and sign out.
+              <ModeToggle isEmployer={Boolean(isEmployer)} talentHome={talentHome} signedInAs={signedInAs} />
+            ) : (
+              <>
+                <Link
+                  href="/talent/onboarding"
+                  className="hidden text-sm text-ink-soft underline-grow sm:inline"
+                >
+                  I&rsquo;m looking for work
+                </Link>
+                <Link href={EMPLOYER_HOME}>
+                  <span className="inline-flex h-10 items-center border border-ink/20 px-5 text-sm font-medium text-ink transition-colors hover:border-ink">
+                    I&rsquo;m hiring
+                  </span>
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>

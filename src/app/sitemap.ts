@@ -48,7 +48,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
+  // Real companies only: the invented demo population (badged, noindexed) stays out of the
+  // index entirely — testers see a market, search engines see only what is real.
   for (const company of listPublishedCompanies()) {
+    if (company.isDemo) continue;
     pages.push({ url: `${base}/company/${company.slug}`, changeFrequency: "monthly", priority: 0.4 });
   }
 

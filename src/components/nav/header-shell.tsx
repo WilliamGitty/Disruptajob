@@ -1,4 +1,5 @@
 import { getCurrentAccount } from "@/server/auth";
+import { getCandidateById } from "@/server/repositories/candidates";
 import { listInvitesForCandidate, listInvitesForCompany } from "@/server/repositories/invites";
 import { countAwaitingCandidate, countAwaitingEmployer } from "@/lib/invites";
 import { Header } from "@/components/nav/header";
@@ -25,7 +26,13 @@ export async function HeaderShell() {
     <Header
       awaiting={awaiting}
       signedInAs={account ? { name: account.displayName, role: account.role } : undefined}
-      talentHome={account?.candidateId ? `/profile/${account.candidateId}` : "/talent/onboarding"}
+      // The profile URL takes the SLUG, not the candidate id. The seeded demo people have
+      // id === slug, which hid this for weeks: every real sign-up got a 404 on "My profile".
+      talentHome={
+        account?.candidateId
+          ? `/profile/${getCandidateById(account.candidateId)?.slug ?? ""}`
+          : "/talent/onboarding"
+      }
     />
   );
 }
