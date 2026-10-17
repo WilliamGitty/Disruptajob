@@ -1,5 +1,6 @@
 import type { DatabaseSync } from "node:sqlite";
 import { CANDIDATES, COMPANIES } from "@/lib/mock-data";
+import { seedDemoDemand } from "./demo-demand";
 
 /**
  * Schema migrations.
@@ -99,6 +100,12 @@ const MIGRATIONS: Migration[] = [
           WHERE candidate_id = 'william-sandford' AND email = 'will@example.com'`
       ).run();
     },
+  },
+  {
+    // Three more Example companies with open roles, so the demand side of the demo is thick
+    // enough to walk through. Invented rather than scraped on purpose — see demo-demand.ts.
+    id: "007-demo-demand",
+    up: seedDemoDemand,
   },
 ];
 
