@@ -24,6 +24,9 @@ export function Footer() {
           <Link href="/articles" className="underline-grow hover:text-ink">
             Articles
           </Link>
+          <Link href="/guides" className="underline-grow hover:text-ink">
+            Guides
+          </Link>
           <Link href="/faq" className="underline-grow hover:text-ink">
             FAQ
           </Link>

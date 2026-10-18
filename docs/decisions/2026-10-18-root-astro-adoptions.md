@@ -19,7 +19,10 @@ adopted the principles and skipped the machinery.
 6. Answer guides: future content aims at the justification questions our readers ask AI
    assistants (portfolio instead of CV? experience without the title?), because answer pages
    get cited and citations are the beachhead's first touch.
-7. Kill criteria on content, date attached, to be set when guides ship.
+7. Kill criteria on content, date attached, set the day the first guide shipped: if the
+   guides and articles have produced no attributable signups by 31 January 2027 (funnel
+   referrals plus testers naming them), content drops to maintenance and the hours move to
+   direct outreach. Reviewed in the Monday digest nearest that date.
 8. Parked for the employer side: the refundable founding-deposit as the willingness-to-pay
    test that compliments cannot fake.
 

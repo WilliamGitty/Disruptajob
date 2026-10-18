@@ -7,6 +7,7 @@ import { listDiscoverableCandidates } from "@/server/repositories/discovery";
 import { getProjectById } from "@/server/repositories/projects";
 import { listPublishedCompanies } from "@/server/repositories/companies";
 import { ARTICLES } from "@/content/articles";
+import { GUIDES } from "@/content/guides";
 
 /**
  * Only what an anonymous visitor can already see.
@@ -25,6 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/about`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/faq`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/articles`, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${base}/guides`, changeFrequency: "weekly", priority: 0.8 },
+    ...GUIDES.map((g) => ({
+      url: `${base}/guides/${g.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
     ...ARTICLES.map((a) => ({
       url: `${base}/articles/${a.slug}`,
       changeFrequency: "monthly" as const,
