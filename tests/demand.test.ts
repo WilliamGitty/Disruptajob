@@ -181,3 +181,21 @@ test("the named list is capped and ordered by overlap", () => {
   const d = demandFor(candidate());
   assert.ok(d.matchingRoleDetails.length <= 8, "capped at eight rows");
 });
+
+test("a single shared tag is not demand: majority coverage is the bar", () => {
+  addRole("r-thresh", "co-thresh", "Threshold Co", ["automation", "growth", "data-analysis"]);
+  const d = demandFor(candidate()); // evidences automation only: 1 of 3
+  assert.equal(
+    d.matchingRoleDetails.some((r) => r.companyName === "Threshold Co"),
+    false,
+    "one tag of three must not count as a match"
+  );
+});
+
+test("companies are counted as companies, not as roles", () => {
+  addRole("r-cc-1", "co-cc", "Two Roles Co", ["automation"]);
+  addRole("r-cc-2", "co-cc", "Two Roles Co", ["automation"]);
+  const d = demandFor(candidate());
+  assert.equal(d.matchingRoles, 2);
+  assert.equal(d.matchingCompanies, 1, "two roles at one company is one company");
+});

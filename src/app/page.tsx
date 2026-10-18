@@ -66,7 +66,7 @@ export default async function Home() {
           ? "Your page is claimed but empty. One piece of work makes it real."
           : demand.matchingRoles === 0
             ? "Your evidence is live. We'll show demand here as companies describe work you can prove."
-            : `${demand.matchingRoles} compan${demand.matchingRoles === 1 ? "y has" : "ies have"} described work you can evidence${demand.invisibleTo > 0 ? `, and ${demand.invisibleTo} can't see you` : ""}.`;
+            : `${demand.matchingRoles} open role${demand.matchingRoles === 1 ? "" : "s"} at ${demand.matchingCompanies} compan${demand.matchingCompanies === 1 ? "y" : "ies"} mostly match your evidence${demand.invisibleTo > 0 ? `, and ${demand.invisibleTo} of those roles can't see you` : ""}.`;
       band = (
         <WelcomeBand
           firstName={me.name.split(" ")[0] || account.displayName.split(" ")[0]}

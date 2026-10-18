@@ -41,7 +41,7 @@ export function DemandPanel({ demand, ownerFirstName }: { demand: DemandSummary;
     );
   }
 
-  const roleWord = demand.matchingRoles === 1 ? "company has" : "companies have";
+  const roleWord = demand.matchingRoles === 1 ? "open role mostly matches" : "open roles mostly match";
 
   return (
     <section className="border border-ink/15 p-6">
@@ -49,7 +49,7 @@ export function DemandPanel({ demand, ownerFirstName }: { demand: DemandSummary;
         <Search className="mt-1 h-4 w-4 shrink-0 text-ink-faint" />
         <div>
           <h2 className="font-serif-display text-lg leading-snug text-ink">
-            {demand.matchingRoles} {roleWord} described work you can already evidence.
+            {demand.matchingRoles} {roleWord} the work you can already evidence.
           </h2>
           {demand.inDemand.length > 0 && (
             <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">

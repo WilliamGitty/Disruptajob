@@ -40,8 +40,14 @@ export interface RoleDemand {
 }
 
 export interface DemandSummary {
-  /** Open roles demanding at least one capability this candidate has evidenced. */
+  /**
+   * Open roles where this candidate's evidence covers at least half of what the role asks for.
+   * The threshold exists because "shares one tag" matched nearly every role in the database,
+   * and a number that includes almost everything is flattery, not demand.
+   */
   matchingRoles: number;
+  /** Distinct companies behind those roles, so copy that says "companies" counts companies. */
+  matchingCompanies: number;
   /** Of those, how many belong to companies that cannot currently see this person. */
   invisibleTo: number;
   /** Which of their capabilities are being asked for, most in demand first. */
@@ -79,6 +85,7 @@ export function demandFor(candidate: CandidateProfile): DemandSummary {
   const mine = new Map<string, number>();
   const theirs = new Map<string, number>();
   const details: RoleDemand[] = [];
+  const matchedCompanyIds = new Set<string>();
   let matchingRoles = 0;
   let invisibleTo = 0;
 
@@ -93,8 +100,11 @@ export function demandFor(candidate: CandidateProfile): DemandSummary {
       else theirs.set(tag, (theirs.get(tag) ?? 0) + 1);
     }
 
-    if (overlap.length === 0) continue;
+    // Majority coverage, not a single shared tag: the role is asking for this person, not for
+    // anyone who has ever automated anything.
+    if (overlap.length < Math.ceil(required.length / 2)) continue;
     matchingRoles += 1;
+    matchedCompanyIds.add(role.companyId);
 
     // The same two gates search applies, asked in reverse: could this company find them?
     const company = companies.get(role.companyId);
@@ -124,6 +134,7 @@ export function demandFor(candidate: CandidateProfile): DemandSummary {
 
   return {
     matchingRoles,
+    matchingCompanies: matchedCompanyIds.size,
     invisibleTo,
     inDemand: rank(mine),
     gaps: rank(theirs).slice(0, 4),
