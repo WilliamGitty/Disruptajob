@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { funnelReport, type FunnelStep } from "@/server/analytics";
 import { realSignups } from "@/server/signups";
+import { all } from "@/server/db";
 import { getCurrentAccount } from "@/server/auth";
 import { isAdminEmail } from "@/server/config";
 
@@ -31,6 +32,9 @@ export default async function FunnelPage({
   const days = Math.min(365, Math.max(1, Number(daysParam) || 30));
   const report = funnelReport(days);
   const signups = realSignups();
+  const questions = all<{ account_name: string | null; question: string; created_at: string }>(
+    "SELECT account_name, question, created_at FROM assistant_message ORDER BY created_at DESC LIMIT 30"
+  );
 
   return (
     <main className="mx-auto max-w-[900px] px-6 py-14">
@@ -84,6 +88,28 @@ export default async function FunnelPage({
 
       <Funnel title="Candidates" steps={report.candidate} />
       <Funnel title="Companies" steps={report.employer} />
+
+      <section className="border border-ink/15 p-6">
+        <h2 className="font-serif-display text-xl text-ink">What people asked the assistant</h2>
+        <p className="mt-1 text-sm text-ink-soft">
+          Every question is a place someone got stuck. Named when they were signed in.
+        </p>
+        {questions.length === 0 ? (
+          <p className="mt-4 text-sm text-ink-faint">No questions yet.</p>
+        ) : (
+          <ul className="mt-4 space-y-2.5">
+            {questions.map((q, i) => (
+              <li key={i} className="text-sm leading-relaxed">
+                <span className="font-medium text-ink">{q.account_name ?? "Signed out"}</span>{" "}
+                <span className="text-ink-faint">
+                  {new Date(q.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                </span>
+                <span className="block text-ink-soft">&ldquo;{q.question}&rdquo;</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <section className="mt-12">
         <h2 className="font-serif-display text-xl text-ink">Where candidates stop</h2>

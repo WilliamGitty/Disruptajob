@@ -14,6 +14,8 @@ export const RETENTION = {
   sessionDays: 30,
   /** Funnel events. Long enough to compare one month to the last, short enough not to hoard. */
   eventDays: 365,
+  /** Help-assistant questions: kept long enough to fix the confusion, not to profile anyone. */
+  assistantDays: 90,
   /** Rate-limiting rows are useful for minutes; this is only a backstop for abandoned buckets. */
   rateAttemptDays: 1,
 } as const;
@@ -27,6 +29,7 @@ export function pruneExpiredData(): void {
   run("DELETE FROM session WHERE created_at < ?", cutoff(RETENTION.sessionDays));
   run("DELETE FROM event WHERE created_at < ?", cutoff(RETENTION.eventDays));
   run("DELETE FROM rate_attempt WHERE created_at < ?", cutoff(RETENTION.rateAttemptDays));
+  run("DELETE FROM assistant_message WHERE created_at < ?", cutoff(RETENTION.assistantDays));
 }
 
 const PRUNE_INTERVAL_MS = 60 * 60 * 1000;

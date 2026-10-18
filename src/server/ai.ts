@@ -17,6 +17,8 @@ import { logError, logWarn } from "./log";
 
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MODEL = "claude-sonnet-5";
+/** Support answers are short and templated enough that the small model is the honest spend. */
+const ASSISTANT_MODEL = "claude-haiku-4-5-20251001";
 
 export const AI_ENABLED = Boolean(API_KEY);
 
@@ -203,6 +205,44 @@ export async function draftProjectFromReadme(
     return suggestion;
   } catch (error) {
     logError("ai.draft-failed", error, { repo: repoName });
+    return null;
+  }
+}
+
+/**
+ * One help-assistant reply. History arrives already clamped by the route; a failure returns
+ * null and the widget says the assistant is unavailable rather than guessing.
+ */
+export async function assistantReply(
+  system: string,
+  history: { role: "user" | "assistant"; content: string }[]
+): Promise<string | null> {
+  if (!API_KEY) return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: ASSISTANT_MODEL,
+        max_tokens: 400,
+        system,
+        messages: history,
+      }),
+    });
+    if (!res.ok) {
+      logError("ai.assistant-failed", new Error(`Anthropic responded ${res.status}`), {
+        body: (await res.text()).slice(0, 200),
+      });
+      return null;
+    }
+    const data = (await res.json()) as { content?: { type: string; text?: string }[] };
+    return data.content?.find((b) => b.type === "text")?.text ?? null;
+  } catch (error) {
+    logError("ai.assistant-failed", error, {});
     return null;
   }
 }

@@ -41,6 +41,14 @@ export default function PrivacyPage() {
         <p>
           For anything in this policy, write to <strong>hello@disruptajob.com</strong>.
         </p>
+        <p>
+          The help assistant (the question mark in the corner) sends what you type to
+          Anthropic, our AI provider, to generate the answer. We keep each question and
+          answer, together with your account name if you are signed in, so the founder can
+          see where people get stuck and fix it; these logs are deleted after 90 days and the
+          widget says this before you use it. Don&rsquo;t put passwords or sensitive personal
+          details into the chat; it never needs them.
+        </p>
       </Section>
 
       <Section id="what" heading="What we collect, and why">

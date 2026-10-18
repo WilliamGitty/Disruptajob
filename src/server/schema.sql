@@ -354,3 +354,16 @@ CREATE TABLE IF NOT EXISTS role_interest (
   created_at   TEXT NOT NULL,
   PRIMARY KEY (candidate_id, role_id)
 );
+
+-- Questions asked to the help assistant, kept so the founder can see where people get stuck.
+-- Disclosed in the widget itself and in the privacy policy; account_name is set only for
+-- signed-in users; rows are purged on the retention schedule (see server/retention.ts).
+CREATE TABLE IF NOT EXISTS assistant_message (
+  id           TEXT PRIMARY KEY,
+  visitor      TEXT NOT NULL,
+  account_name TEXT,
+  question     TEXT NOT NULL,
+  answer       TEXT NOT NULL,
+  created_at   TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_assistant_created ON assistant_message(created_at);

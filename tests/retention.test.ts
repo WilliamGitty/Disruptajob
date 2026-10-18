@@ -80,3 +80,17 @@ test("session retention matches the session cookie's lifetime", () => {
   // early. Pinned so the two have to be changed together.
   assert.equal(RETENTION.sessionDays, 30);
 });
+
+test("assistant questions expire on schedule like everything else", async () => {
+  const { RETENTION, pruneExpiredData } = await import("@/server/retention");
+  const old = new Date(Date.now() - (RETENTION.assistantDays + 1) * 86400_000).toISOString();
+  const fresh = new Date().toISOString();
+  run(
+    "INSERT INTO assistant_message (id, visitor, account_name, question, answer, created_at) VALUES ('am-old','v',NULL,'q','a',?), ('am-new','v',NULL,'q','a',?)",
+    old, fresh
+  );
+  pruneExpiredData();
+  const left = all<{ id: string }>("SELECT id FROM assistant_message").map((r) => r.id);
+  assert.ok(!left.includes("am-old"), "old questions are deleted, not hoarded");
+  assert.ok(left.includes("am-new"));
+});

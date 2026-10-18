@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { HeaderShell } from "@/components/nav/header-shell";
 import { Footer } from "@/components/layout/footer";
+import { AssistantWidget } from "@/components/assistant/assistant-widget";
 import { DemoBanner } from "@/components/layout/demo-banner";
 
 const geistSans = Geist({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <HeaderShell />
         <div className="flex-1">{children}</div>
         <Footer />
+        <AssistantWidget />
       </body>
     </html>
   );

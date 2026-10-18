@@ -37,6 +37,8 @@ export const LIMITS = {
   resetByEmail: { max: 3, windowMs: 60 * 60 * 1000 },
   /** Registering interest is consequential (it grants a company visibility), so no spraying. */
   roleInterestByIp: { max: 30, windowMs: 60 * 60 * 1000 },
+  /** The help assistant costs money per message; generous for a stuck human, dull for a script. */
+  assistantByIp: { max: 20, windowMs: 15 * 60 * 1000 },
 } as const satisfies Record<string, Limit>;
 
 export type LimitName = keyof typeof LIMITS;

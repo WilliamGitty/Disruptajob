@@ -94,6 +94,12 @@ string: **would you say this out loud to someone who's had a hard year?**
   yes. Code auto-deploys; tests are its gate. Decisions live in docs/decisions/, one file,
   same day.
 
+## The help assistant's knowledge
+
+The in-site assistant knows exactly what [src/content/assistant-kb.ts](src/content/assistant-kb.ts)
+says and nothing else. **Ship anything that changes what a user sees, update that file in the
+same commit** — a bot that describes last week's UI is worse than no bot.
+
 ## Recording decisions
 
 - **Why goes in the commit message.** Not what changed — the diff says that — but what was broken,
