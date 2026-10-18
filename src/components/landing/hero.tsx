@@ -12,7 +12,13 @@ import { Reveal } from "@/components/landing/reveal";
  * rather than our thesis, and the three reassurances answer what they're actually anxious about
  * before they'll click: does this cost me, will my employer find out, how long will this take.
  */
-export function Hero() {
+export function Hero({
+  ctaLabel = "Add your first project",
+  ctaHref = "/talent/onboarding",
+}: {
+  ctaLabel?: string;
+  ctaHref?: string;
+}) {
   return (
     <section className="relative border-b border-ink/10">
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-6 pb-16 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 lg:px-10 lg:pb-24 lg:pt-24">
@@ -36,8 +42,8 @@ export function Hero() {
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button asChild size="lg" variant="accent">
-              <Link href="/talent/onboarding">
-                Add your first project
+              <Link href={ctaHref}>
+                {ctaLabel}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
