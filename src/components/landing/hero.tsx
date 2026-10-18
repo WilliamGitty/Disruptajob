@@ -24,7 +24,7 @@ export function Hero({
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-6 pb-16 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 lg:px-10 lg:pb-24 lg:pt-24">
         <div className="animate-fade-up">
           <p className="mb-6 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-            For people whose title says one thing
+            For people the CV format punishes
           </p>
           {/* The accent lands on the two words that carry the argument, not the whole line , 
               colour marks one thing or it marks nothing. */}
@@ -32,12 +32,13 @@ export function Hero({
             Your <span className="text-accent">job title</span> doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-            You run the ops, build the automations and own half of product. Your CV has room for
-            one line of that. If you&rsquo;ve sent two hundred applications and heard back from
-            four, the problem isn&rsquo;t you. It&rsquo;s the format. Build your evidence here
-            and it&rsquo;s a link you can use everywhere today: in applications, on LinkedIn,
-            under your email signature. Companies searching this place and finding you is the
-            upside, not the ask.
+            One year of experience when the filter demands two. Four roles in three years that
+            read as a risk instead of range. A master&rsquo;s full of real research and no job
+            title to show for it. The CV was built for tidy decade careers; it punishes everyone
+            else. Here you show the work instead: projects, research, systems, the things you
+            actually did. Build your page once and there is nothing left to pull out at 11pm.
+            It&rsquo;s a link that works everywhere today, and companies searching this place
+            and finding you is the upside, not the ask.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">

@@ -173,7 +173,11 @@ export function funnelReport(days = 30): FunnelReport {
     days,
     candidate: buildFunnel(CANDIDATE_FUNNEL, counts),
     employer: buildFunnel(EMPLOYER_FUNNEL, counts),
-    stepDropOff: stepRows.map((r) => ({ step: r.step, label: r.label ?? `Step ${r.step}`, visitors: r.n })),
+    stepDropOff: stepRows
+      // Events from retired flows (the eight-step onboarding) would otherwise haunt this list
+      // forever; the report speaks only the current flow's language.
+      .filter((r) => ["gap", "work", "proof", "you", "claim"].includes(r.label ?? ""))
+      .map((r) => ({ step: r.step, label: r.label ?? `Step ${r.step}`, visitors: r.n })),
     interest: {
       total: interestTotal,
       recent: recentInterest.map((r) => ({ email: r.email, side: r.side, createdAt: r.created_at })),

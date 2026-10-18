@@ -24,7 +24,9 @@ export function CandidatePreviewGrid() {
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               Every one of these started as one project written up by someone who thought their
-              CV wasn&rsquo;t doing them justice.
+              CV wasn&rsquo;t doing them justice. The companies we&rsquo;re bringing to the other
+              side are AI-era startups and small firms that hire for what you can do, because
+              they can&rsquo;t afford to hire for anything else.
             </p>
           </div>
           <Link href="/people" className="text-sm font-medium text-ink underline-grow">

@@ -68,6 +68,24 @@ export default function AboutPage() {
           </Link>
         </p>
 
+        <h2 className="pt-4 font-serif-display text-xl text-ink">Who&rsquo;s behind it</h2>
+        <div className="flex items-start gap-5">
+          {/* Swap for /founder.jpg the day the photo lands; the layout already fits it. */}
+          <span className="flex h-20 w-20 shrink-0 items-center justify-center border border-ink/15 bg-paper-dim font-serif-display text-2xl text-ink">
+            WS
+          </span>
+          <div>
+            <p className="font-medium text-ink">William Sandford</p>
+            <p className="mt-1 text-[15px] leading-relaxed text-ink-soft">
+              I run operations and build automations at a venture builder by day, and I taught
+              myself to ship software with AI because waiting for permission stopped making
+              sense. My own CV kept one line of all that. This site is what I wished existed,
+              built in the open, mistakes included. If something here annoys you, tell me:
+              hello@disruptajob.com reaches me, not a team.
+            </p>
+          </div>
+        </div>
+
         <h2 className="pt-4 font-serif-display text-xl text-ink">Where it stands</h2>
         <p>
           Disruptajob is new and built small: one founder, an AI pair, and a few weeks of

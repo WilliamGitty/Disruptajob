@@ -207,13 +207,18 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
             <Screen
               kicker="Now the work"
               question="Tell us about one piece of work you're proud of."
-              hint="One real thing you built, ran or fixed. A good test: what would break, or just quietly stop happening, if you went away for a month?"
+              hint="One real thing you built, ran, fixed or researched. A dissertation project counts. The system you set up in a six-month stint counts. The workshop you ran counts. A good test: did it actually happen, and could you talk about it for five minutes?"
             >
               <Writing
                 value={project.description}
                 onChange={(v) => patchProject({ description: v })}
                 placeholder="There was no system for…, so I…"
               />
+              <p className="mt-4 text-xs leading-relaxed text-ink-faint">
+                If your work lives on GitHub or in a CV, a rough answer here is enough: the
+                moment your page exists you can import either, and AI drafts the rest for you
+                to edit.
+              </p>
               <div className="mt-6 max-w-sm space-y-2">
                 <Label htmlFor="work-title" className="text-ink-soft">
                   Give it a short name
@@ -614,6 +619,10 @@ function PayoffView({
           We&rsquo;ve emailed you a confirmation link. No rush; nothing is locked behind it.
         </p>
       )}
+      <p className="mt-3 text-sm text-ink-soft">
+        Got more work on GitHub or in a CV? Your page has an import desk: drop either and AI
+        drafts the write-ups for you to finish or discard.
+      </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Button asChild variant="accent">
           <Link href={`/profile/${slug}`}>
