@@ -54,7 +54,7 @@ export function Header({
   // On public pages, a visitor gets the public header: content links and the two doors. The
   // app navigation (My work, Settings, ...) is a row of dead ends to anyone without an account,
   // and a signed-in person on a public page still has both doors home.
-  const PUBLIC_PREFIXES = ["/about", "/articles", "/guides", "/faq", "/people", "/privacy", "/terms", "/signin", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/company"];
+  const PUBLIC_PREFIXES = ["/about", "/articles", "/guides", "/faq", "/community", "/people", "/privacy", "/terms", "/signin", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/company"];
   const isPublicPage = pathname === "/" || PUBLIC_PREFIXES.some((p) => pathname?.startsWith(p));
 
   if (isPublicPage) {
@@ -65,8 +65,8 @@ export function Header({
           {/* Two doors, labelled by what the visitor is here to do rather than by our jargon,
               plus the pages that let a careful visitor take our measure before trusting us. */}
           <nav className="flex items-center gap-5">
-            <Link href="/people" className="hidden text-sm text-ink-faint underline-grow lg:inline">
-              People
+            <Link href="/community" className="hidden text-sm text-ink-faint underline-grow lg:inline">
+              Community
             </Link>
             <Link href="/about" className="hidden text-sm text-ink-faint underline-grow lg:inline">
               About
