@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { funnelReport, type FunnelStep } from "@/server/analytics";
+import { realSignups } from "@/server/signups";
 import { getCurrentAccount } from "@/server/auth";
 import { isAdminEmail } from "@/server/config";
 
@@ -29,6 +30,7 @@ export default async function FunnelPage({
   const { days: daysParam } = await searchParams;
   const days = Math.min(365, Math.max(1, Number(daysParam) || 30));
   const report = funnelReport(days);
+  const signups = realSignups();
 
   return (
     <main className="mx-auto max-w-[900px] px-6 py-14">
@@ -50,6 +52,35 @@ export default async function FunnelPage({
           ))}
         </nav>
       </header>
+
+      <section className="border border-ink/15 bg-paper-dim p-6">
+        <h2 className="font-serif-display text-xl text-ink">
+          Real people: {signups.length}
+        </h2>
+        <p className="mt-1 text-sm text-ink-soft">
+          Actual candidate accounts, straight from the database. Demo accounts and yours are
+          excluded, so this number only moves when a stranger finishes the whole thing.
+        </p>
+        {signups.length === 0 ? (
+          <p className="mt-4 text-sm text-ink-faint">Nobody yet. The next one is the first.</p>
+        ) : (
+          <ul className="mt-4 space-y-2">
+            {signups.map((su) => (
+              <li key={`${su.name}-${su.createdAt}`} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
+                <span className="font-medium text-ink">{su.name}</span>
+                <span className="text-ink-faint">
+                  joined {new Date(su.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                </span>
+                <span className="text-ink-soft">
+                  {su.publishedProjects} published project{su.publishedProjects === 1 ? "" : "s"}
+                </span>
+                <span className="text-ink-faint">· {su.discoverability}</span>
+                {!su.emailVerified && <span className="text-ink-faint">· unverified email</span>}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <Funnel title="Candidates" steps={report.candidate} />
       <Funnel title="Companies" steps={report.employer} />

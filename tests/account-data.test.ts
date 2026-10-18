@@ -267,3 +267,26 @@ test("nothing anywhere in the database still mentions the deleted person", () =>
     }
   }
 });
+
+test("realSignups excludes the demo population and the admin's own accounts", async () => {
+  const { realSignups } = await import("@/server/signups");
+  const now = new Date().toISOString();
+  run(
+    `INSERT INTO candidate (id, slug, name, discoverability, demo, created_at)
+     VALUES ('cand-real-su','real-su','Real Stranger','hidden',0,?),
+            ('cand-demo-su','demo-su','Demo Person','open',1,?),
+            ('cand-admin-su','admin-su','The Admin','hidden',0,?)`,
+    now, now, now
+  );
+  run(
+    `INSERT INTO account (id, email, display_name, role, candidate_id, created_at)
+     VALUES ('acc-real-su','stranger@example.com','Real Stranger','talent','cand-real-su',?),
+            ('acc-demo-su','demo-su@example.com','Demo Person','talent','cand-demo-su',?),
+            ('acc-admin-su','founder@example.com','The Admin','talent','cand-admin-su',?)`,
+    now, now, now
+  );
+  const names = realSignups(["founder@example.com"]).map((s) => s.name);
+  assert.ok(names.includes("Real Stranger"));
+  assert.ok(!names.includes("Demo Person"), "demo accounts never count as real people");
+  assert.ok(!names.includes("The Admin"), "the founder's own runs never flatter the number");
+});
