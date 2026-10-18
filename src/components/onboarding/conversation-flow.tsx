@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
 import type { Project } from "@/types";
@@ -85,7 +85,20 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
     [items]
   );
 
-  if (!hydrated) return <div className="min-h-[60vh]" aria-hidden />;
+  // A "completed" draft with no session behind it is stale: the account was deleted, the cookie
+  // expired, or this is a shared device whose last user finished onboarding (the founder's
+  // coffee-shop testing, concretely). The server is the truth; the local flag self-clears so
+  // the next person starts clean instead of being told their profile already exists.
+  const staleCompletion = hydrated && !session && Boolean(draft.completedAt);
+  useEffect(() => {
+    if (staleCompletion) {
+      reset();
+      remove((p) => p.id === CONVO_PROJECT_ID);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staleCompletion]);
+
+  if (!hydrated || staleCompletion) return <div className="min-h-[60vh]" aria-hidden />;
 
   if (done) {
     return <PayoffView slug={done.slug} capabilities={done.capabilities} signedUpFresh={done.fresh} />;
