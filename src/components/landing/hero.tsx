@@ -32,13 +32,11 @@ export function Hero({
             Your <span className="text-accent">job title</span> doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-            One year of experience when the filter demands two. Four roles in three years that
-            read as a risk instead of range. A master&rsquo;s full of real research and no job
-            title to show for it. The CV was built for tidy decade careers; it punishes everyone
-            else. Here you show the work instead: projects, research, systems, the things you
-            actually did. Build your page once and there is nothing left to pull out at 11pm.
-            It&rsquo;s a link that works everywhere today, and companies searching this place
-            and finding you is the upside, not the ask.
+            One year of experience when the filter demands two. Four roles that read as risk
+            instead of range. Research with no job title to show for it. The CV punishes
+            timelines that don&rsquo;t fit; here you show the work instead. Build your page
+            once and there&rsquo;s nothing left to pull out at 11pm: a link that works
+            everywhere, and companies finding you is the upside, not the ask.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
