@@ -619,10 +619,42 @@ function PayoffView({
           We&rsquo;ve emailed you a confirmation link. No rush; nothing is locked behind it.
         </p>
       )}
-      <p className="mt-3 text-sm text-ink-soft">
-        Got more work on GitHub or in a CV? Your page has an import desk: drop either and AI
-        drafts the write-ups for you to finish or discard.
-      </p>
+      <div className="mt-8 border border-ink/15 bg-paper-dim p-5">
+        <p className="text-xs font-medium uppercase tracking-[0.12em] text-ink-faint">
+          What happens from here
+        </p>
+        <ol className="mt-3 space-y-2.5 text-[15px] leading-relaxed text-ink">
+          <li>
+            <span className="font-medium">1. Add more when you like.</span>{" "}
+            <span className="text-ink-soft">
+              More evidence means more searches you appear in. GitHub and CV imports on your
+              page draft it for you.
+            </span>
+          </li>
+          <li>
+            <span className="font-medium">2. Decide who can find you.</span>{" "}
+            <span className="text-ink-soft">
+              You&rsquo;re hidden now. Open up when ready, and block any company by name,
+              your employer included.
+            </span>
+          </li>
+          <li>
+            <span className="font-medium">3. Use your link today.</span>{" "}
+            <span className="text-ink-soft">
+              Applications, LinkedIn, your email signature. It works before anyone finds you
+              here.
+            </span>
+          </li>
+          <li>
+            <span className="font-medium">4. Then live your life.</span>{" "}
+            <span className="text-ink-soft">
+              There&rsquo;s nothing to check daily, on purpose. When a company wants to talk,
+              you get one email. Until then, silence means it&rsquo;s working, not that
+              it&rsquo;s broken.
+            </span>
+          </li>
+        </ol>
+      </div>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Button asChild variant="accent">
           <Link href={`/profile/${slug}`}>

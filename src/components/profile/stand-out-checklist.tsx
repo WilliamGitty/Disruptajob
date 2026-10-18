@@ -28,7 +28,8 @@ export function StandOutChecklist({ items }: { items: StandOutItem[] }) {
         <p className="font-serif-display text-lg text-ink">Make this page harder to scroll past</p>
         <p className="mt-1 text-sm leading-relaxed text-ink-soft">
           Everything here is optional, and everything here works: more evidence means more
-          searches you appear in.
+          searches you appear in. Beyond this list there&rsquo;s nothing to check daily;
+          when a company wants to talk, you get one email.
         </p>
         <ul className="mt-4 space-y-2.5">
           {items.map((item) => (
