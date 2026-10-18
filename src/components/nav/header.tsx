@@ -199,12 +199,14 @@ function AccountMenu({
   const items =
     signedInAs.role === "talent"
       ? [
-          { label: "My profile", href: talentHome },
-          { label: "My work", href: `${talentHome}#work` },
-          { label: "Add work", href: "/talent/onboarding" },
+          { label: "My profile", href: "/talent/account" },
+          { label: "My projects", href: talentHome },
           { label: "Job roles available", href: "/talent/matches" },
+          { label: "Registered interest", href: "/talent/interested" },
           { label: "Who's interested", href: "/talent/opportunities" },
-          { label: "My settings", href: "/talent/settings" },
+          { label: "divider:Settings", href: "#" },
+          { label: "Account management", href: "/talent/settings" },
+          { label: "Help", href: "/faq" },
         ]
       : [
           { label: "Find people", href: "/employer" },
@@ -240,17 +242,23 @@ function AccountMenu({
             role="menu"
             className="absolute right-0 top-full z-50 mt-2 w-52 border border-ink/15 bg-paper py-1.5 shadow-[3px_3px_0_rgba(26,24,21,0.08)]"
           >
-            {items.map((item) => (
-              <Link
-                key={item.label}
-                role="menuitem"
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="block px-4 py-2 text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {items.map((item) =>
+              item.label.startsWith("divider:") ? (
+                <div key={item.label} className="mx-4 mb-1 mt-2 border-t border-ink/10 pt-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-faint">
+                  {item.label.slice(8)}
+                </div>
+              ) : (
+                <Link
+                  key={item.label}
+                  role="menuitem"
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="block px-4 py-2 text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
             <div className="my-1.5 border-t border-ink/10" />
             <form action={signOutAction}>
               <button
