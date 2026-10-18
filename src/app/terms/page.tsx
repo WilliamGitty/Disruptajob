@@ -4,7 +4,7 @@ import { LegalPage, NotYetReviewed, Rows, Section } from "@/components/legal/leg
 
 export const metadata: Metadata = {
   alternates: { canonical: "/terms" },
-  title: "Terms — Disruptajob",
+  title: "Terms · Disruptajob",
   description: "The agreement between you and Disruptajob, in plain English.",
 };
 
@@ -28,7 +28,7 @@ export default function TermsPage() {
         <>
           Candidates use this for free, permanently. Companies pay. You own the work you describe
           here and can take it with you or delete it at any time. We don&rsquo;t promise you a job,
-          and we don&rsquo;t promise a company a hire — what we promise is that what you see is
+          and we don&rsquo;t promise a company a hire, what we promise is that what you see is
           backed by evidence rather than by assertion.
         </>
       }
@@ -50,7 +50,7 @@ export default function TermsPage() {
 
       <Section id="free" heading="Free for candidates. Permanently.">
         <p>
-          If you are looking for work, this service is free and we will not charge you — not for an
+          If you are looking for work, this service is free and we will not charge you, not for an
           account, not for visibility, not for being contacted, and not for any &ldquo;premium&rdquo;
           tier that moves you up a list.
         </p>
@@ -76,7 +76,7 @@ export default function TermsPage() {
         </p>
         <p>
           Describe only work you actually did, and don&rsquo;t publish anything you&rsquo;re not
-          free to share — an employer&rsquo;s confidential information, material covered by an NDA,
+          free to share, an employer&rsquo;s confidential information, material covered by an NDA,
           or someone else&rsquo;s work presented as yours. If you&rsquo;re unsure, describe the
           problem and your contribution rather than attaching the artefact.
         </p>
@@ -151,7 +151,7 @@ export default function TermsPage() {
         <p>
           We don&rsquo;t promise you a job, an approach, an interview, or a hire. We don&rsquo;t
           verify employment history, and a capability score describes the evidence someone has
-          attached — not a guarantee about them. Companies should still do their own assessment, and
+          attached, not a guarantee about them. Companies should still do their own assessment, and
           candidates should still do their own diligence on a company.
         </p>
         <p>
@@ -181,7 +181,7 @@ export default function TermsPage() {
           and permanently.
         </p>
         <p>
-          We may suspend or close an account that breaks these terms — most seriously, a company
+          We may suspend or close an account that breaks these terms, most seriously, a company
           that contacts someone who blocked it, or an account misrepresenting whose work is whose.
           Where it&rsquo;s reasonable to do so, we&rsquo;ll tell you why and give you a chance to
           put it right first.

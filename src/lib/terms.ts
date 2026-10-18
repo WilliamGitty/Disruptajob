@@ -76,7 +76,7 @@ export function assessTerms(candidate: CandidateProfile, query: string): TermsFi
   if (offered && floor) {
     if (offered.currency !== floor.currency) {
       compensation = "unknown";
-      notes.push("Budget stated in a different currency to their minimum — worth confirming.");
+      notes.push("Budget stated in a different currency to their minimum, worth confirming.");
     } else if (offered.amount >= floor.amount) {
       compensation = "fits";
       notes.push("Your stated budget clears their minimum.");

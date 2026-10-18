@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "FAQ — Disruptajob",
+  title: "FAQ · Disruptajob",
   description:
     "Straight answers: what it costs, who can see you, how capabilities are scored, where AI is used, and what happens to your data.",
   alternates: { canonical: "/faq" },

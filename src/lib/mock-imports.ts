@@ -114,7 +114,7 @@ export async function importFromGitHub(ownerId: string): Promise<Project[]> {
         .join(" "),
       description: repo.description,
       thumbnailSeed: slug,
-      capabilities: [], // candidate tags these during review — never pre-filled by the import
+      capabilities: [], // candidate tags these during review, never pre-filled by the import
       tools: [],
       evidence: [], // import never fabricates evidence
       outcome: "",

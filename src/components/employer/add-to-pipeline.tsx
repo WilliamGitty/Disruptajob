@@ -49,7 +49,7 @@ export function AddToPipelineButton({
             } catch {
               // The action rejects if you're not signed in as an employer, or if this candidate
               // has hidden from you since the page rendered.
-              setError("Couldn't add — check you're signed in as a company.");
+              setError("Couldn't add, check you're signed in as a company.");
             }
           })
         }

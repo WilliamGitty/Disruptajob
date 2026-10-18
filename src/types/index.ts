@@ -111,7 +111,7 @@ export type WorkArrangement = "remote" | "hybrid" | "onsite";
  */
 export interface NonNegotiables {
   roleTypes: string[]; // role type / seniority open to
-  compFloor?: string; // private — never shown to employers
+  compFloor?: string; // private, never shown to employers
   workArrangements: WorkArrangement[];
   locationConstraint?: string;
   dealbreakers: string[]; // e.g. "no on-call", "no 5-day RTO"

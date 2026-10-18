@@ -63,7 +63,7 @@ export function CompanyStep({
       <StepIntro
         eyebrow="Who you are"
         title="Who you are, briefly."
-        body="None of this affects who you match with — that comes entirely from the work you describe on the next step."
+        body="None of this affects who you match with, that comes entirely from the work you describe on the next step."
       />
 
       <Field label="Company website">
@@ -92,7 +92,7 @@ export function CompanyStep({
           </Button>
         </div>
         <p className="text-xs text-ink-faint">
-          We don&rsquo;t read your site — this just saves you typing your own name. Everything that
+          We don&rsquo;t read your site, this just saves you typing your own name. Everything that
           matters, you write yourself.
         </p>
       </Field>
@@ -125,7 +125,7 @@ export function CompanyStep({
             />
           </Field>
           <p className="text-xs leading-relaxed text-ink-faint sm:col-span-2">
-            Your account is created when you publish, not now — so you can look around first. The
+            Your account is created when you publish, not now, so you can look around first. The
             password is never saved with your draft.
           </p>
         </div>
@@ -139,7 +139,7 @@ export function CompanyStep({
           onChange={(e) => patch({ blurb: e.target.value })}
         />
         <p className="text-xs text-ink-faint">
-          Plain language beats positioning here — a candidate is deciding whether they understand
+          Plain language beats positioning here, a candidate is deciding whether they understand
           what you do.
         </p>
       </Field>
@@ -228,7 +228,7 @@ export function WorkStep({ setup, patch }: StepProps) {
       <StepIntro
         eyebrow="The work, not the job title"
         title="What would they actually be doing?"
-        body="We don't take job descriptions. Describe one or two real pieces of work this person would own — it's what candidates read, and it's what we match their evidence against."
+        body="We don't take job descriptions. Describe one or two real pieces of work this person would own, it's what candidates read, and it's what we match their evidence against."
       />
 
       <JobDescriptionDrop onApply={applyJobDescription} />
@@ -286,7 +286,7 @@ export function TermsStep({ setup, patch }: StepProps) {
       <StepIntro
         eyebrow="Your side of the deal"
         title="Be straight about the terms."
-        body="Candidates here have already stated what they need. Posting your range lets us tell both sides immediately whether this is worth a conversation — and nobody wastes three weeks finding out."
+        body="Candidates here have already stated what they need. Posting your range lets us tell both sides immediately whether this is worth a conversation, and nobody wastes three weeks finding out."
       />
 
       <Field label="Compensation range">
@@ -296,7 +296,7 @@ export function TermsStep({ setup, patch }: StepProps) {
           onChange={(e) => patchTerms({ compRange: e.target.value })}
         />
         <p className="text-xs text-ink-faint">
-          Shown to candidates. We never show you theirs — we only tell you whether yours clears it.
+          Shown to candidates. We never show you theirs, we only tell you whether yours clears it.
         </p>
       </Field>
 
@@ -324,7 +324,7 @@ export function TermsStep({ setup, patch }: StepProps) {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field label="Location expectation">
           <Input
-            placeholder="London — 2 days a week onsite"
+            placeholder="London, 2 days a week onsite"
             value={terms.location ?? ""}
             onChange={(e) => patchTerms({ location: e.target.value })}
           />
@@ -388,7 +388,7 @@ export function ReviewStep({ setup }: StepProps) {
       <StepIntro
         eyebrow="Before you publish"
         title="Who you'll be matched against."
-        body="Matching is a set overlap between the capabilities your work demands and the evidence people have published — not a keyword search of CVs."
+        body="Matching is a set overlap between the capabilities your work demands and the evidence people have published, not a keyword search of CVs."
       />
 
       {required.length === 0 ? (
@@ -429,7 +429,7 @@ export function ReviewStep({ setup }: StepProps) {
           ) : (
             <div className="border border-ink/15 bg-paper-dim/50 p-6">
               <p className="font-serif-display text-xl text-ink">
-                Nobody here has evidenced this combination yet — you&rsquo;d be early.
+                Nobody here has evidenced this combination yet, you&rsquo;d be early.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                 We&rsquo;re new and we won&rsquo;t pretend otherwise: {preview.discoverable}{" "}

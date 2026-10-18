@@ -16,7 +16,7 @@ export function CompanyGate({ title = "Sign in as a company" }: { title?: string
     <main className="mx-auto max-w-[700px] px-6 py-24 text-center">
       <h1 className="font-serif-display text-2xl text-ink">{title}</h1>
       <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
-        Candidate search works against each person&rsquo;s privacy choices — including the
+        Candidate search works against each person&rsquo;s privacy choices, including the
         companies they&rsquo;ve blocked. That check needs to know who&rsquo;s asking, so searching
         requires a signed-in company account.
       </p>

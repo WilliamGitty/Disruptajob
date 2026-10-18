@@ -5,7 +5,7 @@ import { RETENTION } from "@/server/retention";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
-  title: "Privacy — Disruptajob",
+  title: "Privacy · Disruptajob",
   description: "What this site collects, why, how long it keeps it, and how to get rid of it.",
 };
 
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
           You are hidden until you choose otherwise. We don&rsquo;t sell anything about you, we
           don&rsquo;t load anyone else&rsquo;s tracking scripts, and we don&rsquo;t keep a record
           of your IP address. You can download everything we hold, or delete all of it, from your
-          settings page — immediately and without asking us.
+          settings page, immediately and without asking us.
         </>
       }
     >
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
           rows={[
             [
               "Your account",
-              "Email address, display name, and a password stored only as a scrypt hash — we cannot read it, and neither can anyone who obtains the database.",
+              "Email address, display name, and a password stored only as a scrypt hash, we cannot read it, and neither can anyone who obtains the database.",
             ],
             [
               "Your profile",
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
             ],
             [
               "Your terms",
-              "What you're open to, your dealbreakers, and a minimum salary if you give one. The minimum is never shown to a company — it only ever produces a yes-or-no verdict against what they've offered.",
+              "What you're open to, your dealbreakers, and a minimum salary if you give one. The minimum is never shown to a company, it only ever produces a yes-or-no verdict against what they've offered.",
             ],
             [
               "Your privacy choices",
@@ -105,7 +105,7 @@ export default function PrivacyPage() {
             ],
             [
               "Legitimate interests",
-              "Keeping the service secure (rate limiting) and understanding whether it works (first-party usage events). We've kept both as minimal as we can — no IP addresses, no third-party analytics.",
+              "Keeping the service secure (rate limiting) and understanding whether it works (first-party usage events). We've kept both as minimal as we can, no IP addresses, no third-party analytics.",
             ],
           ]}
         />
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
           you change that setting yourself.
         </p>
         <p>
-          When you do open up, you can block companies by name — including the one you currently
+          When you do open up, you can block companies by name, including the one you currently
           work for. Blocked companies cannot find you in search, cannot open your profile by its
           link, and are never informed that you exist or that you blocked them. Candidate search
           and profile pages require a signed-in company account precisely so this check always
@@ -125,7 +125,7 @@ export default function PrivacyPage() {
         </p>
         <p>
           Honestly stated: the blocklist protects you from a named company acting as itself. A
-          determined bad actor could register under a different name — no blocklist can prevent
+          determined bad actor could register under a different name, no blocklist can prevent
           that, and we won&rsquo;t pretend otherwise. If that is your threat model, stay hidden:
           hidden is absolute.
         </p>
@@ -158,7 +158,7 @@ export default function PrivacyPage() {
         </p>
         <p>
           A company you have allowed to see you will see your profile, your projects and your
-          stated terms — never your minimum salary and never your blocklist.
+          stated terms, never your minimum salary and never your blocklist.
         </p>
         <p>
           The only third party involved in running this service is our hosting provider,{" "}
@@ -173,7 +173,7 @@ export default function PrivacyPage() {
           rows={[
             [
               "Your account and everything in it",
-              "Until you delete it. Deletion is immediate and permanent — there is no recycle bin and no grace period during which we could restore it.",
+              "Until you delete it. Deletion is immediate and permanent, there is no recycle bin and no grace period during which we could restore it.",
             ],
             [
               "Sign-in sessions",
@@ -189,7 +189,7 @@ export default function PrivacyPage() {
             ],
             [
               "Email list",
-              "Until you ask to come off it, or until you create an account — at which point deleting your account removes it too.",
+              "Until you ask to come off it, or until you create an account, at which point deleting your account removes it too.",
             ],
           ]}
         />

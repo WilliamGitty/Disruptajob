@@ -98,7 +98,7 @@ export async function completeCandidateOnboarding(
     return { ok: false, error: "Add at least one piece of work, tagged with what it proves." };
   }
   if (projects.length > MAX_PROJECTS) {
-    return { ok: false, error: `That's more than ${MAX_PROJECTS} projects — add the rest from your profile.` };
+    return { ok: false, error: `That's more than ${MAX_PROJECTS} projects, add the rest from your profile.` };
   }
 
   for (const p of projects) {

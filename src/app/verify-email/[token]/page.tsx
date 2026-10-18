@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { completeEmailVerification } from "@/server/email-verification";
 
-export const metadata: Metadata = { title: "Email confirmed — Disruptajob" };
+export const metadata: Metadata = { title: "Email confirmed · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 /**
@@ -40,7 +40,7 @@ export default async function VerifyEmailPage({
         <>
           <h1 className="font-serif-display text-3xl text-ink">This link has already done its job</h1>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-            Either the address is already confirmed — most likely — or the link expired. Nothing
+            Most likely the address is already confirmed; otherwise the link expired. Nothing
             here needs fixing; sign in as usual.
           </p>
           <p className="mt-6 text-sm text-ink-soft">

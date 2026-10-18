@@ -124,7 +124,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
   function finish() {
     setError(null);
     if (!session && password.length < 10) {
-      setError("Pick a password of at least 10 characters — it's not stored with your draft, so it's only asked for here.");
+      setError("Pick a password of at least 10 characters. It isn't stored with your draft, so this is the only place we ask.");
       return;
     }
 
@@ -180,7 +180,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
             <Screen
               kicker="First, the gap"
               question="What do you actually do that your job title doesn't say?"
-              hint="Say it like you'd tell a friend. The automations nobody asked you to build, the product calls you somehow ended up running — the stuff with no line on your CV."
+              hint="Say it like you'd tell a friend. The automations nobody asked you to build, the product calls you somehow ended up running: the stuff with no line on your CV."
             >
               <Writing
                 value={draft.titleGap}
@@ -220,7 +220,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
             <Screen
               kicker="What it proves"
               question="Which of these did that work genuinely involve?"
-              hint="Pick only what's true — this is what employers search by, and every tag you pick points straight at the work you just described."
+              hint="Pick only what is true. Employers search by these tags, and every one you pick points straight at the work you just described."
             >
               <div className="flex flex-wrap gap-2">
                 {CAPABILITY_DEFINITIONS.map((c) => {
@@ -281,7 +281,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
             <Screen
               kicker="The person behind it"
               question="Who should this page belong to?"
-              hint={session ? "You're signed in — check these are right." : "Just enough to put a name on the work. Everything stays hidden until you say otherwise."}
+              hint={session ? "You're signed in. Check these are right." : "Just enough to put a name on the work. Everything stays hidden until you say otherwise."}
             >
               <div className="max-w-sm space-y-5">
                 <div className="space-y-2">
@@ -328,7 +328,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
               question="This page exists. Claim it."
               hint={
                 session
-                  ? "You're signed in, so it's one press: your page publishes to your profile — still hidden from every search until you choose."
+                  ? "You're signed in, so it's one press. Your page publishes to your profile and stays hidden from every search until you choose."
                   : "An email and a password, and the page you just made is yours. It stays hidden from every search until you choose otherwise."
               }
             >
@@ -379,7 +379,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
           {error && (
             <p role="alert" className="mt-8 border border-accent/30 bg-accent-soft px-4 py-3 text-[15px] leading-relaxed text-ink">
               {error}{" "}
-              <span className="text-ink-soft">Nothing you&rsquo;ve written is lost — it&rsquo;s all still here.</span>
+              <span className="text-ink-soft">Nothing you&rsquo;ve written is lost. It&rsquo;s all still here.</span>
             </p>
           )}
 
@@ -401,7 +401,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
           </div>
 
           <p className="mt-6 text-xs text-ink-faint">
-            Everything saves in this browser as you go — leave any time, pick up right here.
+            Everything saves in this browser as you go. Leave any time; pick up right here.
           </p>
         </div>
 
@@ -579,8 +579,8 @@ function PayoffView({
         Here&rsquo;s what your title never said.
       </h1>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-        The work you just published proves these capabilities — and capabilities are exactly what
-        employers here search by, instead of job titles:
+        The work you just published proves these capabilities. Employers here search by
+        capabilities, not job titles:
       </p>
       <div className="mt-6 flex flex-wrap gap-2">
         {capabilities.map((tag) => (
@@ -590,15 +590,15 @@ function PayoffView({
         ))}
       </div>
       <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
-        So when a company needs what you&rsquo;ve just proven, you surface — no application, no
+        When a company needs what you&rsquo;ve just proven, you surface. No application, no
         keyword lottery. Your page is live and <strong className="text-ink">hidden</strong>: no
-        employer sees it until you decide. Even hidden it&rsquo;s useful — a link for
-        applications and LinkedIn the moment you open it up, evidence where everyone else
+        employer sees it until you decide. Even hidden it earns its keep: a link for
+        applications and LinkedIn the moment you open it up. Evidence, where everyone else
         attaches a PDF.
       </p>
       {signedUpFresh && (
         <p className="mt-3 text-sm text-ink-faint">
-          We&rsquo;ve emailed you a confirmation link — no rush, nothing is locked behind it.
+          We&rsquo;ve emailed you a confirmation link. No rush; nothing is locked behind it.
         </p>
       )}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">

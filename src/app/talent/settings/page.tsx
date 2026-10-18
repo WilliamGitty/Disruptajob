@@ -13,7 +13,7 @@ import { YourData } from "@/components/settings/your-data";
 import { cn } from "@/lib/utils";
 import type { Discoverability } from "@/types";
 
-export const metadata: Metadata = { title: "Your settings — Disruptajob" };
+export const metadata: Metadata = { title: "Your settings · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 const VISIBILITY: { value: Discoverability; label: string; body: string }[] = [
@@ -129,7 +129,7 @@ export default async function SettingsPage({
             <p className="flex items-start gap-2 text-xs text-ink-faint">
               <Lock className="mt-0.5 h-3 w-3 shrink-0" />
               One company per line. They won&rsquo;t appear in your search results and you
-              won&rsquo;t appear in theirs — they&rsquo;re never told you blocked them.
+              won&rsquo;t appear in theirs, they&rsquo;re never told you blocked them.
             </p>
           </div>
 
@@ -143,7 +143,7 @@ export default async function SettingsPage({
       <section className="mt-8 border border-ink/10 p-7">
         <h2 className="font-serif-display text-xl text-ink">What you need from a role</h2>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Employers see everything here <em>except</em> your minimum — we only ever tell them
+          Employers see everything here <em>except</em> your minimum, we only ever tell them
           whether their budget clears it.
         </p>
 
@@ -239,7 +239,7 @@ export default async function SettingsPage({
               placeholder="Operations · Automation · AI Enablement"
             />
             <p className="text-xs text-ink-faint">
-              The things you actually do — not the title on your contract.
+              The things you actually do, not the title on your contract.
             </p>
           </div>
 

@@ -27,12 +27,12 @@ export function VerifyEmailNotice({
         <span className="font-medium">One loose end:</span> {email} isn&rsquo;t confirmed yet.
       </p>
       <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-        Nothing is locked — this only matters if you ever forget your password, because recovery
+        Nothing is locked. This only matters if you ever forget your password, because recovery
         has to reach a confirmed inbox.
       </p>
       {sent ? (
         <p className="mt-3 text-sm text-ink-soft">
-          Sent — check your inbox (and spam) for a message from hello@disruptajob.com.
+          Sent. Check your inbox (and spam) for a message from hello@disruptajob.com.
         </p>
       ) : (
         <form action={resendVerificationAction} className="mt-3">

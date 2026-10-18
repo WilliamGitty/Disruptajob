@@ -48,7 +48,7 @@ export function EmptyShelf({ className }: { className?: string }) {
     >
       <path d="M28 74 H132" stroke="var(--ink)" strokeOpacity="0.25" />
 
-      {/* One piece already there — the first project is all we ask for. */}
+      {/* One piece already there, the first project is all we ask for. */}
       <rect
         x="36"
         y="40"

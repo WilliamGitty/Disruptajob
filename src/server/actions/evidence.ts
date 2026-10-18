@@ -169,11 +169,11 @@ export async function publishDraftProject(
 
   const capabilities = [...new Set(input.capabilities)].filter(Boolean);
   if (capabilities.length === 0) {
-    return { ok: false, error: "Tag at least one capability this work actually proves — that's what makes it evidence." };
+    return { ok: false, error: "Tag at least one capability this work actually proves, that's what makes it evidence." };
   }
   const description = clean(input.description, MAX_SHORT);
   if (!description) {
-    return { ok: false, error: "Say what this is in a sentence — imports shouldn't publish unexplained." };
+    return { ok: false, error: "Say what this is in a sentence, imports shouldn't publish unexplained." };
   }
 
   transaction(() => {

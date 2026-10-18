@@ -74,7 +74,7 @@ export async function completeCompanySetup(
     };
   }
   if (workExamples.length > MAX_WORK_EXAMPLES) {
-    return { ok: false, error: `That's more than ${MAX_WORK_EXAMPLES} examples — trim it to the work that matters most.` };
+    return { ok: false, error: `That's more than ${MAX_WORK_EXAMPLES} examples, trim it to the work that matters most.` };
   }
 
   const website = input.website.trim();

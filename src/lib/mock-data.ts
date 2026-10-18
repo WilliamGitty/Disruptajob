@@ -62,7 +62,7 @@ export const PROJECTS: Project[] = [
     whatIBuilt:
       "A daily digest pipeline that scrapes, filters, scores, and summarises AI news and research into a ranked brief delivered straight to Slack every morning.",
     myContribution:
-      "Designed and built the entire pipeline solo — source selection, relevance scoring, summarisation prompts, and the Slack delivery format — then iterated weekly based on direct leadership feedback.",
+      "Designed and built the entire pipeline solo, source selection, relevance scoring, summarisation prompts, and the Slack delivery format, then iterated weekly based on direct leadership feedback.",
     process: [
       { title: "Mapped the real behaviour", description: "Shadowed how leadership actually tried (and failed) to keep up with AI news today." },
       { title: "Built a scoring model", description: "Weighted sources and topics so the signal-to-noise ratio stayed high as volume scaled." },
@@ -122,7 +122,7 @@ export const PROJECTS: Project[] = [
     problem:
       "The business had several hunches about where AI could help internally, but no fast way to test them before committing engineering time.",
     whatIBuilt:
-      "Three scoped prototypes — each buildable and testable within a few days — covering different internal workflow bets.",
+      "Three scoped prototypes, each buildable and testable within a few days, covering different internal workflow bets.",
     myContribution:
       "Scoped, built, and user-tested all three prototypes solo, then wrote up findings to decide which bet deserved real investment.",
     process: [
@@ -500,7 +500,7 @@ export const PROJECTS: Project[] = [
     slug: "zero-to-one-ops-stack",
     ownerId: "daniel-cho",
     title: "Zero-to-One Ops Stack",
-    description: "Built the entire operational stack — CRM, support, finance automations — for a 6-person startup.",
+    description: "Built the entire operational stack. CRM, support, finance automations, for a 6-person startup.",
     thumbnailSeed: "zero-to-one-ops-stack",
     capabilities: ["automation", "startup-experience", "systems-thinking"],
     tools: ["Airtable", "Zapier", "Stripe", "QuickBooks"],
@@ -509,7 +509,7 @@ export const PROJECTS: Project[] = [
       ev("e44", "metric", "Time to operational", "Fully operational finance, CRM, and support stack within 3 weeks of founding"),
     ],
     outcome: "Company ran its first six months of operations without hiring a single ops hire.",
-    problem: "A brand-new startup had no operational infrastructure at all — no CRM, no finance process, no support system.",
+    problem: "A brand-new startup had no operational infrastructure at all, no CRM, no finance process, no support system.",
     whatIBuilt: "A lean, fully-automated operational stack covering CRM, finance, and customer support.",
     myContribution: "Designed and built the entire stack solo within the company's first month.",
     process: [
@@ -959,7 +959,7 @@ export const COMPANIES: CompanyProfile[] = [
     slug: "meridian-robotics",
     name: "Meridian Robotics",
     blurb:
-      "We build the software that runs automated warehouses — routing, dispatch and the systems that keep physical goods moving.",
+      "We build the software that runs automated warehouses, routing, dispatch and the systems that keep physical goods moving.",
     website: "meridianrobotics.com",
     stage: "series-b",
     teamSize: "120–180",
@@ -1042,7 +1042,7 @@ export const ROLES: Role[] = [
     terms: {
       compRange: "£65,000 – £80,000",
       workArrangements: ["hybrid"],
-      location: "London — 2 days a week onsite",
+      location: "London, 2 days a week onsite",
       startWindow: "Within 2 months",
       constraints: ["Some warehouse site visits", "UK work authorisation required"],
     },
@@ -1096,7 +1096,7 @@ export const ROLES: Role[] = [
         whatYoudDo: [
           "Find the ten questions that generate most of the tickets",
           "Build the smallest thing that answers them without a data engineer",
-          "Get adoption — the hard part is people, not pipelines",
+          "Get adoption, the hard part is people, not pipelines",
         ],
         capabilities: ["data-analysis", "product-thinking", "systems-thinking"],
         timeframe: "First 6 months",

@@ -117,7 +117,7 @@ export default async function CandidateMatchPage({
           {q && (
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">
               Your search: <span className="italic text-ink">&ldquo;{q}&rdquo;</span> was broken into the
-              requirements below. Every match points to real projects — inspect the evidence, don&rsquo;t
+              requirements below. Every match points to real projects, inspect the evidence, don&rsquo;t
               just trust the score.
             </p>
           )}

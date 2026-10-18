@@ -115,7 +115,7 @@ export function assessPortfolio(
     suggestions.push({
       id: "first-project",
       title: "Describe one thing you built",
-      why: "One real project is the whole difference between a profile and a blank page. It doesn't have to be impressive — it has to be yours.",
+      why: "One real project is the whole difference between a profile and a blank page. It doesn't have to be impressive, it has to be yours.",
       priority: 1,
     });
   } else if (live.length === 1) {
@@ -176,7 +176,7 @@ export function assessPortfolio(
     suggestions.push({
       id: "thicken",
       title: `Back up ${capabilityLabel(tag)} with a second example`,
-      why: "One project supporting a capability is a claim. Two is a track record — and it's the difference an employer scanning results actually notices.",
+      why: "One project supporting a capability is a claim. Two is a track record, and it's the difference an employer scanning results actually notices.",
       priority: 6,
     });
   }
@@ -186,7 +186,7 @@ export function assessPortfolio(
   if (profile?.discoverability === "hidden" && live.length >= 2) {
     suggestions.push({
       id: "consider-visibility",
-      title: "You're still hidden — only when you're ready",
+      title: "You're still hidden, only when you're ready",
       why: "Your profile is strong enough to be found now. You can open up and still block your current employer by name.",
       priority: 7,
     });
@@ -217,7 +217,7 @@ function bandFor(s: PortfolioStrength["signals"]): StrengthBand {
 }
 
 const HEADLINES: Record<StrengthBand, string> = {
-  empty: "Nothing here yet — that's the normal starting point.",
+  empty: "Nothing here yet, that's the normal starting point.",
   started: "You've made a start.",
   credible: "This holds up.",
   strong: "This is a strong body of work.",

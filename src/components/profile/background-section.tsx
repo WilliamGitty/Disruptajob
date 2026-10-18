@@ -10,7 +10,7 @@ export function BackgroundSection({ candidate }: { candidate: CandidateProfile }
             <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
             Background
           </summary>
-          {/* Their own words, above the chronology. Context for someone already interested —
+          {/* Their own words, above the chronology. Context for someone already interested , 
               and explicitly marked as unscored, so it can't be mistaken for evidence. */}
           {candidate.about && (
             <div className="ml-6 mt-6 border-l-2 border-ink/10 pl-5">

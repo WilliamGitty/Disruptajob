@@ -48,7 +48,7 @@ export function ProofAboveFold() {
             </h2>
             <p className="mt-5 text-[17px] leading-relaxed text-ink-soft">
               This is a real profile. The capability isn&rsquo;t something{" "}
-              {candidate.name.split(" ")[0]} typed about themselves — it&rsquo;s counted from the
+              {candidate.name.split(" ")[0]} typed about themselves. It&rsquo;s counted from the
               work below it. Open the project and judge it yourself.
             </p>
             <Link

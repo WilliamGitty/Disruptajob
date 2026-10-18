@@ -107,7 +107,7 @@ const CANDIDATE_FUNNEL: { label: string; event: EventName }[] = [
   { label: "Landed on the homepage", event: EVENTS.landingView },
   { label: "Opened onboarding", event: EVENTS.onboardingStart },
   { label: "Added a piece of work", event: EVENTS.onboardingProject },
-  { label: "Finished — profile created", event: EVENTS.onboardingComplete },
+  { label: "Finished, profile created", event: EVENTS.onboardingComplete },
 ];
 
 const EMPLOYER_FUNNEL: { label: string; event: EventName }[] = [

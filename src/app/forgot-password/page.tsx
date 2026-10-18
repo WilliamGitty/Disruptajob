@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export const metadata: Metadata = { title: "Forgot password — Disruptajob" };
+export const metadata: Metadata = { title: "Forgot password · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 /**
@@ -33,7 +33,7 @@ export default async function ForgotPasswordPage({
         <div className="mt-6 space-y-4">
           <p className="text-[15px] leading-relaxed text-ink-soft">
             If that address has an account, a reset link is on its way. It works once and lasts
-            an hour — check spam if it hasn&rsquo;t landed in a couple of minutes.
+            an hour, check spam if it hasn&rsquo;t landed in a couple of minutes.
           </p>
           <p className="text-sm text-ink-soft">
             <Link href="/signin" className="text-ink underline-grow">

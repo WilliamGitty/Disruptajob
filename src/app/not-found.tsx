@@ -14,7 +14,7 @@ export default function NotFound() {
       <h1 className="font-serif-display text-3xl text-ink">This page isn&rsquo;t here.</h1>
       <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
         Either it never existed, or it belongs to someone who has chosen not to be visible right
-        now — people here control who sees them, and sometimes the answer is nobody.
+        now. People here control who sees them, and sometimes the answer is nobody.
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
         <Link href="/" className="text-ink underline-grow">

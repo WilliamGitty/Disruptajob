@@ -24,7 +24,7 @@ export function DemandPanel({ demand, ownerFirstName }: { demand: DemandSummary;
       <section className="border border-ink/15 p-6">
         <h2 className="font-serif-display text-lg text-ink">What companies here are asking for</h2>
         <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">
-          Nobody has described work matching your evidence yet — there simply aren&rsquo;t many
+          Nobody has described work matching your evidence yet, there simply aren&rsquo;t many
           companies on here so far. These are the capabilities being asked for most:
         </p>
         <ul className="mt-4 flex flex-wrap gap-2">

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About — Disruptajob",
+  title: "About · Disruptajob",
   description:
     "Why this exists: a CV flattens three jobs into one line, two hundred applications get four replies, and the fix is evidence, not better formatting.",
   alternates: { canonical: "/about" },

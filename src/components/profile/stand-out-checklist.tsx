@@ -49,7 +49,7 @@ export function StandOutChecklist({ items }: { items: StandOutItem[] }) {
                   <Link href={item.href} className="underline-grow font-medium">
                     {item.label}
                   </Link>{" "}
-                  <span className="text-ink-soft">— {item.why}</span>
+                  <span className="text-ink-soft">,  {item.why}</span>
                 </span>
               )}
             </li>

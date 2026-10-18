@@ -72,7 +72,7 @@ export function EvidenceNudge({ candidate }: { candidate: CandidateProfile }) {
             Shipped something since you last added evidence?{" "}
             <span className="text-ink-soft">
               <span className="font-medium text-ink">{thinnest.label}</span> is your thinnest
-              capability — {thinnest.evidenceCount} piece
+              capability, {thinnest.evidenceCount} piece
               {thinnest.evidenceCount === 1 ? "" : "s"} of evidence. One more project would make it
               credible.
             </span>

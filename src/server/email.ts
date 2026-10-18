@@ -48,7 +48,7 @@ export async function sendEmail(message: EmailMessage): Promise<SendOutcome> {
   if (!RESEND_API_KEY) {
     // The dev-mode path: the full message goes to stderr, so the flow can be exercised —
     // including clicking the link — without any account or key existing anywhere.
-    logWarn("email.not-sent", "no RESEND_API_KEY configured — full message follows", {
+    logWarn("email.not-sent", "no RESEND_API_KEY configured, full message follows", {
       to: message.to,
       subject: message.subject,
       text: message.text,
@@ -91,7 +91,7 @@ export function passwordResetEmail(to: string, token: string): EmailMessage {
     to,
     subject: "Reset your Disruptajob password",
     text: [
-      "Someone — hopefully you — asked to reset the password for this account.",
+      "Someone, hopefully you, asked to reset the password for this account.",
       "",
       `Set a new one here (the link works once, for the next hour):`,
       `${APP_URL}/reset-password/${token}`,
@@ -104,7 +104,7 @@ export function passwordResetEmail(to: string, token: string): EmailMessage {
 export function verifyEmailEmail(to: string, token: string): EmailMessage {
   return {
     to,
-    subject: "Confirm your email — Disruptajob",
+    subject: "Confirm your email · Disruptajob",
     text: [
       "One click to confirm this address is yours:",
       "",
@@ -123,7 +123,7 @@ export function inviteReceivedEmail(to: string, companyName: string, roleTitle: 
     text: [
       `${companyName} saw your work and reached out about: ${roleTitle}.`,
       "",
-      "They wrote you a message — read it and decide in your own time. Nothing is",
+      "They wrote you a message, read it and decide in your own time. Nothing is",
       "shared with them unless you accept.",
       "",
       `${APP_URL}/talent/opportunities`,
@@ -140,8 +140,8 @@ export function inviteAnsweredEmail(
     to,
     subject:
       answer === "accepted"
-        ? `Your invite was accepted — ${roleTitle}`
-        : `An answer on your invite — ${roleTitle}`,
+        ? `Your invite was accepted, ${roleTitle}`
+        : `An answer on your invite, ${roleTitle}`,
     text:
       answer === "accepted"
         ? [

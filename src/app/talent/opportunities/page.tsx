@@ -9,7 +9,7 @@ import { OpportunityCard } from "@/components/invites/opportunity-card";
 import { QuietInbox } from "@/components/illustrations/empty-states";
 import { Button } from "@/components/ui/button";
 
-export const metadata: Metadata = { title: "Who's interested — Disruptajob" };
+export const metadata: Metadata = { title: "Who's interested · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 export default async function OpportunitiesPage() {
@@ -20,7 +20,7 @@ export default async function OpportunitiesPage() {
       <main className="mx-auto max-w-[700px] px-6 py-24 text-center">
         <h1 className="font-serif-display text-2xl text-ink">Sign in to see your approaches</h1>
         <p className="mt-3 text-sm text-ink-soft">
-          These are yours alone — nobody else can read them.
+          These are yours alone, nobody else can read them.
         </p>
         <Link href="/signin" className="mt-6 inline-block text-sm text-ink underline-grow">
           Go to sign in
@@ -45,7 +45,7 @@ export default async function OpportunitiesPage() {
           Where companies come to you.
         </h1>
         <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
-          Anyone here has already looked at your work before reaching out — there&rsquo;s nothing
+          Anyone here has already looked at your work before reaching out, there&rsquo;s nothing
           to apply for. Say yes to start talking, or no thanks to pass. Either is fine, and
           declining costs you nothing.
         </p>
@@ -53,7 +53,7 @@ export default async function OpportunitiesPage() {
         {invites.length === 0 ? (
           <div className="mt-10 border border-dashed border-ink/20 p-10 text-center">
             <QuietInbox className="mx-auto mb-6 h-24 w-40" />
-            <p className="font-serif-display text-xl text-ink">Quiet so far — that&rsquo;s normal.</p>
+            <p className="font-serif-display text-xl text-ink">Quiet so far, that&rsquo;s normal.</p>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
               Companies here search for proven capability, so the more of your work is written
               up, the more often you turn up in what they&rsquo;re looking for. Adding one more

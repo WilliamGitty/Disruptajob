@@ -31,14 +31,14 @@ export function GitHubImportPanel({ drafts }: { drafts: Project[] }) {
     startImporting(async () => {
       const result = await importGitHubToProfile(username);
       if (!result.ok) {
-        setNotice(result.error ?? "That didn't work — try again in a minute.");
+        setNotice(result.error ?? "That didn't work, try again in a minute.");
         return;
       }
       setSuggestions((prev) => ({ ...prev, ...(result.suggestions ?? {}) }));
       setNotice(
         `${result.imported} repositor${result.imported === 1 ? "y" : "ies"} imported as drafts below.` +
           (result.aiEnriched
-            ? ` ${result.aiEnriched} arrived pre-drafted from their READMEs — edit the words until they're yours, then tag what's true.`
+            ? ` ${result.aiEnriched} arrived pre-drafted from their READMEs, edit the words until they're yours, then tag what's true.`
             : " Describe each in your own words, then tag what's true.")
       );
     });
@@ -53,7 +53,7 @@ export function GitHubImportPanel({ drafts }: { drafts: Project[] }) {
               Import from GitHub
             </p>
             <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-              Public repos arrive as drafts — nothing shows on your profile until you&rsquo;ve
+              Public repos arrive as drafts, nothing shows on your profile until you&rsquo;ve
               made each one yours and tagged it.
             </p>
           </div>
@@ -87,7 +87,7 @@ export function GitHubImportPanel({ drafts }: { drafts: Project[] }) {
       {drafts.length > 0 && (
         <div className="mt-6">
           <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-            Drafts — only you can see these
+            Drafts, only you can see these
           </p>
           <div className="space-y-4">
             {drafts.map((d) => (
@@ -148,7 +148,7 @@ function DraftReview({ draft, suggested }: { draft: Project; suggested: string[]
       <div className="mt-4 space-y-3">
         <div className="space-y-1.5">
           <Label htmlFor={`${draft.id}-desc`} className="text-xs text-ink-soft">
-            What is it? (your words — edit anything that doesn&rsquo;t sound like you)
+            What is it? (your words, edit anything that doesn&rsquo;t sound like you)
           </Label>
           <textarea
             id={`${draft.id}-desc`}
@@ -174,7 +174,7 @@ function DraftReview({ draft, suggested }: { draft: Project; suggested: string[]
         <div>
           <p className="text-xs text-ink-soft">
             Tick what this work genuinely proves{suggested.length > 0 && (
-              <span className="text-ink-faint"> · <Sparkles className="inline h-3 w-3" /> marks AI suggestions — they count for nothing until you tick them</span>
+              <span className="text-ink-faint"> · <Sparkles className="inline h-3 w-3" /> marks AI suggestions, they count for nothing until you tick them</span>
             )}
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">

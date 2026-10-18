@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export const metadata: Metadata = { title: "Set a new password — Disruptajob" };
+export const metadata: Metadata = { title: "Set a new password · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 /**
@@ -66,7 +66,7 @@ export default async function ResetPasswordPage({
         <>
           <h1 className="font-serif-display text-3xl text-ink">That link has expired</h1>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-            Reset links work once and last an hour. No harm done — ask for a fresh one and it
+            Reset links work once and last an hour. No harm done. Ask for a fresh one and it
             will arrive in a minute.
           </p>
           <p className="mt-6 text-sm text-ink-soft">

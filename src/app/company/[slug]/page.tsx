@@ -31,7 +31,7 @@ export async function generateMetadata({
   const company = getCompanyBySlug(slug);
   if (!company) return {};
   return {
-    title: `${company.name} — Disruptajob`,
+    title: `${company.name} · Disruptajob`,
     description: company.blurb,
     // Invented companies are for walking through the product, not for search results.
     robots: company.isDemo ? { index: false, follow: false } : undefined,
@@ -102,7 +102,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
             Companies here describe what genuinely needs doing instead of a list of
-            responsibilities — so you can judge the job before you ever speak to anyone.
+            responsibilities, so you can judge the job before you ever speak to anyone.
           </p>
         </div>
 

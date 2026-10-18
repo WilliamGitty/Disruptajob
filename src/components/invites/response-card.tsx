@@ -68,7 +68,7 @@ export function ResponseCard({
 
       {invite.status === "sent" && (
         <p className="mt-5 border-t border-ink/10 pt-5 text-sm text-ink-faint">
-          Sent — {candidateName} hasn&rsquo;t opened this yet.
+          Sent, {candidateName} hasn&rsquo;t opened this yet.
         </p>
       )}
       {invite.status === "viewed" && (
@@ -87,7 +87,7 @@ export function ResponseCard({
         <HandoffPanel handoff={handoff} roleTitle={invite.roleTitle} />
       )}
 
-      {/* Terms surface the moment they accept — so nobody discovers a mismatch three weeks in. */}
+      {/* Terms surface the moment they accept, so nobody discovers a mismatch three weeks in. */}
       {invite.status === "accepted" && terms && (
         <div className="mt-5">
           <TermsSummary terms={toEmployerSafeTerms(terms)} />

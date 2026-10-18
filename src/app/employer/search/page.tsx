@@ -85,8 +85,8 @@ export default async function EmployerSearchResultsPage({
           <p className="mb-6 flex items-start gap-2 border border-ink/10 bg-ink/[0.02] px-4 py-3 text-xs text-ink-faint">
             <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
             <span>
-              {withheld} {withheld === 1 ? "profile is" : "profiles are"} not shown —
-              those people control who can find them. Candidates choose their own visibility, and
+              {withheld} {withheld === 1 ? "profile is" : "profiles are"} not shown.
+              Those people control who can find them. Candidates choose their own visibility, and
               can hide from named companies.
             </span>
           </p>
@@ -101,7 +101,7 @@ export default async function EmployerSearchResultsPage({
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
               We only return people whose projects actually demonstrate what you asked for, so an
               empty result is honest rather than a failure. Try describing the capability more
-              broadly — &ldquo;automation&rdquo; rather than a specific tool.
+              broadly, &ldquo;automation&rdquo; rather than a specific tool.
             </p>
           </div>
         ) : (

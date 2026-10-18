@@ -35,7 +35,7 @@ export function ShareProfileBar({ slug, hidden }: { slug: string; hidden: boolea
         <p className="text-sm text-ink-soft">
           {hidden ? (
             <>
-              This page is your evidence link — but it&rsquo;s{" "}
+              This page is your evidence link, but it&rsquo;s{" "}
               <strong className="text-ink">hidden</strong>, so right now it only opens for you.{" "}
               <Link href="/talent/settings" className="text-ink underline-grow">
                 Decide who can see it
@@ -43,7 +43,7 @@ export function ShareProfileBar({ slug, hidden }: { slug: string; hidden: boolea
             </>
           ) : (
             <>
-              This link works anywhere — applications, LinkedIn, your CV. Evidence beats
+              This link works anywhere: applications, LinkedIn, your CV. Evidence beats
               &ldquo;see attached&rdquo;.
             </>
           )}

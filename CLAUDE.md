@@ -69,6 +69,11 @@ the fresh install, the new account, the empty state, the phone.
 
 ## Writing for people
 
+**Every user-facing string goes through the Copywriter persona: [team/copywriter.md](team/copywriter.md).**
+Its banned list is mechanical and non-negotiable; the first entry is em dashes, of which
+user-facing copy contains exactly none. This exists because the site once read like the AI that
+built it, and the founder caught it.
+
 The reader is often someone eleven months into a job search who feels invisible. The test for any
 string: **would you say this out loud to someone who's had a hard year?**
 

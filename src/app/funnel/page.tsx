@@ -5,7 +5,7 @@ import { getCurrentAccount } from "@/server/auth";
 import { isAdminEmail } from "@/server/config";
 
 export const metadata: Metadata = {
-  title: "Funnel — Disruptajob",
+  title: "Funnel · Disruptajob",
   robots: { index: false, follow: false },
 };
 
@@ -36,7 +36,7 @@ export default async function FunnelPage({
         <h1 className="font-serif-display text-3xl text-ink">Funnel</h1>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
           Last {report.days} days · {report.totalEvents.toLocaleString()} events. Counted as
-          distinct visitors, first-party only — nothing here was shared with anyone.
+          distinct visitors, first-party only, nothing here was shared with anyone.
         </p>
         <nav className="mt-4 flex gap-4 text-sm">
           {[7, 30, 90].map((d) => (

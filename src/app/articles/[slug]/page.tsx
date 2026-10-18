@@ -17,7 +17,7 @@ export async function generateMetadata({
   const article = getArticle(slug);
   if (!article) return {};
   return {
-    title: `${article.title} — Disruptajob`,
+    title: `${article.title} · Disruptajob`,
     description: article.standfirst,
     alternates: { canonical: `/articles/${article.slug}` },
     openGraph: { title: article.title, description: article.standfirst, type: "article" },

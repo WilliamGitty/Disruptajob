@@ -166,7 +166,7 @@ export function WorkExampleEditor({
       </Button>
 
       {examples.length > 1 && (
-        <p className="text-xs text-ink-faint">Drag to reorder — the first one is read first.</p>
+        <p className="text-xs text-ink-faint">Drag to reorder, the first one is read first.</p>
       )}
     </div>
   );
@@ -220,7 +220,7 @@ function WorkExampleForm({
     <div className="border border-ink/15 bg-paper p-6">
       <h4 className="font-serif-display text-xl text-ink">Describe a real piece of work</h4>
       <p className="mt-1.5 text-sm text-ink-soft">
-        Not responsibilities — something that actually needs doing, in the words you&rsquo;d use
+        Not responsibilities, something that actually needs doing, in the words you&rsquo;d use
         to explain it to the person on their first day.
       </p>
 
@@ -268,7 +268,7 @@ function WorkExampleForm({
         <div className="space-y-2">
           <Label>What does this work demand?</Label>
           <p className="text-xs text-ink-faint">
-            This is what we match against candidates&rsquo; evidence — pick what the work genuinely
+            This is what we match against candidates&rsquo; evidence, pick what the work genuinely
             needs, not a wish-list.
           </p>
           <CapabilityPicker selected={capabilities} onChange={setCapabilities} />
@@ -309,7 +309,7 @@ function WorkExampleForm({
               />
             </label>
             <p className="mt-2 text-[11px] text-ink-faint">
-              Nothing is uploaded in this prototype — we record the file name only.
+              Nothing is uploaded in this prototype, we record the file name only.
             </p>
           </div>
 

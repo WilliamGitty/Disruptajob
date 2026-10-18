@@ -16,7 +16,7 @@ import { assessPortfolio, type StrengthBand } from "@/lib/portfolio-strength";
  */
 
 const BAND_COPY: Record<StrengthBand, { marker: string; tone: string }> = {
-  empty: { marker: "—", tone: "text-ink-faint" },
+  empty: { marker: ", ", tone: "text-ink-faint" },
   started: { marker: "1 of 3", tone: "text-ink-soft" },
   credible: { marker: "2 of 3", tone: "text-ink" },
   strong: { marker: "3 of 3", tone: "text-evidence" },

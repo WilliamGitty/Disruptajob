@@ -132,7 +132,7 @@ export function JobDescriptionDrop({
               )}
               <p className="mt-3 text-[15px] text-ink">Drop a .txt or .md file here</p>
               <p className="mt-1 text-sm text-ink-soft">
-                It&rsquo;s read in your browser — nothing is uploaded.
+                It&rsquo;s read in your browser, nothing is uploaded.
               </p>
               <Button
                 type="button"
@@ -248,7 +248,7 @@ function Review({
       )}
 
       <p className="mt-5 text-sm leading-relaxed text-ink-soft">
-        Everything here is a starting point. You confirm each capability yourself — nothing is
+        Everything here is a starting point. You confirm each capability yourself, nothing is
         published until you say so.
       </p>
 

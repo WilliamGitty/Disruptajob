@@ -58,7 +58,7 @@ export function TermsSummary({
         </span>
       </div>
       <p className="mt-1.5 text-xs text-ink-faint">
-        Stated terms, not evidence — this doesn&rsquo;t affect their capability score.
+        Stated terms, not evidence, this doesn&rsquo;t affect their capability score.
       </p>
 
       <dl className="mt-5 space-y-4">
@@ -76,7 +76,7 @@ export function TermsSummary({
         )}
         <Row label="Minimum">
           <span className="text-ink-faint">
-            Private — we only tell you whether your budget clears it.
+            Private, we only tell you whether your budget clears it.
           </span>
         </Row>
       </dl>

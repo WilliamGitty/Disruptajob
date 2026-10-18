@@ -122,7 +122,7 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
     // and came back no longer has one. Without this they'd be told "use at least 10 characters"
     // on a step that has no password field — send them to the field instead of describing it.
     if (!session && password.length < 10) {
-      setError("Set a password to finish — we don't store it with your draft, so it's gone after a reload.");
+      setError("Set a password to finish, we don't store it with your draft, so it's gone after a reload.");
       goTo(1);
       return;
     }
@@ -235,7 +235,7 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
         >
           {error}{" "}
           <span className="text-ink-soft">
-            Nothing you&rsquo;ve written is lost — it&rsquo;s still here when you try again.
+            Nothing you&rsquo;ve written is lost, it&rsquo;s still here when you try again.
           </span>
         </p>
       )}
@@ -278,7 +278,7 @@ export function OnboardingFlow({ session }: { session?: OnboardingSession }) {
       </div>
 
       <p className="mt-6 text-center text-xs text-ink-faint">
-        Progress saves automatically — you can leave and pick up right here any time.
+        Progress saves automatically, you can leave and pick up right here any time.
       </p>
     </div>
   );
@@ -314,7 +314,7 @@ function CompletedView({ slug, onReset }: { slug: string; onReset: () => void })
       <h1 className="font-serif-display text-3xl text-ink">Your profile is saved.</h1>
       <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
         You&apos;ve turned real work into a capability profile no CV could produce. Keep adding
-        evidence as you ship — that&apos;s what makes you findable for the right reasons.
+        evidence as you ship, that&apos;s what makes you findable for the right reasons.
       </p>
       <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <Button asChild variant="accent">

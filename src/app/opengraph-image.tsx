@@ -6,7 +6,7 @@ import { ImageResponse } from "next/og";
  * brand's paper-and-ink palette by hand.
  */
 
-export const alt = "Disruptajob — your job title doesn't do you justice";
+export const alt = "Disruptajob: your job title doesn't do you justice";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

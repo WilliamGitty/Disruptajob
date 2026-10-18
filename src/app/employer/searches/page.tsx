@@ -4,7 +4,7 @@ import { getCurrentAccount } from "@/server/auth";
 import { all } from "@/server/db";
 import { DeleteSearchButton } from "@/components/employer/delete-search-button";
 
-export const metadata: Metadata = { title: "Searches — Disruptajob" };
+export const metadata: Metadata = { title: "Searches · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 export default async function SearchesPage() {

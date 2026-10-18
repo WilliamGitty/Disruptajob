@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Hire on evidence — Disruptajob",
+  title: "Hire on evidence · Disruptajob",
   description: "Search proven capability instead of job titles. Define a role by the work it contains and see only people whose published projects back it up.",
   alternates: { canonical: "/employer" },
 };
@@ -84,9 +84,9 @@ export default async function EmployerPage() {
             <div>
               <h2 className="font-serif-display text-2xl text-ink">What it costs</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-                <strong className="text-ink">Free while we&rsquo;re in beta</strong> — search,
+                <strong className="text-ink">Free while we&rsquo;re in beta</strong>, search,
                 shortlist and contact without a card. When we charge, companies will pay (likely
-                per filled role or a flat subscription — we&rsquo;ll say plainly before anything
+                per filled role or a flat subscription, we&rsquo;ll say plainly before anything
                 changes, and nothing is charged retroactively). Candidates never pay; that isn&rsquo;t
                 generosity, it&rsquo;s what keeps the supply side honest and here.
               </p>

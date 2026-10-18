@@ -7,7 +7,7 @@ import { awaitsEmployer } from "@/lib/invites";
 import { ResponseCard } from "@/components/invites/response-card";
 import { handoffForInvite } from "@/server/repositories/handoff";
 
-export const metadata: Metadata = { title: "Conversations — Disruptajob" };
+export const metadata: Metadata = { title: "Conversations · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 export default async function ResponsesPage() {
@@ -48,7 +48,7 @@ export default async function ResponsesPage() {
         <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">Conversations</h1>
         <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
           Every invite you&rsquo;ve sent, and where it stands. Candidates reply here once they
-          accept — no inbox hunting, no application pipeline.
+          accept, no inbox hunting, no application pipeline.
         </p>
 
         {sent.length > 0 && (

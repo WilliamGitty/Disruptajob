@@ -45,8 +45,8 @@ export function InterestCapture() {
               That&rsquo;s all we needed.
             </h2>
             <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
-              One message when companies start searching — nothing else, and you can leave with one
-              click. Your profile will take about ten minutes whenever you&rsquo;re ready.
+              One message when companies start searching. Nothing else, and one click takes you off
+              the list. Your profile will take about ten minutes whenever you&rsquo;re ready.
             </p>
           </div>
         ) : (
@@ -56,7 +56,7 @@ export function InterestCapture() {
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-[16px] leading-relaxed text-ink-soft">
               Leave an email and we&rsquo;ll tell you once there are companies here searching for
-              what you can do. No newsletter, no drip campaign — one message, when it&rsquo;s
+              what you can do. No newsletter, no drip campaign. One message, when it&rsquo;s
               actually worth your time.
             </p>
 

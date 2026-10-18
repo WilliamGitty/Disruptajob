@@ -131,7 +131,7 @@ export function DictateButton({
       </button>
       <p className="mt-2 text-xs leading-relaxed text-ink-faint">
         {listening
-          ? "Listening — talk the way you'd explain it to a friend."
+          ? "Listening, talk the way you'd explain it to a friend."
           : "Easier to say than write? Your browser handles the transcription."}
       </p>
     </div>

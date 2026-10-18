@@ -46,7 +46,7 @@ export function TitleVsWork({ className }: { className?: string }) {
           stroke="var(--ink)"
           strokeOpacity="0.25"
         />
-        {/* A single grey bar — all a title can hold. */}
+        {/* A single grey bar, all a title can hold. */}
         <rect x="228" y="54" width="164" height="7" fill="var(--ink)" opacity="0.28" />
         <text
           x="310"
@@ -95,7 +95,7 @@ export function TitleVsWork({ className }: { className?: string }) {
                 opacity={c.accent ? 0.16 : 0.1}
               />
             </g>
-            {/* The evidence mark — a filled dot means it's backed by something real. */}
+            {/* The evidence mark, a filled dot means it's backed by something real. */}
             <circle
               cx={c.x + 32}
               cy={top + height - 16}

@@ -12,7 +12,7 @@ import { InviteModal } from "@/components/employer/invite-modal";
 import { AddToPipelineButton } from "@/components/employer/add-to-pipeline";
 import type { CandidateProfile } from "@/types";
 
-export const metadata: Metadata = { title: "Saved — Disruptajob" };
+export const metadata: Metadata = { title: "Saved · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 export default async function SavedPage() {

@@ -38,8 +38,8 @@ export default function RoleBriefPage() {
           Describe what this person needs to prove.
         </h1>
         <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
-          No lengthy job description. Just the capabilities that actually matter for this role —
-          we&rsquo;ll surface people who can prove them.
+          No lengthy job description. Just the capabilities that actually matter for this role.
+          We&rsquo;ll surface people who can prove them.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-12 space-y-10">

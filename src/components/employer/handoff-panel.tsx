@@ -18,7 +18,7 @@ export function HandoffPanel({ handoff, roleTitle }: { handoff: Handoff; roleTit
   if (!handoff.email) return null;
 
   const firstName = handoff.candidateName.split(" ")[0];
-  const subject = `${roleTitle} — following up`;
+  const subject = `${roleTitle}, following up`;
   const body = `Hi ${firstName},\n\nThanks for coming back to me about ${roleTitle}. Good to hear you're open to a conversation.\n\nWhen would suit you for a short call?\n\n`;
 
   async function copy(label: string, value: string) {
@@ -43,7 +43,7 @@ export function HandoffPanel({ handoff, roleTitle }: { handoff: Handoff; roleTit
     <div className="mt-4 border border-evidence/30 bg-evidence-soft/40 p-5">
       <p className="flex items-center gap-2 text-sm font-medium text-ink">
         <Check className="h-4 w-4 text-evidence" />
-        {firstName} accepted — here are their details.
+        {firstName} accepted, here are their details.
       </p>
       <p className="mt-1.5 text-xs leading-relaxed text-ink-soft">
         You&rsquo;re seeing this because they said yes. It wasn&rsquo;t available before, and it

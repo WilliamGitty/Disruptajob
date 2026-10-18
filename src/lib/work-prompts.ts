@@ -37,7 +37,7 @@ export const WORK_PROMPTS: WorkPrompt[] = [
   {
     id: "holiday-test",
     question: "What would break if you went away for a month?",
-    nudge: "Whatever you'd have to write a handover document about — that's ownership, whatever your title says.",
+    nudge: "Whatever you'd have to write a handover document about, that's ownership, whatever your title says.",
     surfaces: ["operations", "workflow-design", "systems-thinking"],
   },
   {

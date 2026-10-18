@@ -15,7 +15,7 @@ export function DemoBanner() {
       <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-center gap-x-3 gap-y-1 px-6 py-2 text-center text-xs lg:px-10">
         <span className="font-medium">Demonstration</span>
         <span className="text-paper/70">
-          Every person and company here is invented. Sign-up is closed — please don&rsquo;t enter
+          Every person and company here is invented. Sign-up is closed, please don&rsquo;t enter
           real details.
         </span>
       </div>

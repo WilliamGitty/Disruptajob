@@ -5,7 +5,7 @@ import { listPipelineForCompany } from "@/server/repositories/pipeline";
 import { PipelineBoard, type BoardCard } from "@/components/employer/pipeline-board";
 
 export const metadata: Metadata = {
-  title: "Pipeline — Disruptajob",
+  title: "Pipeline · Disruptajob",
   description: "Move candidates through your hiring stages.",
 };
 
@@ -19,7 +19,7 @@ export default async function PipelinePage() {
       <main className="mx-auto max-w-[700px] px-6 py-24 text-center">
         <h1 className="font-serif-display text-2xl text-ink">Sign in as a company</h1>
         <p className="mt-3 text-sm text-ink-soft">
-          A pipeline belongs to a company account — there&rsquo;s no shared board.
+          A pipeline belongs to a company account, there&rsquo;s no shared board.
         </p>
         <Link href="/signin" className="mt-6 inline-block text-sm text-ink underline-grow">
           Go to sign in
@@ -50,7 +50,7 @@ export default async function PipelinePage() {
             <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">Pipeline</h1>
             <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
               Drag people between stages. Anyone who changes their visibility settings drops off
-              here automatically — the board only ever shows people you&rsquo;re allowed to see.
+              here automatically, the board only ever shows people you&rsquo;re allowed to see.
             </p>
           </div>
           <Link href="/employer" className="text-sm text-ink underline-grow">

@@ -21,7 +21,7 @@ export function DescribeOneThing({ className }: { className?: string }) {
         stroke="var(--ink)"
         strokeOpacity="0.22"
       />
-      {/* Plain words — short lines, not a formal document. */}
+      {/* Plain words, short lines, not a formal document. */}
       {[
         { y: 18, w: 48 },
         { y: 26, w: 54 },

@@ -37,11 +37,11 @@ export async function generateMetadata({
   // Metadata renders even into a 404 response, so it needs the page's own gate.
   if (!(await viewerMaySeeCandidate(candidate.id))) return {};
   return {
-    title: `${candidate.name} — Disruptajob`,
+    title: `${candidate.name} · Disruptajob`,
     description: candidate.headline || candidate.shortDescription,
     alternates: { canonical: `/profile/${candidate.slug}` },
     openGraph: {
-      title: `${candidate.name} — ${candidate.headline || "Disruptajob"}`,
+      title: `${candidate.name}, ${candidate.headline || "Disruptajob"}`,
       description: candidate.shortDescription,
       type: "profile",
     },
@@ -95,7 +95,7 @@ export default async function ProfilePage({
   return (
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
-      {/* The nudge is for your own profile only — nobody needs prompting about someone else's. */}
+      {/* The nudge is for your own profile only, nobody needs prompting about someone else's. */}
       {isOwnProfile && (
         <ShareProfileBar
           slug={candidate.slug}
@@ -121,7 +121,7 @@ export default async function ProfilePage({
             {
               done: Boolean(candidate.about?.trim()),
               label: "Write a few lines about yourself",
-              why: "context for a human who is already interested — never scored",
+              why: "context for a human who is already interested, never scored",
               href: "/talent/settings",
             },
             {
@@ -155,7 +155,7 @@ export default async function ProfilePage({
       <CapabilitiesSection candidate={candidate} projects={projects} />
 
       {/* Placed after the capability graph: you should see what you've built before being told
-          what would strengthen it. Owner only — nobody else sees how someone was advised. */}
+          what would strengthen it. Owner only, nobody else sees how someone was advised. */}
       {isOwnProfile && (
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 px-6 pb-4 lg:grid-cols-2 lg:px-10">
           <PortfolioCoach candidate={candidate} projects={projects} />

@@ -45,7 +45,7 @@ export function CapabilityBurst({
   return (
     <div className={cn("bg-paper-dim", className)} aria-hidden>
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="h-full w-full">
-        {/* the quiet dot grid, kept from the old art — it reads as graph paper, not decoration */}
+        {/* the quiet dot grid, kept from the old art, it reads as graph paper, not decoration */}
         <defs>
           <pattern id={`grid-${seed}`} width="22" height="22" patternUnits="userSpaceOnUse">
             <circle cx="2" cy="2" r="1.1" className="fill-ink/8" />

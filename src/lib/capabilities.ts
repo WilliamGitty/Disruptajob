@@ -14,7 +14,7 @@ export const CAPABILITY_DEFINITIONS: CapabilityDefinition[] = [
   {
     tag: "operations",
     label: "Operations",
-    description: "Keeping a business running — process, infrastructure, and the unglamorous work that compounds.",
+    description: "Keeping a business running, process, infrastructure, and the unglamorous work that compounds.",
   },
   {
     tag: "product-thinking",
@@ -39,7 +39,7 @@ export const CAPABILITY_DEFINITIONS: CapabilityDefinition[] = [
   {
     tag: "data-analysis",
     label: "Data Analysis",
-    description: "Turning raw data into decisions — dashboards, models, and clear-eyed analysis.",
+    description: "Turning raw data into decisions, dashboards, models, and clear-eyed analysis.",
   },
   {
     tag: "systems-thinking",

@@ -22,7 +22,7 @@ const REALITIES = [
   },
   {
     heading: "Your title picked one job.",
-    body: "You might run operations, build the automations and own half of product. “Operations Associate” covers none of it — and that’s the word the filters search for.",
+    body: "You might run operations, build the automations and own half of product. “Operations Associate” covers none of it, and that’s the word the filters search for.",
     Mark: TitleTooSmall,
   },
   {

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Create an account — Disruptajob",
+  title: "Create an account · Disruptajob",
   description: "Free for candidates. Hidden until you choose otherwise.",
 };
 export const dynamic = "force-dynamic";
@@ -34,7 +34,7 @@ export default async function SignUpPage({
       <main className="mx-auto max-w-[520px] px-6 py-20 text-center">
         <h1 className="font-serif-display text-3xl text-ink">Sign-up is closed here.</h1>
         <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-          This is a demonstration — every profile on it is invented, and we&rsquo;d rather you
+          This is a demonstration, every profile on it is invented, and we&rsquo;d rather you
           didn&rsquo;t hand real employment details to a prototype. Sign in with one of the demo
           accounts to look around instead.
         </p>
@@ -82,7 +82,7 @@ export default async function SignUpPage({
           <Input id="email" name="email" type="email" required autoComplete="email" />
           {!isEmployer && (
             <p className="text-xs text-ink-faint">
-              Use a personal address, not your work one — your current employer should never be
+              Use a personal address, not your work one, your current employer should never be
               able to connect this to you.
             </p>
           )}
@@ -115,7 +115,7 @@ export default async function SignUpPage({
       {!isEmployer && (
         <ul className="mt-8 space-y-3 border-t border-ink/10 pt-6 text-sm text-ink-soft">
           <Reassurance icon={<Heart className="h-3.5 w-3.5" />}>
-            Free, always — companies pay, you don&rsquo;t
+            Free, always, companies pay, you don&rsquo;t
           </Reassurance>
           <Reassurance icon={<Eye className="h-3.5 w-3.5" />}>
             Your profile starts hidden. Nobody can find you until you switch it on.

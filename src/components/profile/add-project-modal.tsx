@@ -135,7 +135,7 @@ export function AddProjectModal({
             <DialogHeader>
               <DialogTitle>Add a project</DialogTitle>
               <DialogDescription>
-                Link to something you built — with Claude Code, another AI tool, or by hand. Write the
+                Link to something you built, with Claude Code, another AI tool, or by hand. Write the
                 context yourself; we never fetch or run anything from the link.
               </DialogDescription>
             </DialogHeader>
@@ -226,7 +226,7 @@ export function AddProjectModal({
               <div className="space-y-2">
                 <Label>What does this demonstrate?</Label>
                 <p className="text-xs text-ink-faint">
-                  Tag the capabilities this work proves. This is what moves your capability scores — nothing else does.
+                  Tag the capabilities this work proves. This is what moves your capability scores, nothing else does.
                 </p>
                 <CapabilityPicker selected={capabilities} onChange={setCapabilities} />
               </div>

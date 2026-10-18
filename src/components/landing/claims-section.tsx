@@ -40,7 +40,7 @@ export function ClaimsSection() {
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               AI writes a flawless application in seconds, so polish no longer separates anyone.
-              Screening on documents means sorting 400 candidates who all sound equally strong —
+              Screening on documents means sorting 400 candidates who all sound equally strong,
               and finding out who was telling the truth in week three.
             </p>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">

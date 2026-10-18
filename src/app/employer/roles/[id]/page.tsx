@@ -26,7 +26,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const role = getRoleById(id);
-  return role ? { title: `${role.title} — matches` } : {};
+  return role ? { title: `${role.title}, matches` } : {};
 }
 
 /**
@@ -87,7 +87,7 @@ export default async function RoleMatchesPage({ params }: { params: Promise<{ id
             <Link href={`/company/${company.slug}`} className="text-ink underline-grow">
               your company page
             </Link>{" "}
-            — the real work, not a job ad.
+, the real work, not a job ad.
           </p>
         </div>
       </div>

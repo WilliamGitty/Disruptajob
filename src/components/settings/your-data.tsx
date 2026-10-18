@@ -33,14 +33,14 @@ export function YourData({ email }: { email: string }) {
       <h2 className="font-serif-display text-xl text-ink">Your data</h2>
       <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-ink-soft">
         Your evidence is yours. You can take a copy at any time, and you can remove it from here
-        entirely — properly, not just hidden from view.
+        entirely, properly, not just hidden from view.
       </p>
 
       <div className="mt-6 border-t border-ink/10 pt-6">
         <h3 className="font-medium text-ink">Download everything</h3>
         <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-ink-soft">
           One file: your profile, every project and piece of evidence, your terms, who you blocked,
-          and every conversation — including the records companies hold that mention you.
+          and every conversation, including the records companies hold that mention you.
         </p>
         <Button asChild variant="outline" className="mt-4">
           <a href="/api/my-data" download>
@@ -57,7 +57,7 @@ export function YourData({ email }: { email: string }) {
         </h3>
         <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-ink-soft">
           This removes your profile, your projects and evidence, your conversations, and your place
-          in any company&rsquo;s pipeline. It happens immediately and cannot be undone — there is no
+          in any company&rsquo;s pipeline. It happens immediately and cannot be undone, there is no
           recycle bin and no thirty-day window. Download a copy first if you might want it.
         </p>
 

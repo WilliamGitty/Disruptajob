@@ -48,10 +48,10 @@ export function OpportunityCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="text-[15px] font-medium text-ink">{invite.roleTitle}</h3>
-          {/* Companies are inspectable too — read their real work before replying. */}
+          {/* Companies are inspectable too, read their real work before replying. */}
           {companySlug ? (
             <Link href={`/company/${companySlug}`} className="text-sm text-ink-soft underline-grow">
-              {invite.companyName} — see their work
+              {invite.companyName}, see their work
             </Link>
           ) : (
             <p className="text-sm text-ink-faint">{invite.companyName}</p>
@@ -82,7 +82,7 @@ export function OpportunityCard({
             id={`reply-${invite.id}`}
             rows={3}
             className="mt-2"
-            placeholder="A line in your own words — no need to be formal."
+            placeholder="A line in your own words, no need to be formal."
             value={reply}
             onChange={(e) => setReply(e.target.value)}
           />
@@ -144,7 +144,7 @@ export function OpportunityCard({
 
       {invite.status === "declined" && (
         <p className="mt-5 border-t border-ink/10 pt-5 text-sm text-ink-faint">
-          You passed on this one. {invite.companyName} has been let know — nothing further needed
+          You passed on this one. {invite.companyName} has been let know, nothing further needed
           from you.
         </p>
       )}

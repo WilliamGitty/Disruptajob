@@ -46,7 +46,7 @@ const DUTY_HEADINGS = /^(what you('|’)?ll do|responsibilities|the role|day to 
 /** Headings that introduce wish-lists — the part of a JD worth ignoring. */
 const WISHLIST_HEADINGS = /^(requirements|about you|what we('|’)?re looking for|qualifications|skills|must have|nice to have|benefits|perks|what we offer|our stack|about us)\b/i;
 
-const BULLET = /^\s*([-–—*•·]|\d+[.)])\s+/;
+const BULLET = /^\s*([-–, *•·]|\d+[.)])\s+/;
 
 const ARRANGEMENT_PATTERNS: [WorkArrangement, RegExp][] = [
   ["remote", /\b(fully remote|remote[- ]first|work from home|wfh|remote)\b/i],
@@ -63,7 +63,7 @@ function clean(line: string): string {
 
 /** A sentence fragment short enough to be a title, trimmed at a natural break. */
 function toTitle(text: string): string {
-  const firstClause = text.split(/[—–:;.]|\s-\s/)[0].trim();
+  const firstClause = text.split(/[, –:;.]|\s-\s/)[0].trim();
   const base = firstClause.length >= 12 ? firstClause : text;
   if (base.length <= 70) return base;
   const cut = base.slice(0, 70);

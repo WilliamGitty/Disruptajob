@@ -21,13 +21,13 @@ const STEPS = [
     n: "01",
     Mark: DescribeOneThing,
     heading: "Describe one thing you built.",
-    body: "A process you fixed, a tool you made, a mess you untangled. Plain words are fine — and if you'd rather speak than write, you can dictate it. Got public code? Connect GitHub and bring repos in as drafts.",
+    body: "A process you fixed, a tool you made, a mess you untangled. Plain words are fine, and if you'd rather speak than write, you can dictate it. Got public code? Connect GitHub and bring repos in as drafts.",
   },
   {
     n: "02",
     Mark: TagWhatItProves,
     heading: "Tag what it proves.",
-    body: "You pick the capabilities that piece of work demonstrates. That’s the only thing that moves your profile — nothing you simply claim ever will.",
+    body: "You pick the capabilities that piece of work demonstrates. That’s the only thing that moves your profile. Nothing you merely claim ever will.",
   },
   {
     n: "03",

@@ -52,7 +52,7 @@ export function assessMutualFit(terms: EmployerTerms, candidate: CandidateProfil
   const floor = nn?.compFloor ? topOfRange(nn.compFloor) : null;
   if (offered && floor) {
     if (offered.currency !== floor.currency) {
-      notes.push("Your range is in a different currency to their minimum — worth confirming.");
+      notes.push("Your range is in a different currency to their minimum, worth confirming.");
     } else if (offered.amount >= floor.amount) {
       compensation = "fits";
       notes.push("Your range clears their minimum.");

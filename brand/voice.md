@@ -1,5 +1,9 @@
 # Voice
 
+Mechanics of production, including the banned-phrases list and the no-em-dash rule, live
+with the Copywriter persona: [../team/copywriter.md](../team/copywriter.md). This file is the
+tone; that file is the discipline.
+
 ## The test
 
 **Would you say this out loud to someone who's had a hard year?**

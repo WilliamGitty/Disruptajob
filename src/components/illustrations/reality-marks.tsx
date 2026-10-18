@@ -63,7 +63,7 @@ export function TitleTooSmall({ className }: { className?: string }) {
       <rect x="10" y="14" width="30" height="30" fill="var(--evidence)" opacity="0.18" />
       <rect x="44" y="14" width="30" height="30" fill="var(--evidence)" opacity="0.14" />
       <rect x="78" y="14" width="30" height="30" fill="var(--evidence)" opacity="0.1" />
-      {/* The title — one box, covering a third of it. */}
+      {/* The title, one box, covering a third of it. */}
       <rect
         x="10"
         y="52"

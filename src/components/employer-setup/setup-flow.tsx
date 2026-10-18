@@ -82,7 +82,7 @@ export function SetupFlow({ session }: { session?: EmployerSession }) {
     // and came back no longer has one. Without this they'd be told "use at least 10 characters"
     // on a step that has no password field — send them to the field instead of describing it.
     if (!session && password.length < 10) {
-      setError("Set a password to finish — we don't store it with your draft, so it's gone after a reload.");
+      setError("Set a password to finish, we don't store it with your draft, so it's gone after a reload.");
       goTo(0);
       return;
     }
@@ -163,7 +163,7 @@ export function SetupFlow({ session }: { session?: EmployerSession }) {
         >
           {error}{" "}
           <span className="text-ink-soft">
-            Your draft is still here — nothing you&rsquo;ve written is lost.
+            Your draft is still here, nothing you&rsquo;ve written is lost.
           </span>
         </p>
       )}
@@ -204,7 +204,7 @@ export function SetupFlow({ session }: { session?: EmployerSession }) {
       </div>
 
       <p className="mt-6 text-center text-xs text-ink-faint">
-        Saves as you go — close this and pick up where you left off.
+        Saves as you go, close this and pick up where you left off.
       </p>
     </div>
   );
@@ -218,7 +218,7 @@ function PublishedView({ onReset }: { onReset: () => void }) {
       </div>
       <h1 className="font-serif-display text-3xl text-ink">Your role is live.</h1>
       <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
-        Candidates can now see the actual work rather than a job ad — and you can work through
+        Candidates can now see the actual work rather than a job ad, and you can work through
         people who already have evidence for it.
       </p>
       <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

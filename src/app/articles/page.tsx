@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ARTICLES } from "@/content/articles";
 
 export const metadata: Metadata = {
-  title: "Articles — Disruptajob",
+  title: "Articles · Disruptajob",
   description:
     "Opinion on why hiring feels broken and what evidence-first changes. Written in-house, no ghostwriters, no filler.",
   alternates: { canonical: "/articles" },

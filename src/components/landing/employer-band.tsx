@@ -24,7 +24,7 @@ export function EmployerBand({ children }: { children: ReactNode }) {
       <div className="mx-auto max-w-[1400px] px-6 pt-16 lg:px-10 lg:pt-20">
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-ink/15 pb-6">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-            From here down — for companies
+            From here down: for companies
           </p>
           <Link
             href="/employer"

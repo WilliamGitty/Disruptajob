@@ -252,7 +252,7 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
         company: "employer-1",
         role: "role-meridian-1",
         title: "AI Operations Lead",
-        msg: "We came across your AI Daily Signal build — the scoring and summarisation approach is exactly the kind of internal tooling we need someone to own. Open to a conversation?",
+        msg: "We came across your AI Daily Signal build, the scoring and summarisation approach is exactly the kind of internal tooling we need someone to own. Open to a conversation?",
         comp: "£65,000 – £80,000",
         status: "sent",
         at: hoursAgo(26),
@@ -302,7 +302,7 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
       "msg-1",
       "inv-3",
       "candidate",
-      "Thanks for reaching out — the internal tooling problem is exactly what I like building for. Happy to find 20 minutes this week.",
+      "Thanks for reaching out, the internal tooling problem is exactly what I like building for. Happy to find 20 minutes this week.",
       hoursAgo(96)
     );
     insert(

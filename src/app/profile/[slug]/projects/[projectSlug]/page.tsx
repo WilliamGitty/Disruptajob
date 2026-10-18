@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!candidate || !project) return {};
   if (!(await viewerMaySeeCandidate(candidate.id))) return {};
   return {
-    title: `${project.title} — Disruptajob`,
+    title: `${project.title} · Disruptajob`,
     description: project.description,
     alternates: { canonical: `/profile/${candidate.slug}/projects/${project.slug}` },
   };

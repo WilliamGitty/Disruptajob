@@ -60,7 +60,7 @@ export function InviteModal({
       });
       setSent(true);
     } catch {
-      setError("Couldn't send — check you're signed in as a company.");
+      setError("Couldn't send, check you're signed in as a company.");
     } finally {
       setSending(false);
     }
@@ -100,7 +100,7 @@ export function InviteModal({
             <DialogHeader>
               <DialogTitle>Invite {candidateName} to a conversation</DialogTitle>
               <DialogDescription>
-                Disruptajob connects you directly — no application, no job board.
+                Disruptajob connects you directly, no application, no job board.
               </DialogDescription>
             </DialogHeader>
             <form className="space-y-5" onSubmit={handleSend}>
@@ -137,8 +137,8 @@ export function InviteModal({
                 />
               </div>
 
-              {/* Asked now, honoured later. Contact details are never released on reaching out —
-                  only on acceptance — so this is a choice about what happens if they say yes. */}
+              {/* Asked now, honoured later. Contact details are never released on reaching out , 
+                  only on acceptance, so this is a choice about what happens if they say yes. */}
               <div className="space-y-2 border-t border-ink/10 pt-5">
                 <Label>If they say yes, how do you want to carry on?</Label>
                 <div className="grid grid-cols-1 gap-2">
@@ -173,7 +173,7 @@ export function InviteModal({
                 )}
 
                 <p className="pt-1 text-xs leading-relaxed text-ink-faint">
-                  You never see someone&rsquo;s contact details for reaching out — only once
+                  You never see someone&rsquo;s contact details for reaching out, only once
                   they&rsquo;ve accepted. {followupPromise(followupChannel)}
                 </p>
               </div>

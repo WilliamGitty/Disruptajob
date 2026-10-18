@@ -92,7 +92,7 @@ export function HookStep({ draft, patch }: StepProps) {
       <StepIntro
         eyebrow="Let's start with the real you"
         title="What do you actually do that your job title doesn't capture?"
-        body="This is the thing no CV ever asks. Write it like you'd say it to a friend — we'll shape it into your profile later."
+        body="This is the thing no CV ever asks. Write it like you'd say it to a friend, we'll shape it into your profile later."
       />
       <Textarea
         autoFocus
@@ -135,7 +135,7 @@ export function IdentityStep({
       <StepIntro
         eyebrow="The basics"
         title="A few details, then we're onto your work."
-        body="No CV required. This is the minimum we need — everything heavier is optional and comes later."
+        body="No CV required. This is the minimum we need, everything heavier is optional and comes later."
       />
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field label="Name">
@@ -165,7 +165,7 @@ export function IdentityStep({
               autoComplete="new-password"
             />
             <p className="mt-2 text-xs leading-relaxed text-ink-faint">
-              The only thing we ask you to remember. Your draft stays in this browser as you go —
+              The only thing we ask you to remember. Your draft stays in this browser as you go , 
               the password is never saved alongside it.
             </p>
           </Field>
@@ -224,7 +224,7 @@ export function NonNegotiablesStep({ draft, patch }: StepProps) {
       <StepIntro
         eyebrow="Your terms"
         title="Your non-negotiables."
-        body="You're setting the terms here, not applying. This stays private and is only ever used to filter what reaches you — never shown to employers."
+        body="You're setting the terms here, not applying. This stays private and is only ever used to filter what reaches you, never shown to employers."
       />
       <Field label="Roles / seniority you'd consider">
         <ChipInput
@@ -301,9 +301,9 @@ export function AcceleratorsStep({
   return (
     <div className="space-y-6">
       <StepIntro
-        eyebrow="Optional — skip this entirely"
+        eyebrow="Optional, skip this entirely"
         title="Got public code? We can save you some typing."
-        body="Repos come in as drafts for you to review and tag. Nothing publishes until you confirm it, and an import can never set your capability scores — only work you've tagged does that."
+        body="Repos come in as drafts for you to review and tag. Nothing publishes until you confirm it, and an import can never set your capability scores, only work you've tagged does that."
       />
 
       <div className="border border-ink/15 p-5">
@@ -320,7 +320,7 @@ export function AcceleratorsStep({
             {imported !== null ? (
               <p className="mt-4 flex items-center gap-2 text-sm text-ink">
                 <Check className="h-4 w-4 text-evidence" />
-                {imported} {imported === 1 ? "repo" : "repos"} brought in as drafts — you&rsquo;ll
+                {imported} {imported === 1 ? "repo" : "repos"} brought in as drafts, you&rsquo;ll
                 tag them on the next step.
               </p>
             ) : (
@@ -366,7 +366,7 @@ export function AcceleratorsStep({
 
       {/*
         CV and LinkedIn, honestly.
-        We cannot import from LinkedIn — it blocks it, and an OAuth app we don't have wouldn't
+        We cannot import from LinkedIn, it blocks it, and an OAuth app we don't have wouldn't
         return work history anyway. We can't reliably parse a PDF CV without a dependency this
         project doesn't carry. What we *can* do is take both as context: a link an employer can
         follow, and CV text the candidate pastes. Neither touches a capability, which is stated
@@ -375,7 +375,7 @@ export function AcceleratorsStep({
       <div className="border border-ink/15 p-5">
         <p className="text-sm font-medium text-ink">Your CV and LinkedIn, if you want</p>
         <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-          Entirely optional. Neither affects your capability scores — only work you describe and tag
+          Entirely optional. Neither affects your capability scores, only work you describe and tag
           does that. These are context for a human who&rsquo;s already interested.
         </p>
 
@@ -388,7 +388,7 @@ export function AcceleratorsStep({
               onChange={(e) => patch({ linkedinUrl: e.target.value, linkedinConnected: Boolean(e.target.value.trim()) })}
             />
             <p className="mt-1.5 text-xs text-ink-faint">
-              We don&rsquo;t read it — LinkedIn doesn&rsquo;t allow that. It&rsquo;s a link on your
+              We don&rsquo;t read it. LinkedIn doesn&rsquo;t allow that. It&rsquo;s a link on your
               profile for anyone who wants the conventional version too.
             </p>
           </Field>
@@ -410,7 +410,7 @@ export function AcceleratorsStep({
             />
             <p className="mt-1.5 text-xs leading-relaxed text-ink-faint">
               Kept as background and shown to nobody until you&rsquo;re visible. We deliberately
-              don&rsquo;t turn it into capabilities — a CV is a list of claims, and claims are the
+              don&rsquo;t turn it into capabilities, a CV is a list of claims, and claims are the
               thing this site exists to replace.
             </p>
           </Field>
@@ -442,13 +442,13 @@ export function EvidenceStep({
       <StepIntro
         eyebrow="The part that counts"
         title="Add your first piece of evidence."
-        body="One real thing you built. Tag what it demonstrates — this is what actually moves your capability bars. No CV bullet points here."
+        body="One real thing you built. Tag what it demonstrates, this is what actually moves your capability bars. No CV bullet points here."
       />
 
       {drafts.length > 0 && (
         <div className="space-y-3">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-            From GitHub — review &amp; publish
+            From GitHub, review &amp; publish
           </p>
           {drafts.map((p) => (
             <DraftProjectReview
@@ -591,7 +591,7 @@ function DraftProjectReview({
             onClick={() => setExpanded(true)}
             className="text-sm text-ink-soft underline-grow hover:text-ink"
           >
-            Add more detail — what you built, what changed
+            Add more detail, what you built, what changed
           </button>
         )}
       </div>
@@ -600,7 +600,7 @@ function DraftProjectReview({
         <Label className="mb-2 block text-xs">What does this demonstrate?</Label>
         <CapabilityPicker selected={caps} onChange={setCaps} />
         <p className="mt-2 text-xs text-ink-faint">
-          Nothing is pre-selected — we haven&rsquo;t read your code, and a guess here would end up
+          Nothing is pre-selected, we haven&rsquo;t read your code, and a guess here would end up
           on your profile as though you&rsquo;d proved it.
         </p>
       </div>
@@ -749,7 +749,7 @@ export function ScoreRevealStep({ ownProjects }: StepProps & { ownProjects: Proj
       />
       {capabilities.length === 0 ? (
         <p className="border border-dashed border-ink/20 p-6 text-center text-sm text-ink-faint">
-          No evidence yet — go back a step and add your first project to see this come alive.
+          No evidence yet, go back a step and add your first project to see this come alive.
         </p>
       ) : (
         <div className="divide-y divide-ink/10 border-y border-ink/10">
@@ -765,7 +765,7 @@ export function ScoreRevealStep({ ownProjects }: StepProps & { ownProjects: Proj
         </div>
       )}
       <p className="text-sm text-ink-faint">
-        A single data point isn&apos;t a credible score — but it&apos;s a real start. You can keep adding evidence any time.
+        A single data point isn&apos;t a credible score, but it&apos;s a real start. You can keep adding evidence any time.
       </p>
     </div>
   );
@@ -780,11 +780,11 @@ export function BackgroundStep({ draft, patch }: StepProps) {
       <StepIntro
         eyebrow="Context, not headline"
         title="Your background."
-        body="Useful context — but it sits behind your capabilities, not in front of them. Your title describes where you've been; your evidence describes what you can do."
+        body="Useful context, but it sits behind your capabilities, not in front of them. Your title describes where you've been; your evidence describes what you can do."
       />
 
       {/*
-        The long-form answer. Optional, capped, and explicitly not scored — someone who writes a
+        The long-form answer. Optional, capped, and explicitly not scored, someone who writes a
         beautiful 500 words and no projects still has an empty capability graph, which is the
         whole point. It exists because a human who is already interested wants context a list of
         projects doesn't give.
@@ -799,7 +799,7 @@ export function BackgroundStep({ draft, patch }: StepProps) {
         />
         <div className="mt-1.5 flex flex-wrap items-baseline justify-between gap-2">
           <p className="text-xs leading-relaxed text-ink-faint">
-            Optional, and it never affects your capability scores — only tagged work does that.
+            Optional, and it never affects your capability scores, only tagged work does that.
           </p>
           <p className="text-xs text-ink-faint">
             {(draft.about ?? "").trim().split(/\s+/).filter(Boolean).length} / 500 words
@@ -847,7 +847,7 @@ export function BackgroundStep({ draft, patch }: StepProps) {
       ) : (
         <div className="space-y-5">
           <p className="text-sm text-ink-faint">
-            You skipped the CV and LinkedIn shortcuts — that&apos;s fine. You can add experience and education from your
+            You skipped the CV and LinkedIn shortcuts, that&apos;s fine. You can add experience and education from your
             profile whenever you like. Your evidence is what matters most here.
           </p>
           <Field label="Current title (for context)">
@@ -877,7 +877,7 @@ export function VisibilityStep({ draft, patch }: StepProps) {
       <StepIntro
         eyebrow="You decide who sees this"
         title="Visibility is yours to control."
-        body="Your profile stays hidden from employer search until you choose otherwise — being complete doesn't make you discoverable."
+        body="Your profile stays hidden from employer search until you choose otherwise, being complete doesn't make you discoverable."
       />
       <Field label="Who can find you">
         <div className="space-y-2">

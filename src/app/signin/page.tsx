@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export const metadata: Metadata = { title: "Sign in — Disruptajob" };
+export const metadata: Metadata = { title: "Sign in · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 /**

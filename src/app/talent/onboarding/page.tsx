@@ -4,7 +4,7 @@ import { getCurrentAccount } from "@/server/auth";
 import { EVENTS, track } from "@/server/analytics";
 
 export const metadata: Metadata = {
-  title: "Build your profile — Disruptajob",
+  title: "Build your profile · Disruptajob",
   description: "Turn the work you actually do into an evidence-backed capability profile.",
 };
 

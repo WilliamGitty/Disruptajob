@@ -4,7 +4,7 @@ import { getCurrentAccount } from "@/server/auth";
 import { VerifyEmailNotice } from "@/components/settings/verify-email-notice";
 import { YourData } from "@/components/settings/your-data";
 
-export const metadata: Metadata = { title: "Account — Disruptajob" };
+export const metadata: Metadata = { title: "Account · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 /**

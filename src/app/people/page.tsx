@@ -4,7 +4,7 @@ import { listDiscoverableCandidates } from "@/server/repositories/discovery";
 import { capabilityLabel } from "@/lib/capabilities";
 
 export const metadata: Metadata = {
-  title: "People — Disruptajob",
+  title: "People · Disruptajob",
   description:
     "Browse the people here by the work they've published, not the titles they've held. No account needed to look.",
   alternates: { canonical: "/people" },
@@ -33,7 +33,7 @@ export default function PeoplePage() {
       </h1>
       <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-soft">
         Everyone here chose to be visible, and every capability you see is backed by published
-        work — nothing is self-declared. Searching by what a role actually needs, and saving or
+        work. Nothing is self-declared. Searching by what a role actually needs, and saving or
         contacting people, needs a company account:{" "}
         <Link href="/employer" className="text-ink underline-grow">
           how hiring works here
@@ -43,7 +43,7 @@ export default function PeoplePage() {
 
       {candidates.length === 0 ? (
         <p className="mt-14 border border-ink/10 bg-paper-dim px-6 py-10 text-center text-[15px] text-ink-soft">
-          Nobody has opened their profile yet — we&rsquo;re new, and we won&rsquo;t pretend
+          Nobody has opened their profile yet. We&rsquo;re new, and we won&rsquo;t pretend
           otherwise. The people come before the crowd does.
         </p>
       ) : (
