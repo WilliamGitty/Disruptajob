@@ -82,6 +82,18 @@ string: **would you say this out loud to someone who's had a hard year?**
 - Empty states get more care than marketing pages.
 - Full rules in [docs/design-principles.md](docs/design-principles.md).
 
+## Working with the founder (adopted from Root Astro's protocol, 18 Oct 2026)
+
+- **Lead every report What, So What, Now What.** The decision he needs comes first, never
+  after the scenic route.
+- **Never generate more for him to read than the decision needs.** Idle capacity goes into
+  making the system need him less, not into reports.
+- **Never invent proposals that add to his decision queue.** Build what follows from what he
+  asked; park the rest.
+- **Silence never publishes, for content.** Articles, guides and campaign copy wait for his
+  yes. Code auto-deploys; tests are its gate. Decisions live in docs/decisions/, one file,
+  same day.
+
 ## Recording decisions
 
 - **Why goes in the commit message.** Not what changed — the diff says that — but what was broken,

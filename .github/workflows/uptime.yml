@@ -1,0 +1,81 @@
+name: Uptime watch
+
+# The dead-man switch, adopted from Root Astro's operating map after reading how Lee's crew
+# handles silence: nothing watched disruptajob.com, and the October Fly outage was discovered
+# by the founder failing to load his own site. Now a failure opens a GitHub issue, which
+# emails him within minutes, with zero new secrets: the built-in token can file issues.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe the site
+        id: probe
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 25 https://disruptajob.com/ || echo "000")
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "Site answered: $code"
+
+      - name: Open an issue if it's down
+        if: steps.probe.outputs.code != '200'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const code = '${{ steps.probe.outputs.code }}';
+            const open = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'site-down',
+            });
+            if (open.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: open.data[0].number,
+                body: `Still down at ${new Date().toISOString()} (HTTP ${code}).`,
+              });
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: `Site down: disruptajob.com answered ${code}`,
+              labels: ['site-down'],
+              body: [
+                `The uptime watch got HTTP ${code} from https://disruptajob.com/ at ${new Date().toISOString()}.`,
+                ``,
+                `First checks, in order:`,
+                `1. https://status.flyio.net (the October outage was theirs, not ours)`,
+                `2. \`fly status -a disruptajob\` and \`fly logs -a disruptajob\``,
+                `3. The latest deploy run in Actions, in case a release broke serving`,
+                ``,
+                `Close this issue when the site is back; the watch does not reopen closed issues.`,
+              ].join('\n'),
+            });
+
+      - name: Close the alert when it recovers
+        if: steps.probe.outputs.code == '200'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const open = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'site-down',
+            });
+            for (const issue of open.data) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `Recovered: HTTP 200 at ${new Date().toISOString()}.`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: issue.number, state: 'closed',
+              });
+            }
