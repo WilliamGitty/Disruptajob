@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { DemoBadge } from "@/components/ui/demo-badge";
 import { useState, useTransition } from "react";
 import { Bookmark, BookmarkCheck, MessageSquarePlus } from "lucide-react";
@@ -51,9 +52,20 @@ export function ProfileHeader({
                 <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">{candidate.name}</h1>
                 {candidate.isDemo && <DemoBadge />}
               </div>
-              <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
-                {candidate.shortDescription ? `“${candidate.shortDescription}”` : null}
-              </p>
+              {candidate.shortDescription ? (
+                <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
+                  &ldquo;{candidate.shortDescription}&rdquo;
+                </p>
+              ) : isOwnProfile ? (
+                // The founder's own page showed him: a missing sentence here reads as an
+                // unfinished site, not an unfinished profile. Owner only; visitors see nothing.
+                <Link
+                  href="/talent/settings"
+                  className="mt-3 inline-block max-w-md border border-dashed border-ink/25 px-3 py-2 text-sm text-ink-soft transition-colors hover:border-ink/50 hover:text-ink"
+                >
+                  Add a sentence about yourself. It sits right here, in your words.
+                </Link>
+              ) : null}
               {/* The title is context, not the headline act. Two testers pointed out that
                   billing it second under the name contradicts the site's own argument. */}
               <p className="mt-1.5 text-sm text-ink-faint">{candidate.headline}</p>
