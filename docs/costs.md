@@ -42,3 +42,18 @@ A candidate costs ~£0 to serve (static-ish pages, one shared machine) plus ~£0
 from GitHub with AI drafting. The paying side is companies; until they pay, total burn is a
 coffee a month. The first invoice to a company changes this file's whole character — that's the
 trigger for incorporation, the ICO fee, and real bookkeeping.
+
+## Certifications: triggers, not todos
+
+None are legally required; all are sales artifacts for buyers we don't target yet. UK GDPR,
+the actual law, is complied with in code and documented in the privacy page.
+
+| Certification | Trigger to pursue | Expected cost then |
+|---|---|---|
+| Cyber Essentials (UK baseline) | First employer security questionnaire, or first public-sector-adjacent buyer | ~£300-500, days of work |
+| ISO 27001 | A specific enterprise deal that names it as a condition, worth multiples of the cost | £5-15k+, months |
+| SOC 2 | A specific US enterprise deal naming it | Similar |
+
+Until a trigger fires: keep the substance (hashed tokens, scrypt, encrypted backups, minimal
+data, no trackers) and, when employers start asking informally, a /security page describing
+practices honestly costs an afternoon and answers most questionnaires before they're sent.
