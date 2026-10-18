@@ -12,19 +12,27 @@ import type { CandidateProfile, EmployerTerms, TermsVerdict } from "@/types";
 
 // --- Mutual fit ------------------------------------------------------------
 
-const MONEY = /([£$€])\s?(\d[\d,.]*)\s*(k\b)?/gi;
+const MONEY = /([£$€])?\s?(\d[\d,.]*)\s*(k\b)?/gi;
 
-/** Highest figure in a posted range — what the employer could actually pay. */
-function topOfRange(value: string): { currency: string; amount: number } | null {
+/**
+ * Highest figure in a posted range — what the employer could actually pay. The currency
+ * symbol is optional because people type "45000" or "45k" without one (the founder did,
+ * and his terms filter silently did nothing); a bare number carries no currency and only
+ * two EXPLICIT, different currencies ever count as a mismatch.
+ */
+function topOfRange(value: string): { currency: string | null; amount: number } | null {
   const matches = [...value.matchAll(MONEY)];
   if (matches.length === 0) return null;
-  let best: { currency: string; amount: number } | null = null;
+  let best: { currency: string | null; amount: number } | null = null;
   for (const m of matches) {
     const digits = m[2].replace(/[,.]/g, "");
     let amount = Number(digits);
     if (!Number.isFinite(amount) || amount <= 0) continue;
     if (m[3]) amount *= 1000;
-    if (!best || amount > best.amount) best = { currency: m[1], amount };
+    // Guard against swallowing stray small numbers from prose ("4 day week"): a credible
+    // salary figure is at least three digits once k-expanded.
+    if (amount < 100) continue;
+    if (!best || amount > best.amount) best = { currency: m[1] ?? null, amount };
   }
   return best;
 }
@@ -51,7 +59,7 @@ export function assessMutualFit(terms: EmployerTerms, candidate: CandidateProfil
   const offered = terms.compRange ? topOfRange(terms.compRange) : null;
   const floor = nn?.compFloor ? topOfRange(nn.compFloor) : null;
   if (offered && floor) {
-    if (offered.currency !== floor.currency) {
+    if (offered.currency && floor.currency && offered.currency !== floor.currency) {
       notes.push("Your range is in a different currency to their minimum, worth confirming.");
     } else if (offered.amount >= floor.amount) {
       compensation = "fits";

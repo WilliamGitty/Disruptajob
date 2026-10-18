@@ -97,3 +97,23 @@ test("no evidence means an empty mirror, not a flattering one", () => {
   );
   assert.equal(matches.length, 0);
 });
+
+test("a bare-number floor still counts: 45000 without a pound sign conflicts with a lower band", () => {
+  addRole("m6", "Bare Floor Co", ["automation"], "£20,000-£25,000");
+  const matches = rolesMatchingCandidate(
+    candidate({
+      nonNegotiables: { roleTypes: [], workArrangements: [], dealbreakers: [], compFloor: "45000" },
+    })
+  );
+  assert.equal(matches[0]?.conflict, true, "the founder typed exactly this and the filter did nothing");
+});
+
+test("45k clears a £50k-£60k band, and k-notation parses", () => {
+  addRole("m7", "K Co", ["automation"], "£50,000-£60,000");
+  const matches = rolesMatchingCandidate(
+    candidate({
+      nonNegotiables: { roleTypes: [], workArrangements: [], dealbreakers: [], compFloor: "45k" },
+    })
+  );
+  assert.equal(matches[0]?.conflict, false);
+});
