@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CompressionDrawing } from "@/components/illustrations/field-notes";
 
 export const metadata: Metadata = {
   title: "About · Disruptajob",
@@ -41,6 +42,8 @@ export default function AboutPage() {
           everything sent through it, the problem is not the senders. The problem is the channel,
           and the fix is not a better CV template.
         </p>
+
+        <CompressionDrawing className="my-2 w-full border border-ink/10" />
 
         <h2 className="pt-4 font-serif-display text-xl text-ink">What we did about it</h2>
         <p>

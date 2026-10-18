@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ARTICLES } from "@/content/articles";
+import { MarginNotes } from "@/components/illustrations/field-notes";
 
 export const metadata: Metadata = {
   title: "Articles · Disruptajob",
@@ -22,6 +23,8 @@ export default function ArticlesPage() {
         Why hiring feels broken, and what changes when evidence replaces claims. Written here, by
         us, with a position in every piece. Where we talk about ourselves, we say so.
       </p>
+
+      <MarginNotes className="mt-8 w-full border border-ink/10" />
 
       <div className="mt-12 space-y-10">
         {articles.map((a) => (

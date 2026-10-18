@@ -1,5 +1,6 @@
 "use client";
 
+import { OneQuietMessage } from "@/components/illustrations/field-notes";
 import { useState, useTransition } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,7 @@ export function InterestCapture() {
             <h2 className="font-serif-display text-2xl leading-tight text-ink sm:text-3xl">
               Not today? That&rsquo;s completely fine.
             </h2>
+            <OneQuietMessage className="mx-auto mt-6 w-full max-w-md border border-ink/10" />
             <p className="mx-auto mt-4 max-w-lg text-[16px] leading-relaxed text-ink-soft">
               Leave an email and we&rsquo;ll tell you once there are companies here searching for
               what you can do. No newsletter, no drip campaign. One message, when it&rsquo;s

@@ -1,3 +1,4 @@
+import { StackVsOne } from "@/components/illustrations/field-notes";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ export function ClaimsSection() {
               Screening on documents means sorting 400 candidates who all sound equally strong,
               and finding out who was telling the truth in week three.
             </p>
+            <StackVsOne className="mt-6 w-full max-w-xl border border-ink/10" />
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               We give you the harder-to-fake version: a body of work you can actually inspect.
             </p>
