@@ -17,3 +17,9 @@ away from.
 
 Channel work continues regardless: distributing into existing communities is still this
 month's growth motion. Building our own is the destination, not the substitute.
+
+**Legal note, added same day:** the current /terms covers the product as it exists and says
+nothing about user-generated content. Before the forum accepts its first post, the terms
+need a UGC section (content ownership, moderation rights, takedown) shipped in the same
+commit as the feature. A solicitor review of both documents is triggered by first revenue
+or first dispute-shaped email, whichever lands first.
