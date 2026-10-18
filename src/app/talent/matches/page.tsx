@@ -20,7 +20,7 @@ export default async function MatchesPage() {
   if (!account?.candidateId) {
     return (
       <main className="mx-auto max-w-[700px] px-6 py-24 text-center">
-        <h1 className="font-serif-display text-2xl text-ink">Sign in to see what's out there</h1>
+        <h1 className="font-serif-display text-2xl text-ink">Sign in to see what&rsquo;s out there</h1>
         <p className="mx-auto mt-3 max-w-md text-[15px] text-ink-soft">
           This page scores open roles against your published evidence, so it needs to know
           whose evidence to score.
