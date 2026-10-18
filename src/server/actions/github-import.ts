@@ -242,3 +242,88 @@ async function fetchReadme(username: string, repo: string): Promise<string | nul
     return null;
   }
 }
+
+// --- CV / LinkedIn-export import: same desk, same boundary --------------------------------
+
+const MAX_CV_BYTES = 4 * 1024 * 1024;
+
+/**
+ * Turn an uploaded CV (or LinkedIn's own profile PDF export) into draft projects.
+ *
+ * The founder's instruction, kept inside the one rule: AI reads the document and PRE-DRAFTS
+ * pieces of work for the person to finish or discard. Drafts only, suggested tags travel in
+ * the return value and render unchecked, publishing still demands the owner's own ticks. The
+ * document itself is read once for drafting and never stored.
+ *
+ * LinkedIn arrives as the PDF LinkedIn exports of a profile, because reading profiles from a
+ * URL is something LinkedIn does not permit, and this product does not do what sites forbid.
+ */
+export async function importCvToProfile(formData: FormData): Promise<ProfileImportResult> {
+  const { requireCandidate } = await import("../auth");
+  const { get, run } = await import("../db");
+  const { draftProjectsFromCv, AI_ENABLED } = await import("../ai");
+  const { randomUUID } = await import("node:crypto");
+
+  const account = await requireCandidate();
+
+  if (!AI_ENABLED) {
+    return { ok: false, error: "CV drafting is switched off on this machine. You can add the work manually, which works just as well." };
+  }
+
+  const file = formData.get("cv");
+  const pasted = String(formData.get("cvText") ?? "").trim();
+
+  let pdfBase64: string | undefined;
+  let text: string | undefined;
+
+  if (file instanceof File && file.size > 0) {
+    if (file.size > MAX_CV_BYTES) {
+      return { ok: false, error: "That file is over 4MB. Export a lighter PDF, or paste the text instead." };
+    }
+    const bytes = Buffer.from(await file.arrayBuffer());
+    const isPdf = bytes.subarray(0, 5).toString() === "%PDF-";
+    if (isPdf) {
+      pdfBase64 = bytes.toString("base64");
+    } else {
+      text = bytes.toString("utf8");
+    }
+  } else if (pasted) {
+    text = pasted;
+  } else {
+    return { ok: false, error: "Drop a PDF or paste the text first." };
+  }
+
+  const drafts = await draftProjectsFromCv({ pdfBase64, text });
+  if (!drafts) {
+    return { ok: false, error: "We couldn't draft anything readable from that. Paste the text instead, or add the work manually." };
+  }
+
+  const now = new Date().toISOString();
+  const suggestions: Record<string, string[]> = {};
+  let imported = 0;
+
+  const slugify = (v: string) =>
+    v.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "work";
+
+  for (const d of drafts) {
+    let slug = slugify(d.title);
+    let n = 2;
+    while (get<{ id: string }>("SELECT id FROM project WHERE owner_id = ? AND slug = ?", account.candidateId, slug)) {
+      slug = `${slugify(d.title)}-${n++}`;
+    }
+    const id = `proj-${randomUUID()}`;
+    run(
+      `INSERT INTO project (id, owner_id, slug, title, description, thumbnail_seed, outcome,
+                            problem, what_i_built, my_contribution, demo_url, status, source, created_at)
+       VALUES (?,?,?,?,?,?,?,?,?,'',NULL,'draft','cv-import',?)`,
+      id, account.candidateId, slug, d.title, d.description, slug, d.outcome, d.problem, d.whatIBuilt, now
+    );
+    if (d.suggestedTags.length > 0) suggestions[id] = d.suggestedTags;
+    imported += 1;
+  }
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath("/profile/[slug]", "page");
+
+  return { ok: true, imported, suggestions, aiEnriched: imported };
+}

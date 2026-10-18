@@ -75,6 +75,95 @@ export function parseDraftSuggestion(raw: string): ProjectDraftSuggestion | null
   }
 }
 
+export type CvDraft = ProjectDraftSuggestion & { title: string };
+
+/** What a CV import asks the model for. Pure and exported for tests. */
+export function cvDraftsPrompt(): string {
+  const taxonomy = CAPABILITY_DEFINITIONS.map((c) => `- ${c.tag}: ${c.description}`).join("\n");
+  return [
+    `The attached document is someone's CV or LinkedIn profile export. Extract the distinct pieces of REAL WORK in it (projects, systems built, processes changed, things run), not job titles or responsibilities. Write in first person, concrete and modest; never inflate. Skip anything too vague to describe as work that happened.`,
+    ``,
+    `Capability taxonomy (suggest ONLY tags from this list, only where the document gives real evidence):`,
+    taxonomy,
+    ``,
+    `Reply with ONLY a JSON array of 1 to 6 objects, no markdown fence, each: {"title": short name for the piece of work, "description": one plain sentence saying what it is, "problem": what it addressed (1-2 sentences, empty string if unclear), "whatIBuilt": what was actually done and how (2-3 sentences), "outcome": what changed (1 sentence, empty string if the document doesn't say), "suggestedTags": array of 0-3 taxonomy tags}`,
+  ].join("\n");
+}
+
+/** Clamp a CV reply to the allowed shape: at most six drafts, taxonomy tags only. */
+export function parseCvDrafts(raw: string): CvDraft[] | null {
+  try {
+    const start = raw.indexOf("[");
+    const end = raw.lastIndexOf("]");
+    if (start === -1 || end <= start) return null;
+    const arr = JSON.parse(raw.slice(start, end + 1));
+    if (!Array.isArray(arr)) return null;
+    const drafts: CvDraft[] = [];
+    for (const item of arr) {
+      if (drafts.length >= 6) break;
+      const one = parseDraftSuggestion(JSON.stringify(item));
+      const title = typeof item?.title === "string" ? item.title.trim().slice(0, 120) : "";
+      if (one && title) drafts.push({ ...one, title });
+    }
+    return drafts.length > 0 ? drafts : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Draft projects from an uploaded CV (PDF, read natively by the API) or pasted text.
+ * Best-effort like everything else here: null means the import proceeds with nothing drafted.
+ */
+export async function draftProjectsFromCv(input: {
+  pdfBase64?: string;
+  text?: string;
+}): Promise<CvDraft[] | null> {
+  if (!API_KEY) return null;
+
+  const content: unknown[] = [];
+  if (input.pdfBase64) {
+    content.push({
+      type: "document",
+      source: { type: "base64", media_type: "application/pdf", data: input.pdfBase64 },
+    });
+  }
+  content.push({
+    type: "text",
+    text: (input.text ? `Document text:\n"""\n${input.text.slice(0, 30000)}\n"""\n\n` : "") + cvDraftsPrompt(),
+  });
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 2500,
+        messages: [{ role: "user", content }],
+      }),
+    });
+    if (!res.ok) {
+      logError("ai.cv-draft-failed", new Error(`Anthropic responded ${res.status}`), {
+        body: (await res.text()).slice(0, 300),
+      });
+      return null;
+    }
+    const data = (await res.json()) as { content?: { type: string; text?: string }[] };
+    const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+    const drafts = parseCvDrafts(text);
+    if (!drafts) logWarn("ai.cv-draft-unparseable", "model reply was not the requested JSON array", {});
+    return drafts;
+  } catch (error) {
+    logError("ai.cv-draft-failed", error, {});
+    return null;
+  }
+}
+
 /**
  * Draft a write-up from a repo README. Best-effort: any failure returns null and the import
  * continues exactly as it would with no key configured.

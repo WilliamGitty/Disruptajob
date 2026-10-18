@@ -65,7 +65,7 @@ export interface ProjectProcessStep {
 export type ProjectStatus = "draft" | "published";
 
 /** Where a project originated. Used to label drafts and keep import sources swappable. */
-export type ProjectSource = "manual" | "github-import";
+export type ProjectSource = "manual" | "github-import" | "cv-import";
 
 export interface Project {
   id: string;

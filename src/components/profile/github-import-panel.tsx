@@ -6,7 +6,7 @@ import type { Project } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { importGitHubToProfile } from "@/server/actions/github-import";
+import { importGitHubToProfile, importCvToProfile } from "@/server/actions/github-import";
 import { publishDraftProject, removeProject } from "@/server/actions/evidence";
 import { CAPABILITY_DEFINITIONS } from "@/lib/capabilities";
 import { cn } from "@/lib/utils";
@@ -82,6 +82,19 @@ export function GitHubImportPanel({ drafts }: { drafts: Project[] }) {
           </div>
         </div>
         {notice && <p className="mt-4 border-t border-ink/10 pt-3 text-sm text-ink-soft">{notice}</p>}
+
+        <CvDrop
+          onResult={(result) => {
+            if (!result.ok) {
+              setNotice(result.error ?? "That didn't work. Try pasting the text.");
+              return;
+            }
+            setSuggestions((prev) => ({ ...prev, ...(result.suggestions ?? {}) }));
+            setNotice(
+              `${result.imported} piece${result.imported === 1 ? "" : "s"} of work drafted from your document. Edit each until it sounds like you, tick what's true, publish or delete.`
+            );
+          }}
+        />
       </div>
 
       {drafts.length > 0 && (
@@ -97,6 +110,91 @@ export function GitHubImportPanel({ drafts }: { drafts: Project[] }) {
         </div>
       )}
     </section>
+  );
+}
+
+function CvDrop({ onResult }: { onResult: (r: Awaited<ReturnType<typeof importCvToProfile>>) => void }) {
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [pasteOpen, setPasteOpen] = useState(false);
+  const [pasted, setPasted] = useState("");
+  const [working, startWorking] = useTransition();
+
+  function submit(form: FormData) {
+    startWorking(async () => {
+      onResult(await importCvToProfile(form));
+      setFileName(null);
+      setPasted("");
+    });
+  }
+
+  function onFile(file: File | null) {
+    if (!file) return;
+    setFileName(file.name);
+    const form = new FormData();
+    form.set("cv", file);
+    submit(form);
+  }
+
+  function onPaste() {
+    const form = new FormData();
+    form.set("cvText", pasted);
+    submit(form);
+  }
+
+  return (
+    <div className="mt-4 border-t border-ink/10 pt-4">
+      <p className="text-sm text-ink">
+        Or your <span className="font-medium">CV or LinkedIn profile export</span> (PDF)
+      </p>
+      <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+        AI reads it and drafts the pieces of real work it finds, for you to finish or discard.
+        The document is read once and never stored. LinkedIn: use the PDF LinkedIn exports of
+        your profile, since reading profiles from a link isn&rsquo;t something they allow.
+      </p>
+      <div
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          onFile(e.dataTransfer.files?.[0] ?? null);
+        }}
+        className="mt-3 flex flex-wrap items-center gap-3 border border-dashed border-ink/25 bg-paper px-4 py-4"
+      >
+        <label className="cursor-pointer text-sm font-medium text-ink underline-grow">
+          {working ? "Drafting from your document…" : fileName ? `Again? Choose another file` : "Choose a file"}
+          <input
+            type="file"
+            accept=".pdf,.txt,application/pdf,text/plain"
+            className="hidden"
+            disabled={working}
+            onChange={(e) => onFile(e.target.files?.[0] ?? null)}
+          />
+        </label>
+        <span className="text-xs text-ink-faint">or drop it here, up to 4MB</span>
+        <button
+          type="button"
+          onClick={() => setPasteOpen(!pasteOpen)}
+          className="text-xs text-ink-soft underline-grow"
+        >
+          or paste the text
+        </button>
+        {working && <Loader2 className="h-4 w-4 animate-spin text-ink-faint" />}
+      </div>
+      {pasteOpen && (
+        <div className="mt-3 space-y-2">
+          <textarea
+            value={pasted}
+            onChange={(e) => setPasted(e.target.value)}
+            rows={5}
+            maxLength={30000}
+            placeholder="Paste your CV text here"
+            className="w-full border border-ink/15 bg-paper px-3 py-2 text-sm leading-relaxed text-ink outline-none focus:border-ink/40"
+          />
+          <Button type="button" variant="outline" size="sm" onClick={onPaste} disabled={working || !pasted.trim()}>
+            Draft from this text
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
 

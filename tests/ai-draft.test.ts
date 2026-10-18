@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { draftPrompt, parseDraftSuggestion } from "@/server/ai";
+import { cvDraftsPrompt, draftPrompt, parseCvDrafts, parseDraftSuggestion } from "@/server/ai";
 import { CAPABILITY_DEFINITIONS } from "@/lib/capabilities";
 
 /**
@@ -86,4 +86,29 @@ test("oversized fields are clamped", () => {
   );
   assert.ok(parsed);
   assert.equal(parsed.description.length, 400);
+});
+
+test("CV drafts: array parsed, titles required, taxonomy enforced, capped at six", () => {
+  const item = (title: string, tags: string[]) =>
+    ({ title, description: "d", problem: "", whatIBuilt: "", outcome: "", suggestedTags: tags });
+  const raw = "Here you go:\n" + JSON.stringify([
+    item("Invoice automation", ["automation", "made-up-tag"]),
+    item("", ["growth"]),
+    ...Array.from({ length: 8 }, (_, i) => item(`Work ${i}`, [])),
+  ]);
+  const drafts = parseCvDrafts(raw);
+  assert.ok(drafts);
+  assert.equal(drafts.length, 6, "capped at six even when the model offers more");
+  assert.deepEqual(drafts[0].suggestedTags, ["automation"], "invented tags discarded");
+  assert.ok(!drafts.some((d) => d.title === ""), "untitled items dropped");
+});
+
+test("CV drafts: prose without an array returns null", () => {
+  assert.equal(parseCvDrafts("I couldn't find any projects in this document."), null);
+});
+
+test("the CV prompt asks for work, not titles, and carries the taxonomy", () => {
+  const prompt = cvDraftsPrompt();
+  assert.ok(prompt.includes("not job titles"));
+  for (const c of CAPABILITY_DEFINITIONS) assert.ok(prompt.includes(c.tag));
 });
