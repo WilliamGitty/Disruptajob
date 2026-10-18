@@ -12,11 +12,11 @@ export function TitleVsWork({ className }: { className?: string }) {
   // Six pieces of work fanning out beneath the title.
   const cards = [
     { x: 24, label: "Automation", tall: 44 },
-    { x: 126, label: "Operations", tall: 62 },
-    { x: 228, label: "AI tooling", tall: 38, accent: true },
+    { x: 126, label: "Research", tall: 62 },
+    { x: 228, label: "AI Enablement", tall: 38, accent: true },
     { x: 330, label: "Data", tall: 54 },
-    { x: 432, label: "Product", tall: 46 },
-    { x: 534, label: "Comms", tall: 34 },
+    { x: 432, label: "Storytelling", tall: 46 },
+    { x: 534, label: "Events", tall: 34 },
   ];
 
   return (
@@ -46,8 +46,18 @@ export function TitleVsWork({ className }: { className?: string }) {
           stroke="var(--ink)"
           strokeOpacity="0.25"
         />
-        {/* A single grey bar, all a title can hold. */}
-        <rect x="228" y="54" width="164" height="7" fill="var(--ink)" opacity="0.28" />
+        {/* The title, named: one string, and everything below it invisible. */}
+        <text
+          x="310"
+          y="66"
+          textAnchor="middle"
+          fontSize="19"
+          fontFamily="var(--font-serif), Georgia, serif"
+          fill="var(--ink)"
+          opacity="0.85"
+        >
+          Operations Manager
+        </text>
         <text
           x="310"
           y="24"
@@ -102,6 +112,17 @@ export function TitleVsWork({ className }: { className?: string }) {
               r="3.5"
               fill={c.accent ? "var(--accent)" : "var(--evidence)"}
             />
+            {/* The card, named: the life the title was hiding. */}
+            <text
+              x={c.x + 32}
+              y={top + height + 18}
+              textAnchor="middle"
+              fontSize="10.5"
+              letterSpacing="0.6"
+              fill={c.accent ? "var(--accent)" : "var(--ink-faint)"}
+            >
+              {c.label}
+            </text>
           </g>
         );
       })}
