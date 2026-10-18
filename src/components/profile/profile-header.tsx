@@ -50,10 +50,12 @@ export function ProfileHeader({
                 <h1 className="font-serif-display text-3xl text-ink sm:text-4xl">{candidate.name}</h1>
                 {candidate.isDemo && <DemoBadge />}
               </div>
-              <p className="mt-1.5 text-[15px] font-medium text-ink-soft">{candidate.headline}</p>
               <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
                 {candidate.shortDescription ? `“${candidate.shortDescription}”` : null}
               </p>
+              {/* The title is context, not the headline act. Two testers pointed out that
+                  billing it second under the name contradicts the site's own argument. */}
+              <p className="mt-1.5 text-sm text-ink-faint">{candidate.headline}</p>
               <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-ink-faint">
                 <span>{candidate.location}</span>
                 <span className="h-1 w-1 rounded-full bg-ink-faint/50" />

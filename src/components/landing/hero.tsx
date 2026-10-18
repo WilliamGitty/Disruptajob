@@ -26,13 +26,14 @@ export function Hero({
           <p className="mb-6 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             For people the CV format punishes
           </p>
-          {/* The accent lands on the two words that carry the argument, not the whole line , 
-              colour marks one thing or it marks nothing. */}
+          {/* The accent marks the villain and nothing else; a tester read the old two-word
+              highlight as an accident, which means it was decoration. */}
           <h1 className="font-serif-display text-[2.75rem] leading-[1.05] tracking-tight text-ink sm:text-[3.5rem] lg:text-[4.25rem]">
-            Your <span className="text-accent">job title</span> doesn&rsquo;t do you justice.
+            Your <span className="text-accent">CV</span> doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-            The CV punishes timelines that don&rsquo;t fit. Here, you show the work instead.{" "}
+            Gaps, changes, second starts: a CV turns them into red flags. Here, you show your
+            work instead.{" "}
             <Link href="/about" className="text-ink underline-grow">
               Here&rsquo;s why
             </Link>
@@ -56,10 +57,10 @@ export function Hero({
               Hidden until you say otherwise
             </Reassurance>
             <Reassurance icon={<LinkIcon className="h-3.5 w-3.5" />}>
-              A link that works anywhere, from day one
+              One link you can send anywhere, from day one
             </Reassurance>
             <Reassurance icon={<Clock className="h-3.5 w-3.5" />}>
-              One piece of work, about 10 minutes
+              One real project, about ten minutes
             </Reassurance>
           </ul>
         </div>

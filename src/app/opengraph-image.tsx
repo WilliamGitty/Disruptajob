@@ -6,7 +6,7 @@ import { ImageResponse } from "next/og";
  * brand's paper-and-ink palette by hand.
  */
 
-export const alt = "Disruptajob: your job title doesn't do you justice";
+export const alt = "Disruptajob: your CV doesn't do you justice";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -29,7 +29,7 @@ export default function OpenGraphImage() {
         <div style={{ display: "flex", fontSize: 34, letterSpacing: 2 }}>Disruptajob</div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 76, lineHeight: 1.15 }}>
-            Your job title doesn&rsquo;t
+            Your CV doesn&rsquo;t
           </div>
           <div style={{ display: "flex", fontSize: 76, lineHeight: 1.15 }}>
             do you justice.

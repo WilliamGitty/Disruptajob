@@ -1,10 +1,7 @@
 import { Hero } from "@/components/landing/hero";
-import { NotYourFault } from "@/components/landing/not-your-fault";
-import { DisruptionSection } from "@/components/landing/disruption-section";
 import { Comparison } from "@/components/landing/comparison";
 import { ClaimsSection } from "@/components/landing/claims-section";
 import { CandidatePreviewGrid } from "@/components/landing/candidate-preview-grid";
-import { TalentPitch } from "@/components/landing/talent-pitch";
 import { ProofAboveFold } from "@/components/landing/proof-above-fold";
 import { InterestCapture } from "@/components/landing/interest-capture";
 import { EmployerBand } from "@/components/landing/employer-band";
@@ -41,9 +38,11 @@ const JSON_LD = {
 export const dynamic = "force-dynamic";
 
 /**
- * Ordered as an emotional arc for the candidate — name the pain, remove the blame, show the small
- * first step, then prove other people are already here — with the employer door placed after
- * they've seen how it works, not competing with the opening.
+ * Deliberately short. Three testers in a row said the old page was too long to finish, and the
+ * product's own thesis is demonstration over narration, so the page now does exactly four
+ * things: the claim (hero), the proof (one real profile), the crowd (the grid), the employer
+ * door. The argument sections that used to live here (not-your-fault, talent-pitch,
+ * disruption) survive as components; /about and /why carry that depth for whoever wants it.
  */
 export default async function Home() {
   await track(EVENTS.landingView, { path: "/" });
@@ -99,8 +98,6 @@ export default async function Home() {
       {band}
       <Hero ctaLabel={ctaLabel} ctaHref={ctaHref} />
       <ProofAboveFold />
-      <NotYourFault />
-      <TalentPitch />
       <CandidatePreviewGrid />
 
       {/* Everything for companies, grouped and visually separated so a job-seeker doesn't read
@@ -110,10 +107,9 @@ export default async function Home() {
         <Comparison />
       </EmployerBand>
 
-      {/* The candidate email capture sits after the employer block, so the page ends by speaking
-          to the person it's built for. */}
+      {/* The candidate email capture sits last, so the page ends by speaking to the person
+          it's built for. */}
       <InterestCapture />
-      <DisruptionSection />
     </main>
   );
 }

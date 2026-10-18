@@ -43,21 +43,15 @@ export function ProofAboveFold() {
             <p className="mb-5 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
               What a profile looks like
             </p>
+            {/* A tester told us the old three-sentence explainer was "VERY confusing" and that
+                the imperative alone was "very effective". She was right: this block demonstrates,
+                it shouldn't also narrate. */}
             <h2 className="font-serif-display text-3xl leading-tight text-ink sm:text-[2.25rem]">
               Every claim has the work attached.
             </h2>
             <p className="mt-5 text-[17px] leading-relaxed text-ink-soft">
-              This is a real profile. The capability isn&rsquo;t something{" "}
-              {candidate.name.split(" ")[0]} typed about themselves. It&rsquo;s counted from the
-              work below it. Open the project and judge it yourself.
+              Open a project and see for yourself.
             </p>
-            <Link
-              href={`/profile/${candidate.slug}`}
-              className="mt-7 inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow"
-            >
-              See the whole profile
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
           </Reveal>
 
           <Reveal className="border border-ink/15 bg-paper" delay={180}>
@@ -69,6 +63,15 @@ export function ProofAboveFold() {
                 {candidate.location && (
                   <p className="mt-1 text-xs text-ink-faint">{candidate.location}</p>
                 )}
+                {/* The link lives with the person it belongs to; a tester went looking for it
+                    here and found it floating outside the card instead. */}
+                <Link
+                  href={`/profile/${candidate.slug}`}
+                  className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow"
+                >
+                  See the whole profile
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
               </div>
             </div>
 

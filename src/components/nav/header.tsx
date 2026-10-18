@@ -402,9 +402,9 @@ function Logo() {
       <Image
         src="/logo-mark.jpg"
         alt=""
-        width={28}
-        height={28}
-        className="h-7 w-7 shrink-0 rounded-sm"
+        width={32}
+        height={32}
+        className="h-8 w-8 shrink-0 rounded-sm"
       />
       <span className="hidden font-serif-display text-lg tracking-tight text-ink min-[430px]:inline">
         Disruptajob
