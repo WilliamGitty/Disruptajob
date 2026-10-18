@@ -20,21 +20,28 @@ A hiring platform where people publish evidence of real work instead of sending 
 
 PRIVACY MODEL (the part people ask about most)
 - Every new profile starts HIDDEN: invisible in all searches, and its link only opens for its owner.
-- The owner chooses visibility in Account management (under their name menu, top right): hidden, open, or selectively open.
+- The owner chooses visibility in Account management (under the Settings menu, top right): hidden, open, or selectively open.
 - Candidates can block named companies (their employer, say) which can then never see them. The blocklist always wins.
 - Registering interest in a role is the one exception the user controls: it lets THAT company see their profile while the interest stands, even if otherwise hidden. Withdrawing it (from Registered interest in the menu) restores the wall immediately. Nothing is sent when registering interest; it is a visibility grant, not an application.
 - Data export and full account deletion are in Account management. Deletion is real and immediate.
 
-NAVIGATION MAP (signed-in candidates: everything lives under your name, top right)
-- My profile: your name, email address, and password. Changing email or password asks for your current password. A changed email gets a new confirmation link.
+NAVIGATION MAP (signed-in candidates: three menus, top right of every page)
+The header has three dropdowns when signed in: About (About us, Articles, Guides, FAQ), a menu under your first name, and Settings.
+Under your name:
+- My profile settings: your name, email address, and password. Changing email or password asks for your current password. A changed email gets a new confirmation link.
 - My projects: your page with your published work, and the import desk: import public GitHub repos by username, or drop a CV or LinkedIn profile export (PDF) and AI drafts projects for you to edit, tag and publish or delete. Drafts are private until published. Also here: the share bar to copy your profile link, and the checklist of ways to strengthen the page.
 - Job roles available: open roles scored against your evidence. The percentage is how much of what the role asks for your published work covers. Filters for arrangement, minimum match, and hiding roles that clash with your terms. Each role has a Register interest button.
 - Registered interest: every role you've raised a hand for, with Withdraw on each.
 - Who's interested: companies that have reached out to you. You get one email when that happens; there is nothing to check daily, by design.
-- Account management (under Settings): who can find you, your terms (preferred arrangements, location, a private minimum salary that is never shown to companies, only compared), your about text, LinkedIn link, data export and deletion.
+- Sign out: at the bottom of the name menu.
+Under Settings:
+- Account management: who can find you, your terms (preferred arrangements, location, a private minimum salary that is never shown to companies, only compared), your about text, LinkedIn link, data export and deletion.
 - Help: the FAQ page.
+- Terms and conditions: the terms page.
 
 SIGNED-OUT / GENERAL PAGES
+- Signed-out header, top right: an About menu (About us, Why create an account?, Articles, Guides, FAQ), I'm hiring, Sign in, and Create an account.
+- Why create an account (/why): a short page listing what an account gets you. Reading for the undecided.
 - Add your first project (homepage button): the onboarding. Four short questions (the gap your title hides, one piece of work, what it proves, who you are), then claim the page with email and password. About ten minutes. Progress saves in the browser; leaving and returning picks up where they left off.
 - People: browse everyone who chose to be visible. Community: coming; the page explains. Articles and Guides: reading. About and FAQ: what it says.
 - Sign in, Create an account: top right when signed out. Forgotten password: link on the sign-in page; reset links arrive by email and work once.

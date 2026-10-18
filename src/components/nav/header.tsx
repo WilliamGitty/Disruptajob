@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -9,18 +9,6 @@ import { cn } from "@/lib/utils";
 import { signOutAction } from "@/server/actions/auth";
 
 const EMPLOYER_HOME = "/employer";
-
-// The quick row for the three places a signed-in candidate actually goes day to day.
-// It speaks the same vocabulary as the full menu under their name; the founder caught
-// the old labels ("My profile", "Settings") surviving here after the menu restructure.
-function talentLinks(talentHome: string) {
-  return [
-    { label: "My projects", href: talentHome },
-    { label: "Job roles available", href: "/talent/matches" },
-    // Named for what it feels like to receive, not for the system object behind it.
-    { label: "Who's interested", href: "/talent/opportunities" },
-  ];
-}
 
 const EMPLOYER_LINKS = [
   { label: "Find people", href: EMPLOYER_HOME },
@@ -31,6 +19,23 @@ const EMPLOYER_LINKS = [
   { label: "Account", href: "/employer/settings" },
 ];
 
+interface MenuItem {
+  label: string;
+  href: string;
+  /** Carries the awaiting count, for the one item that can have things waiting. */
+  badge?: number;
+}
+
+/**
+ * The condensed header, to the founder's sketch (19 Oct 2026). One design everywhere:
+ *
+ * Signed out:            About ▾ · I'm hiring · Sign in · [Create an account]
+ * Signed-in candidate:   About ▾ · [first name] ▾ · Settings ▾
+ *
+ * The old row of loose links grew by accretion; this one is three doors, each a short menu.
+ * Employer accounts keep the previous app header untouched, deliberately: that side stays
+ * underbuilt until real candidates justify building it.
+ */
 export function Header({
   awaiting = 0,
   signedInAs,
@@ -42,100 +47,252 @@ export function Header({
   talentHome?: string;
 }) {
   const pathname = usePathname();
-  const isEmployer = pathname?.startsWith("/employer");
-  const links = isEmployer ? EMPLOYER_LINKS : talentLinks(talentHome);
-  // Remember which route the menu was opened on, so navigating away closes it by derivation
-  // rather than by syncing state in an effect.
+  // One dropdown open at a time, remembered with the route it opened on, so navigating
+  // away closes it by derivation rather than by syncing state in an effect.
+  const [openState, setOpenState] = useState<{ id: string; at: string } | null>(null);
+  const openId = openState && openState.at === pathname ? openState.id : null;
+  const toggle = (id: string) =>
+    setOpenState(openId === id ? null : { id, at: pathname ?? "" });
+  const close = () => setOpenState(null);
+
+  if (signedInAs?.role === "employer") {
+    return <EmployerHeader awaiting={awaiting} signedInAs={signedInAs} talentHome={talentHome} />;
+  }
+
+  const aboutItems: MenuItem[] = [
+    { label: "About us", href: "/about" },
+    // The question a first-time visitor is actually asking. Signed-in people answered it.
+    ...(signedInAs ? [] : [{ label: "Why create an account?", href: "/why" }]),
+    { label: "Articles", href: "/articles" },
+    { label: "Guides", href: "/guides" },
+    { label: "FAQ", href: "/faq" },
+  ];
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/90 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
+        <Logo />
+        <nav className="flex items-center gap-4 sm:gap-5">
+          <NavDropdown
+            id="about"
+            label="About"
+            items={aboutItems}
+            openId={openId}
+            onToggle={toggle}
+            onNavigate={close}
+          />
+
+          {signedInAs ? (
+            <>
+              <NavDropdown
+                id="me"
+                label={signedInAs.name.split(" ")[0]}
+                bordered
+                buttonBadge={awaiting}
+                items={[
+                  { label: "My profile settings", href: "/talent/account" },
+                  { label: "My projects", href: talentHome },
+                  { label: "Job roles available", href: "/talent/matches" },
+                  { label: "Registered interest", href: "/talent/interested" },
+                  { label: "Who's interested", href: "/talent/opportunities", badge: awaiting },
+                ]}
+                openId={openId}
+                onToggle={toggle}
+                onNavigate={close}
+                footer={
+                  <form action={signOutAction}>
+                    <button
+                      type="submit"
+                      role="menuitem"
+                      className="block w-full px-4 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
+                    >
+                      Sign out
+                    </button>
+                  </form>
+                }
+              />
+              <NavDropdown
+                id="settings"
+                label="Settings"
+                items={[
+                  { label: "Account management", href: "/talent/settings" },
+                  { label: "Help", href: "/faq" },
+                  { label: "Terms and conditions", href: "/terms" },
+                ]}
+                openId={openId}
+                onToggle={toggle}
+                onNavigate={close}
+              />
+            </>
+          ) : (
+            <>
+              <Link
+                href={EMPLOYER_HOME}
+                className="hidden text-sm text-ink-soft underline-grow sm:inline"
+              >
+                I&rsquo;m hiring
+              </Link>
+              <Link href="/signin" className="text-sm text-ink-soft underline-grow">
+                Sign in
+              </Link>
+              <Link href="/talent/onboarding">
+                <span className="inline-flex h-9 items-center border border-ink/20 px-3.5 text-sm font-medium text-ink transition-colors hover:border-ink sm:h-10 sm:px-5">
+                  Create an account
+                </span>
+              </Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+/**
+ * One labelled door that opens a short menu. Click-away closes it; so does navigating,
+ * because the open state remembers which route it was opened on.
+ */
+function NavDropdown({
+  id,
+  label,
+  items,
+  openId,
+  onToggle,
+  onNavigate,
+  bordered = false,
+  buttonBadge = 0,
+  footer,
+}: {
+  id: string;
+  label: string;
+  items: MenuItem[];
+  openId: string | null;
+  onToggle: (id: string) => void;
+  onNavigate: () => void;
+  bordered?: boolean;
+  buttonBadge?: number;
+  footer?: ReactNode;
+}) {
+  const open = openId === id;
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => onToggle(id)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className={cn(
+          "flex items-center gap-1.5 text-[13px] font-medium transition-colors",
+          bordered
+            ? "border border-ink/15 px-2.5 py-1.5 text-ink hover:border-ink/40 sm:px-3"
+            : "py-1.5 text-ink-soft hover:text-ink"
+        )}
+      >
+        <span className={bordered ? "max-w-[72px] truncate sm:max-w-none" : undefined}>
+          {label}
+        </span>
+        {buttonBadge > 0 && <CountDot count={buttonBadge} />}
+        <ChevronDown
+          className={cn("h-3.5 w-3.5 text-ink-faint transition-transform", open && "rotate-180")}
+        />
+      </button>
+      {open && (
+        <>
+          {/* click-away layer */}
+          <button
+            type="button"
+            aria-hidden
+            tabIndex={-1}
+            onClick={() => onToggle(id)}
+            className="fixed inset-0 z-40 cursor-default"
+          />
+          <div
+            role="menu"
+            className="absolute right-0 top-full z-50 mt-2 w-56 border border-ink/15 bg-paper py-1.5 shadow-[3px_3px_0_rgba(26,24,21,0.08)]"
+          >
+            {items.map((item) => (
+              <Link
+                key={item.label}
+                role="menuitem"
+                href={item.href}
+                onClick={onNavigate}
+                className="flex items-center gap-2 px-4 py-2 text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
+              >
+                {item.label}
+                {(item.badge ?? 0) > 0 && <CountDot count={item.badge ?? 0} />}
+              </Link>
+            ))}
+            {footer && (
+              <>
+                <div className="my-1.5 border-t border-ink/10" />
+                {footer}
+              </>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The employer app header, unchanged from before the candidate header was condensed.
+ * It keeps the Looking/Hiring toggle because an employer account is the one place both
+ * modes are real.
+ */
+function EmployerHeader({
+  awaiting,
+  signedInAs,
+  talentHome,
+}: {
+  awaiting: number;
+  signedInAs: { name: string; role: "talent" | "employer" };
+  talentHome: string;
+}) {
+  const pathname = usePathname();
   const [openedAt, setOpenedAt] = useState<string | null>(null);
   const menuOpen = openedAt !== null && openedAt === pathname;
   const setMenuOpen = (next: boolean) => setOpenedAt(next ? pathname : null);
+  const badgedHref = "/employer/responses";
 
-  const badgedHref = isEmployer ? "/employer/responses" : "/talent/opportunities";
-
-  // On public pages, a visitor gets the public header: content links and the two doors. The
-  // app navigation (My projects, Job roles available, ...) is a row of dead ends to anyone without an account,
-  // and a signed-in person on a public page still has both doors home.
-  const PUBLIC_PREFIXES = ["/about", "/articles", "/guides", "/faq", "/community", "/people", "/privacy", "/terms", "/signin", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/company"];
-  const isPublicPage = pathname === "/" || PUBLIC_PREFIXES.some((p) => pathname?.startsWith(p));
-
-  if (isPublicPage) {
-    return (
-      <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/90 backdrop-blur-sm">
-        <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
-          <Logo />
-          {/* Two doors, labelled by what the visitor is here to do rather than by our jargon,
-              plus the pages that let a careful visitor take our measure before trusting us. */}
-          <nav className="flex items-center gap-5">
-            <Link href="/community" className="hidden text-sm text-ink-faint underline-grow lg:inline">
-              Community
-            </Link>
-            <Link href="/about" className="hidden text-sm text-ink-faint underline-grow lg:inline">
-              About
-            </Link>
-            <Link href="/articles" className="hidden text-sm text-ink-faint underline-grow lg:inline">
-              Articles
-            </Link>
-            <Link href="/guides" className="hidden text-sm text-ink-faint underline-grow lg:inline">
-              Guides
-            </Link>
-            <Link href="/faq" className="hidden text-sm text-ink-faint underline-grow lg:inline">
-              FAQ
-            </Link>
-            {signedInAs ? (
-              // A signed-in person on a public page keeps their way home: the mode toggle
-              // carries Looking/Hiring, their name, and sign out.
-              <ModeToggle isEmployer={Boolean(isEmployer)} talentHome={talentHome} signedInAs={signedInAs} />
-            ) : (
-              <>
-                <Link
-                  href={EMPLOYER_HOME}
-                  className="hidden text-sm text-ink-soft underline-grow sm:inline"
-                >
-                  I&rsquo;m hiring
-                </Link>
-                <Link href="/signin" className="text-sm text-ink-soft underline-grow">
-                  Sign in
-                </Link>
-                <Link href="/talent/onboarding">
-                  <span className="inline-flex h-9 items-center border border-ink/20 px-3.5 text-sm font-medium text-ink transition-colors hover:border-ink sm:h-10 sm:px-5">
-                    Create an account
-                  </span>
-                </Link>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
-    );
-  }
+  const renderLinks = (textSize: string) =>
+    EMPLOYER_LINKS.map((link) => {
+      const active =
+        pathname === link.href || (pathname?.startsWith(link.href) && link.href !== EMPLOYER_HOME);
+      return (
+        <Link
+          key={link.label}
+          href={link.href}
+          className={cn(
+            "inline-flex items-center gap-2 font-medium tracking-wide transition-colors",
+            textSize,
+            active ? "text-ink" : "text-ink-faint hover:text-ink"
+          )}
+        >
+          {link.label}
+          {link.href === badgedHref && awaiting > 0 && <CountDot count={awaiting} />}
+        </Link>
+      );
+    });
 
   return (
     <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/90 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-6 lg:px-10">
         <div className="flex items-center gap-8">
           <Logo />
-          <nav className="hidden items-center gap-6 md:flex">
-            {links.map((link) => {
-              const active = pathname === link.href || (pathname?.startsWith(link.href) && link.href !== talentHome && link.href !== EMPLOYER_HOME);
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={cn(
-                    "inline-flex items-center gap-2 text-[13px] font-medium tracking-wide transition-colors",
-                    active ? "text-ink" : "text-ink-faint hover:text-ink"
-                  )}
-                >
-                  {link.label}
-                  {link.href === badgedHref && awaiting > 0 && <CountDot count={awaiting} />}
-                </Link>
-              );
-            })}
-          </nav>
+          <nav className="hidden items-center gap-6 md:flex">{renderLinks("text-[13px]")}</nav>
         </div>
 
         <div className="flex items-center gap-3">
-          <ModeToggle isEmployer={Boolean(isEmployer)} talentHome={talentHome} signedInAs={signedInAs} />
+          <div className="flex items-center border border-ink/15 p-0.5 text-[13px] font-medium">
+            <Link href={talentHome} className="px-2.5 py-1.5 text-ink-soft transition-colors hover:text-ink sm:px-3.5">
+              Looking
+            </Link>
+            <Link href={EMPLOYER_HOME} className="bg-ink px-2.5 py-1.5 text-paper sm:px-3.5">
+              Hiring
+            </Link>
+          </div>
+          <EmployerAccountMenu signedInAs={signedInAs} />
           <button
             type="button"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -149,24 +306,7 @@ export function Header({
 
       {menuOpen && (
         <nav className="border-t border-ink/10 bg-paper px-6 py-4 md:hidden">
-          <div className="flex flex-col gap-4">
-            {links.map((link) => {
-              const active = pathname === link.href || (pathname?.startsWith(link.href) && link.href !== talentHome && link.href !== EMPLOYER_HOME);
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={cn(
-                    "inline-flex items-center gap-2 text-sm font-medium tracking-wide transition-colors",
-                    active ? "text-ink" : "text-ink-faint hover:text-ink"
-                  )}
-                >
-                  {link.label}
-                  {link.href === badgedHref && awaiting > 0 && <CountDot count={awaiting} />}
-                </Link>
-              );
-            })}
-          </div>
+          <div className="flex flex-col gap-4">{renderLinks("text-sm")}</div>
         </nav>
       )}
     </header>
@@ -185,37 +325,15 @@ function CountDot({ count }: { count: number }) {
   );
 }
 
-/**
- * The "me" menu. One stable place that always leads back to your own things, from any page —
- * added after the founder, signed in on the homepage, had no path back to his own profile.
- */
-function AccountMenu({
-  signedInAs,
-  talentHome,
-}: {
-  signedInAs: { name: string; role: "talent" | "employer" };
-  talentHome: string;
-}) {
+function EmployerAccountMenu({ signedInAs }: { signedInAs: { name: string } }) {
   const [open, setOpen] = useState(false);
-  const items =
-    signedInAs.role === "talent"
-      ? [
-          { label: "My profile", href: "/talent/account" },
-          { label: "My projects", href: talentHome },
-          { label: "Job roles available", href: "/talent/matches" },
-          { label: "Registered interest", href: "/talent/interested" },
-          { label: "Who's interested", href: "/talent/opportunities" },
-          { label: "divider:Settings", href: "#" },
-          { label: "Account management", href: "/talent/settings" },
-          { label: "Help", href: "/faq" },
-        ]
-      : [
-          { label: "Find people", href: "/employer" },
-          { label: "Your role", href: "/employer/setup" },
-          { label: "Pipeline", href: "/employer/pipeline" },
-          { label: "Conversations", href: "/employer/responses" },
-          { label: "Account settings", href: "/employer/settings" },
-        ];
+  const items = [
+    { label: "Find people", href: "/employer" },
+    { label: "Your role", href: "/employer/setup" },
+    { label: "Pipeline", href: "/employer/pipeline" },
+    { label: "Conversations", href: "/employer/responses" },
+    { label: "Account settings", href: "/employer/settings" },
+  ];
 
   return (
     <div className="relative">
@@ -231,7 +349,6 @@ function AccountMenu({
       </button>
       {open && (
         <>
-          {/* click-away layer */}
           <button
             type="button"
             aria-hidden
@@ -243,23 +360,17 @@ function AccountMenu({
             role="menu"
             className="absolute right-0 top-full z-50 mt-2 w-52 border border-ink/15 bg-paper py-1.5 shadow-[3px_3px_0_rgba(26,24,21,0.08)]"
           >
-            {items.map((item) =>
-              item.label.startsWith("divider:") ? (
-                <div key={item.label} className="mx-4 mb-1 mt-2 border-t border-ink/10 pt-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-faint">
-                  {item.label.slice(8)}
-                </div>
-              ) : (
-                <Link
-                  key={item.label}
-                  role="menuitem"
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="block px-4 py-2 text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
-                >
-                  {item.label}
-                </Link>
-              )
-            )}
+            {items.map((item) => (
+              <Link
+                key={item.label}
+                role="menuitem"
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2 text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
+              >
+                {item.label}
+              </Link>
+            ))}
             <div className="my-1.5 border-t border-ink/10" />
             <form action={signOutAction}>
               <button
@@ -291,49 +402,5 @@ function Logo() {
         Disruptajob
       </span>
     </Link>
-  );
-}
-
-function ModeToggle({
-  isEmployer,
-  talentHome,
-  signedInAs,
-}: {
-  isEmployer: boolean;
-  talentHome: string;
-  signedInAs?: { name: string; role: "talent" | "employer" };
-}) {
-  return (
-    <div className="flex items-center gap-2 sm:gap-3">
-      <div className="flex items-center border border-ink/15 p-0.5 text-[13px] font-medium">
-        <Link
-          href={talentHome}
-          className={cn(
-            "px-2.5 py-1.5 transition-colors sm:px-3.5",
-            !isEmployer ? "bg-ink text-paper" : "text-ink-soft hover:text-ink"
-          )}
-        >
-          Looking
-        </Link>
-        <Link
-          href={EMPLOYER_HOME}
-          className={cn(
-            "px-2.5 py-1.5 transition-colors sm:px-3.5",
-            isEmployer ? "bg-ink text-paper" : "text-ink-soft hover:text-ink"
-          )}
-        >
-          Hiring
-        </Link>
-      </div>
-
-      {/* Who you are is now a real thing that can be wrong, so it's always on screen. */}
-      {signedInAs ? (
-        <AccountMenu signedInAs={signedInAs} talentHome={talentHome} />
-      ) : (
-        <Link href="/signin" className="hidden text-[13px] text-ink-soft underline-grow sm:inline">
-          Sign in
-        </Link>
-      )}
-    </div>
   );
 }
