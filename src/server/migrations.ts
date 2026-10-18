@@ -123,6 +123,14 @@ const MIGRATIONS: Migration[] = [
     id: "009-demo-demand-generated",
     up: seedGeneratedDemand,
   },
+  {
+    // A LinkedIn link on the profile's background. A link, never an import: LinkedIn does not
+    // permit reading profiles, and nothing behind this URL is parsed or scored.
+    id: "010-candidate-linkedin-url",
+    up: (db) => {
+      addColumn(db, "candidate", "linkedin_url", "TEXT");
+    },
+  },
 ];
 
 function appliedIds(db: DatabaseSync): Set<string> {

@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { isSafeHttpUrl } from "@/lib/project-input";
 import { run, transaction } from "../db";
 import { requireCandidate } from "../auth";
 import type { Discoverability, WorkArrangement } from "@/types";
@@ -56,6 +58,7 @@ export async function updateVisibility(formData: FormData) {
 
   revalidatePath("/talent/settings");
   revalidatePath("/profile/[slug]", "page");
+  redirect("/talent/settings?saved=visibility");
 }
 
 export async function updateTerms(formData: FormData) {
@@ -92,6 +95,7 @@ export async function updateTerms(formData: FormData) {
   });
 
   revalidatePath("/talent/settings");
+  redirect("/talent/settings?saved=terms");
 }
 
 export async function updateBasics(formData: FormData) {
@@ -102,20 +106,25 @@ export async function updateBasics(formData: FormData) {
   const shortDescription = clean(formData.get("shortDescription"), 400);
   const location = clean(formData.get("location"), 120);
   const availability = String(formData.get("availability") ?? "open");
+  const linkedinRaw = clean(formData.get("linkedinUrl"), 200);
+  const linkedinUrl = linkedinRaw && isSafeHttpUrl(linkedinRaw) ? linkedinRaw : null;
 
   run(
     `UPDATE candidate
         SET name = COALESCE(NULLIF(?, ''), name),
-            headline = ?, short_description = ?, location = ?, availability = ?
+            headline = ?, short_description = ?, location = ?, availability = ?,
+            linkedin_url = ?
       WHERE id = ?`,
     name,
     headline,
     shortDescription,
     location,
     ["open", "selectively-open", "not-looking"].includes(availability) ? availability : "open",
+    linkedinUrl,
     candidateId
   );
 
   revalidatePath("/talent/settings");
   revalidatePath("/profile/[slug]", "page");
+  redirect("/talent/settings?saved=basics");
 }

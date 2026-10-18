@@ -1,15 +1,23 @@
-import { ChevronDown } from "lucide-react";
 import type { CandidateProfile } from "@/types";
 
 export function BackgroundSection({ candidate }: { candidate: CandidateProfile }) {
   return (
     <section className="border-b border-ink/10 bg-paper-dim/40">
       <div className="mx-auto max-w-[1100px] px-6 py-10 lg:px-10">
-        <details className="group">
-          <summary className="flex cursor-pointer list-none items-center gap-3 text-sm font-medium text-ink-faint">
-            <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
-            Background
-          </summary>
+        <div>
+          <h3 className="text-sm font-medium text-ink-faint">Background</h3>
+          {candidate.linkedinUrl && (
+            <p className="mt-3 text-sm">
+              <a
+                href={candidate.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink underline-grow"
+              >
+                LinkedIn ↗
+              </a>
+            </p>
+          )}
           {/* Their own words, above the chronology. Context for someone already interested , 
               and explicitly marked as unscored, so it can't be mistaken for evidence. */}
           {candidate.about && (
@@ -51,7 +59,7 @@ export function BackgroundSection({ candidate }: { candidate: CandidateProfile }
               </ul>
             </div>
           </div>
-        </details>
+        </div>
       </div>
     </section>
   );

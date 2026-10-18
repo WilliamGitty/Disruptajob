@@ -84,14 +84,17 @@ export function Header({
             ) : (
               <>
                 <Link
-                  href="/talent/onboarding"
+                  href={EMPLOYER_HOME}
                   className="hidden text-sm text-ink-soft underline-grow sm:inline"
                 >
-                  I&rsquo;m looking for work
+                  I&rsquo;m hiring
                 </Link>
-                <Link href={EMPLOYER_HOME}>
-                  <span className="inline-flex h-10 items-center border border-ink/20 px-5 text-sm font-medium text-ink transition-colors hover:border-ink">
-                    I&rsquo;m hiring
+                <Link href="/signin" className="text-sm text-ink-soft underline-grow">
+                  Sign in
+                </Link>
+                <Link href="/talent/onboarding">
+                  <span className="inline-flex h-9 items-center border border-ink/20 px-3.5 text-sm font-medium text-ink transition-colors hover:border-ink sm:h-10 sm:px-5">
+                    Create an account
                   </span>
                 </Link>
               </>
@@ -214,9 +217,9 @@ function AccountMenu({
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="menu"
-        className="flex items-center gap-1.5 border border-ink/15 px-3 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-ink/40"
+        className="flex items-center gap-1.5 border border-ink/15 px-2.5 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-ink/40 sm:px-3"
       >
-        {signedInAs.name.split(" ")[0]}
+        <span className="max-w-[64px] truncate sm:max-w-none">{signedInAs.name.split(" ")[0]}</span>
         <ChevronDown className={cn("h-3.5 w-3.5 text-ink-faint transition-transform", open && "rotate-180")} />
       </button>
       {open && (
@@ -271,7 +274,9 @@ function Logo() {
         height={28}
         className="h-7 w-7 shrink-0 rounded-sm"
       />
-      <span className="font-serif-display text-lg tracking-tight text-ink">Disruptajob</span>
+      <span className="hidden font-serif-display text-lg tracking-tight text-ink min-[430px]:inline">
+        Disruptajob
+      </span>
     </Link>
   );
 }
@@ -286,12 +291,12 @@ function ModeToggle({
   signedInAs?: { name: string; role: "talent" | "employer" };
 }) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-3">
       <div className="flex items-center border border-ink/15 p-0.5 text-[13px] font-medium">
         <Link
           href={talentHome}
           className={cn(
-            "px-3.5 py-1.5 transition-colors",
+            "px-2.5 py-1.5 transition-colors sm:px-3.5",
             !isEmployer ? "bg-ink text-paper" : "text-ink-soft hover:text-ink"
           )}
         >
@@ -300,7 +305,7 @@ function ModeToggle({
         <Link
           href={EMPLOYER_HOME}
           className={cn(
-            "px-3.5 py-1.5 transition-colors",
+            "px-2.5 py-1.5 transition-colors sm:px-3.5",
             isEmployer ? "bg-ink text-paper" : "text-ink-soft hover:text-ink"
           )}
         >

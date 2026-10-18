@@ -43,9 +43,14 @@ const VISIBILITY: { value: Discoverability; label: string; body: string }[] = [
 export default async function SettingsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ verification?: string }>;
+  searchParams: Promise<{ verification?: string; saved?: string }>;
 }) {
-  const { verification } = await searchParams;
+  const { verification, saved } = await searchParams;
+  const savedNote = (
+    <p className="mt-4 inline-flex items-center gap-2 border border-evidence/30 bg-evidence-soft px-3 py-1.5 text-sm text-ink">
+      Changes saved.
+    </p>
+  );
   const account = await getCurrentAccount();
 
   if (!account?.candidateId) {
@@ -92,6 +97,7 @@ export default async function SettingsPage({
           removes you from every employer&rsquo;s search and saved lists.
         </p>
 
+        {saved === "visibility" && savedNote}
         <form action={updateVisibility} className="mt-6 space-y-5">
           <div className="space-y-2">
             {VISIBILITY.map((o) => (
@@ -147,6 +153,7 @@ export default async function SettingsPage({
           whether their budget clears it.
         </p>
 
+        {saved === "terms" && savedNote}
         <form action={updateTerms} className="mt-6 space-y-5">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="space-y-2">
@@ -218,6 +225,7 @@ export default async function SettingsPage({
       <section className="mt-8 border border-ink/10 p-7">
         <h2 className="font-serif-display text-xl text-ink">Your profile</h2>
 
+        {saved === "basics" && savedNote}
         <form action={updateBasics} className="mt-6 space-y-5">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="space-y-2">
@@ -227,6 +235,21 @@ export default async function SettingsPage({
             <div className="space-y-2">
               <Label htmlFor="location">Where you are</Label>
               <Input id="location" name="location" defaultValue={me.location} placeholder="London, UK" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="linkedinUrl">
+                LinkedIn URL <span className="text-ink-faint">(optional)</span>
+              </Label>
+              <Input
+                id="linkedinUrl"
+                name="linkedinUrl"
+                type="url"
+                defaultValue={me.linkedinUrl ?? ""}
+                placeholder="https://linkedin.com/in/you"
+              />
+              <p className="text-xs text-ink-faint">
+                Shown as a link in your background. We never read or score anything behind it.
+              </p>
             </div>
           </div>
 

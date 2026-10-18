@@ -148,6 +148,8 @@ export interface CandidateProfile {
   blockedCompanies?: string[];
   /** Part of the invented demo population. Set by seeding only — no user path can ever set it. */
   isDemo?: boolean;
+  /** A link to LinkedIn, shown in background. A link only: nothing behind it is read or scored. */
+  linkedinUrl?: string;
 }
 
 export interface Employer {

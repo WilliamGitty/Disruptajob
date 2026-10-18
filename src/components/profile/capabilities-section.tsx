@@ -40,14 +40,16 @@ export function CapabilitiesSection({
               .filter((p): p is Project => Boolean(p));
             return (
               <details key={capability.tag} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-center gap-6">
-                  <ChevronDown className="h-4 w-4 shrink-0 text-ink-faint transition-transform group-open:rotate-180" />
-                  <span className="w-48 shrink-0 text-[15px] font-medium text-ink sm:w-56">
-                    {capability.label}
+                <summary className="flex cursor-pointer list-none flex-wrap items-center gap-x-6 gap-y-2 sm:flex-nowrap">
+                  <span className="flex min-w-0 items-center gap-3 sm:w-60 sm:shrink-0">
+                    <ChevronDown className="h-4 w-4 shrink-0 text-ink-faint transition-transform group-open:rotate-180" />
+                    <span className="truncate text-[15px] font-medium text-ink">{capability.label}</span>
                   </span>
-                  <EvidencePips count={capability.evidenceCount} className="flex-1" />
-                  <span className="w-36 shrink-0 text-right text-xs text-ink-faint">
-                    {capability.evidenceCount} piece{capability.evidenceCount === 1 ? "" : "s"} of evidence
+                  <span className="flex w-full items-center justify-between gap-4 pl-7 sm:w-auto sm:flex-1 sm:pl-0">
+                    <EvidencePips count={capability.evidenceCount} className="flex-1 sm:max-w-none" />
+                    <span className="shrink-0 whitespace-nowrap text-right text-xs text-ink-faint">
+                      {capability.evidenceCount} piece{capability.evidenceCount === 1 ? "" : "s"}
+                    </span>
                   </span>
                 </summary>
 
