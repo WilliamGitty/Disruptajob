@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2, MessageCircleQuestion, X } from "lucide-react";
+import Image from "next/image";
+import { Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -58,28 +59,33 @@ export function AssistantWidget() {
         type="button"
         aria-label={open ? "Close help" : "Stuck? Ask a question"}
         onClick={() => setOpen(!open)}
-        className="fixed bottom-5 right-5 z-50 flex h-11 w-11 items-center justify-center border border-ink/20 bg-paper text-ink shadow-[2px_2px_0_rgba(26,24,21,0.12)] transition-colors hover:border-ink/50"
+        className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-sm bg-accent text-paper shadow-[2px_2px_0_rgba(26,24,21,0.2)] transition-colors hover:bg-accent-dark"
       >
-        {open ? <X className="h-5 w-5" /> : <MessageCircleQuestion className="h-5 w-5" />}
+        {open ? (
+          <X className="h-5 w-5" />
+        ) : (
+          <span className="flex flex-col items-center leading-none">
+            <Image src="/logo-mark.jpg" alt="" width={22} height={22} className="rounded-[2px]" />
+            <span className="mt-0.5 text-[9px] font-semibold">Ask</span>
+          </span>
+        )}
       </button>
 
       {open && (
         <div className="fixed bottom-20 right-5 z-50 flex max-h-[70vh] w-[min(360px,calc(100vw-2.5rem))] flex-col border border-ink/20 bg-paper shadow-[3px_3px_0_rgba(26,24,21,0.1)]">
-          <div className="border-b border-ink/10 px-4 py-3">
-            <p className="font-serif-display text-[15px] text-ink">Stuck? Ask.</p>
-            <p className="mt-0.5 text-[11px] leading-snug text-ink-faint">
-              Answers come from AI and cover using this site. Questions are saved, with your
-              name if you&rsquo;re signed in, so the founder can fix whatever confused you.
-            </p>
+          <div className="flex items-center gap-2.5 border-b border-ink/10 px-4 py-3">
+            <Image src="/logo-mark.jpg" alt="" width={20} height={20} className="rounded-[2px]" />
+            <div>
+              <p className="font-serif-display text-[15px] text-ink">
+                If you have any questions, ask below.
+              </p>
+              <p className="text-[10px] leading-snug text-ink-faint">
+                AI answers · questions are saved (with your name when signed in)
+              </p>
+            </div>
           </div>
 
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-3">
-            {turns.length === 0 && (
-              <p className="text-sm text-ink-faint">
-                Things like: where do I change who can see me? How do imports work? Why does my
-                link 404 for my friend?
-              </p>
-            )}
             {turns.map((t, i) => (
               <p
                 key={i}

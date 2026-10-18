@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Eye, Heart } from "lucide-react";
+import { ArrowRight, Clock, Eye, Heart, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TitleVsWork } from "@/components/illustrations/title-vs-work";
 import { Reveal } from "@/components/landing/reveal";
@@ -32,11 +32,11 @@ export function Hero({
             Your <span className="text-accent">job title</span> doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-            One year of experience when the filter demands two. Four roles that read as risk
-            instead of range. Research with no job title to show for it. The CV punishes
-            timelines that don&rsquo;t fit; here you show the work instead. Build your page
-            once and there&rsquo;s nothing left to pull out at 11pm: a link that works
-            everywhere, and companies finding you is the upside, not the ask.
+            The CV punishes timelines that don&rsquo;t fit. Here, you show the work instead.{" "}
+            <Link href="/about" className="text-ink underline-grow">
+              Here&rsquo;s why
+            </Link>
+            .
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -54,6 +54,9 @@ export function Hero({
             </Reassurance>
             <Reassurance icon={<Eye className="h-3.5 w-3.5" />}>
               Hidden until you say otherwise
+            </Reassurance>
+            <Reassurance icon={<LinkIcon className="h-3.5 w-3.5" />}>
+              A link that works anywhere, from day one
             </Reassurance>
             <Reassurance icon={<Clock className="h-3.5 w-3.5" />}>
               One piece of work, about 10 minutes
