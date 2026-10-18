@@ -12,6 +12,8 @@ import {
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ShareProfileBar } from "@/components/profile/share-profile-bar";
 import { GitHubImportPanel } from "@/components/profile/github-import-panel";
+import { StandOutChecklist } from "@/components/profile/stand-out-checklist";
+import { isEmailVerified } from "@/server/email-verification";
 import { FeaturedWorkSection } from "@/components/profile/featured-work-section";
 import { CapabilitiesSection } from "@/components/profile/capabilities-section";
 import { BackgroundSection } from "@/components/profile/background-section";
@@ -101,6 +103,46 @@ export default async function ProfilePage({
         />
       )}
       {isOwnProfile && <EvidenceNudge candidate={candidate} />}
+      {isOwnProfile && viewer && (
+        <StandOutChecklist
+          items={[
+            {
+              done: projects.filter((p) => p.status !== "draft").length >= 2,
+              label: "Add a second piece of work",
+              why: "one project reads as a one-off; two start to look like a pattern",
+              href: "/talent/onboarding",
+            },
+            {
+              done: projects.some((p) => p.status !== "draft" && p.outcome.trim().length > 0),
+              label: "Add an outcome to a project",
+              why: "what changed because of your work is the line employers quote back",
+              href: "#work",
+            },
+            {
+              done: Boolean(candidate.about?.trim()),
+              label: "Write a few lines about yourself",
+              why: "context for a human who is already interested — never scored",
+              href: "/talent/settings",
+            },
+            {
+              done: Boolean(
+                candidate.nonNegotiables &&
+                  (candidate.nonNegotiables.roleTypes.length > 0 ||
+                    candidate.nonNegotiables.workArrangements.length > 0)
+              ),
+              label: "Set your terms (compensation optional)",
+              why: "mismatches surface before anyone wastes a conversation",
+              href: "/talent/settings",
+            },
+            {
+              done: isEmailVerified(viewer.id),
+              label: "Confirm your email",
+              why: "so password recovery provably reaches you",
+              href: "/talent/settings",
+            },
+          ]}
+        />
+      )}
       {isOwnProfile && (
         <GitHubImportPanel drafts={projects.filter((p) => p.status === "draft")} />
       )}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import type { CandidateProfile, Project } from "@/types";
-import { StrengthBar } from "@/components/ui/strength-bar";
+import { EvidencePips } from "@/components/ui/evidence-pips";
 
 /**
  * The capability graph.
@@ -45,7 +45,7 @@ export function CapabilitiesSection({
                   <span className="w-48 shrink-0 text-[15px] font-medium text-ink sm:w-56">
                     {capability.label}
                   </span>
-                  <StrengthBar score={capability.score} className="flex-1" />
+                  <EvidencePips count={capability.evidenceCount} className="flex-1" />
                   <span className="w-36 shrink-0 text-right text-xs text-ink-faint">
                     {capability.evidenceCount} piece{capability.evidenceCount === 1 ? "" : "s"} of evidence
                   </span>

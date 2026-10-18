@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import type { Project } from "@/types";
-import { ProjectThumbnail } from "@/components/ui/project-thumbnail";
+import { CapabilityBurst } from "@/components/ui/capability-burst";
 import { Badge } from "@/components/ui/badge";
 import { capabilityLabel } from "@/lib/capabilities";
 
@@ -44,7 +44,7 @@ export function ProjectCard({
           <X className="h-3.5 w-3.5" />
         </button>
       )}
-      <ProjectThumbnail seed={project.thumbnailSeed} className="aspect-[16/10] w-full" />
+      <CapabilityBurst tags={project.capabilities} seed={project.thumbnailSeed} className="aspect-[16/10] w-full" />
       <div className="p-6">
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-serif-display text-xl text-ink">{project.title}</h3>

@@ -53,8 +53,12 @@ export function draftPrompt(repoName: string, language: string | undefined, read
 /** Clamp whatever the model said to the shape the product allows. Exported for tests. */
 export function parseDraftSuggestion(raw: string): ProjectDraftSuggestion | null {
   try {
-    const cleaned = raw.trim().replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
-    const parsed = JSON.parse(cleaned) as Record<string, unknown>;
+    // Models preface JSON with prose no matter how firmly the prompt forbids it — production
+    // showed every reply failing the strict parse. Take the outermost brace-to-brace span.
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+    if (start === -1 || end <= start) return null;
+    const parsed = JSON.parse(raw.slice(start, end + 1)) as Record<string, unknown>;
     const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
     const tags = Array.isArray(parsed.suggestedTags)
       ? parsed.suggestedTags.filter((t): t is string => typeof t === "string" && VALID_TAGS.has(t)).slice(0, 3)

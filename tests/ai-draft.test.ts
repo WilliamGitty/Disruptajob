@@ -57,6 +57,18 @@ test("at most three suggestions, however many the model offers", () => {
   assert.equal(parsed.suggestedTags.length, 3);
 });
 
+test("JSON buried in model prose still parses — the exact production failure", () => {
+  const body = JSON.stringify({ description: "A thing.", problem: "", whatIBuilt: "", outcome: "", suggestedTags: ["automation"] });
+  for (const raw of [
+    `Here is the JSON you asked for:\n\n${body}\n\nLet me know if you'd like changes!`,
+    `Sure! ${body}`,
+  ]) {
+    const parsed = parseDraftSuggestion(raw);
+    assert.ok(parsed, "prose-wrapped JSON must parse");
+    assert.equal(parsed.description, "A thing.");
+  }
+});
+
 test("garbage returns null rather than a half-parsed draft", () => {
   assert.equal(parseDraftSuggestion("Sure! Here's what I'd write:"), null);
   assert.equal(parseDraftSuggestion(""), null);

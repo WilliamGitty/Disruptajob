@@ -579,7 +579,8 @@ function PayoffView({
         Here&rsquo;s what your title never said.
       </h1>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-        One piece of real work, and your profile already shows evidence a CV has no room for:
+        The work you just published proves these capabilities — and capabilities are exactly what
+        employers here search by, instead of job titles:
       </p>
       <div className="mt-6 flex flex-wrap gap-2">
         {capabilities.map((tag) => (
@@ -589,10 +590,11 @@ function PayoffView({
         ))}
       </div>
       <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
-        Your page is live — and <strong className="text-ink">hidden</strong>. No employer can see
-        it until you decide they can. Even hidden, it&rsquo;s already useful: it&rsquo;s a link
-        you can put in applications and on LinkedIn the moment you open it up — evidence where
-        everyone else attaches a PDF.
+        So when a company needs what you&rsquo;ve just proven, you surface — no application, no
+        keyword lottery. Your page is live and <strong className="text-ink">hidden</strong>: no
+        employer sees it until you decide. Even hidden it&rsquo;s useful — a link for
+        applications and LinkedIn the moment you open it up, evidence where everyone else
+        attaches a PDF.
       </p>
       {signedUpFresh && (
         <p className="mt-3 text-sm text-ink-faint">

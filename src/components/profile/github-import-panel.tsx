@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, Loader2, Sparkles } from "lucide-react";
+import { Check, Loader2, Sparkles, Trash2 } from "lucide-react";
 import type { Project } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { importGitHubToProfile } from "@/server/actions/github-import";
-import { publishDraftProject } from "@/server/actions/evidence";
+import { publishDraftProject, removeProject } from "@/server/actions/evidence";
 import { CAPABILITY_DEFINITIONS } from "@/lib/capabilities";
 import { cn } from "@/lib/utils";
 
@@ -110,6 +110,13 @@ function DraftReview({ draft, suggested }: { draft: Project; suggested: string[]
 
   if (gone) return null;
 
+  function discard() {
+    startPublishing(async () => {
+      await removeProject(draft.id);
+      setGone(true);
+    });
+  }
+
   function publish() {
     setError(null);
     startPublishing(async () => {
@@ -203,17 +210,22 @@ function DraftReview({ draft, suggested }: { draft: Project; suggested: string[]
           <p className="border border-accent/30 bg-accent-soft px-3 py-2 text-sm text-ink">{error}</p>
         )}
 
-        <Button type="button" variant="accent" size="sm" onClick={publish} disabled={publishing}>
-          {publishing ? (
-            <>
-              Publishing <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            </>
-          ) : (
-            <>
-              Publish as evidence <Check className="h-3.5 w-3.5" />
-            </>
-          )}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button type="button" variant="accent" size="sm" onClick={publish} disabled={publishing}>
+            {publishing ? (
+              <>
+                Publishing <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              </>
+            ) : (
+              <>
+                Publish as evidence <Check className="h-3.5 w-3.5" />
+              </>
+            )}
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={discard} disabled={publishing}>
+            <Trash2 className="h-3.5 w-3.5" /> Delete draft
+          </Button>
+        </div>
       </div>
     </div>
   );

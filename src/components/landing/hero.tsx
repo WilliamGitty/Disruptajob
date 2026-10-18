@@ -41,9 +41,6 @@ export function Hero() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/employer">I&rsquo;m hiring</Link>
-            </Button>
           </div>
 
           <ul className="mt-8 flex flex-wrap gap-x-7 gap-y-3 text-sm text-ink-soft">
