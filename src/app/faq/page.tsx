@@ -39,7 +39,7 @@ const CANDIDATE_QAS: QA[] = [
   },
   {
     q: "Do I need a CV?",
-    a: "No. You can paste one as background context for a human to read, but it is never parsed into capabilities and never scored. The product exists because CVs compress people badly; we are not going to turn around and score the compression.",
+    a: "No. If you have one, you can drop it on the import desk and AI will draft projects from it for you to edit, tag and publish, or throw away. The file itself is read once and never stored, and nothing in it ever becomes a capability until you have published the work it describes and tagged it yourself. The product exists because CVs compress people badly; we are not going to turn around and score the compression.",
   },
   {
     q: "What if I don't have GitHub or side projects?",
@@ -50,8 +50,28 @@ const CANDIDATE_QAS: QA[] = [
     a: "Yes, and you should. Once you open your profile up, its link works anywhere: job applications, LinkedIn, an email signature. Evidence beats attachments.",
   },
   {
+    q: "What exactly does a company see when it finds me?",
+    a: (
+      <>
+        Your page as you published it: your name, your projects, the capabilities your work
+        demonstrates, and your preferred arrangements and location if you set them. Two things it
+        never sees: your private minimum salary, which is compared against a role&rsquo;s band but
+        never displayed, and your contact details, which are released only after you accept an
+        approach. Until then, a company that wants to reach you goes through{" "}
+        <Link href="/talent/opportunities" className="text-ink underline-grow">
+          Who&rsquo;s interested
+        </Link>
+        , and you decide.
+      </>
+    ),
+  },
+  {
+    q: "If I register interest in a role, what did I just share?",
+    a: "Visibility, nothing else. Registering interest lets that one company see your profile while the interest stands, even if you are otherwise hidden. No message is sent, no document attached, nothing lands in an inbox. Withdraw it any time from Registered interest in your menu, and the wall is back up immediately.",
+  },
+  {
     q: "How do I delete everything?",
-    a: "From settings, in one action, and it is real deletion, not deactivation. You can also export your data first. You never owe us a reason.",
+    a: "From account management, in one action, and it is real deletion, not deactivation. Your profile, projects, interests and account are removed from the live database immediately. One honest footnote: encrypted nightly backups exist for disaster recovery and cycle out after 30 days, so a deleted account is fully gone from those within a month. You can export your data first, and you never owe us a reason.",
   },
 ];
 
@@ -121,6 +141,44 @@ const PLATFORM_QAS: QA[] = [
   },
 ];
 
+const DATA_QAS: QA[] = [
+  {
+    q: "Where is my data actually stored?",
+    a: "In one database on a server in London. Email leaves through one provider in an EU region, and that is the complete list of third parties: no analytics companies, no trackers, no ad networks ever see anything.",
+  },
+  {
+    q: "How long do you keep things?",
+    a: (
+      <>
+        Your profile and projects: until you delete them, because they are yours. Everything else
+        has an enforced clock: sign-in sessions expire after 30 days, usage analytics after a
+        year, help-assistant questions after 90 days. Enforced means a routine in the code
+        deletes them on schedule;{" "}
+        <Link href="/privacy" className="text-ink underline-grow">
+          the privacy policy
+        </Link>{" "}
+        quotes the same numbers because it is generated from the same constants.
+      </>
+    ),
+  },
+  {
+    q: "What if you get hacked?",
+    a: "The honest answer is that no website can promise it will never happen, so we built for the day it might. We hold little worth stealing: no card details, no government IDs, no documents kept after an import. Passwords are stored with scrypt, a deliberately slow hash built to resist cracking rigs. Backups are encrypted before they leave the server. And if a breach ever touches your data, you will hear it from us first, plainly, not from a journalist.",
+  },
+  {
+    q: "Who reads my questions to the help assistant?",
+    a: "The founder, to find out where people get stuck. Questions are saved with your name when you are signed in, which the widget itself tells you before you type, and they are deleted after 90 days. They are never used for anything else.",
+  },
+  {
+    q: "What happens to my data if Disruptajob shuts down?",
+    a: "You would get notice and a window to export everything, then deletion. Your data is not an asset to be sold with the furniture, in a shutdown or in any other circumstance.",
+  },
+  {
+    q: "Can I see everything you hold on me?",
+    a: "Yes. Data export lives in account management, next to deletion. One action, and you get your account, profile, projects and settings in a readable file. No request form, no thirty-day wait.",
+  },
+];
+
 function Section({ title, qas }: { title: string; qas: QA[] }) {
   return (
     <section className="mt-12">
@@ -151,6 +209,7 @@ export default function FaqPage() {
       <Section title="If you're looking for work" qas={CANDIDATE_QAS} />
       <Section title="If you're hiring" qas={EMPLOYER_QAS} />
       <Section title="About the platform" qas={PLATFORM_QAS} />
+      <Section title="Your data, in detail" qas={DATA_QAS} />
     </main>
   );
 }

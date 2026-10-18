@@ -23,7 +23,11 @@ PRIVACY MODEL (the part people ask about most)
 - The owner chooses visibility in Account management (under the Settings menu, top right): hidden, open, or selectively open.
 - Candidates can block named companies (their employer, say) which can then never see them. The blocklist always wins.
 - Registering interest in a role is the one exception the user controls: it lets THAT company see their profile while the interest stands, even if otherwise hidden. Withdrawing it (from Registered interest in the menu) restores the wall immediately. Nothing is sent when registering interest; it is a visibility grant, not an application.
-- Data export and full account deletion are in Account management. Deletion is real and immediate.
+- Data export and full account deletion are in Account management. Deletion is real and immediate; encrypted disaster-recovery backups cycle out within 30 days.
+- Data lives in one database on a server in London; email goes through one EU-region provider; there are no trackers, analytics companies, or ad networks. Passwords are hashed with scrypt. Sessions expire after 30 days, usage analytics after a year, assistant questions after 90 days.
+- A company that finds a visible profile sees the published page: name, projects, evidenced capabilities, preferred arrangements and location if set. It never sees the private minimum salary (compared, never shown) and gets contact details only after the candidate accepts an approach.
+- If Disruptajob ever shut down, users would get notice and an export window before deletion; data is never sold.
+- The FAQ page has a section called "Your data, in detail" covering all of this.
 
 NAVIGATION MAP (signed-in candidates: three menus, top right of every page)
 The header has three dropdowns when signed in: About (About us, Articles, Guides, FAQ), a menu under your first name, and Settings.
