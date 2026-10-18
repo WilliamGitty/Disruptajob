@@ -103,6 +103,19 @@ export default async function ProfilePage({
         />
       )}
       {isOwnProfile && <EvidenceNudge candidate={candidate} />}
+      <ProfileHeader candidate={candidate} isOwnProfile={isOwnProfile} />
+      <FeaturedWorkSection
+        candidate={candidate}
+        projects={projects}
+        isOwnProfile={isOwnProfile}
+      />
+
+      {/* The owner's desk sits BELOW the page, not above it. A tester said she had to scroll
+          past a wall of tooling to find her own profile; the page is the point, the desk is
+          the workshop behind it. */}
+      {isOwnProfile && (
+        <GitHubImportPanel drafts={projects.filter((p) => p.status === "draft")} />
+      )}
       {isOwnProfile && viewer && (
         <StandOutChecklist
           items={[
@@ -143,15 +156,7 @@ export default async function ProfilePage({
           ]}
         />
       )}
-      {isOwnProfile && (
-        <GitHubImportPanel drafts={projects.filter((p) => p.status === "draft")} />
-      )}
-      <ProfileHeader candidate={candidate} isOwnProfile={isOwnProfile} />
-      <FeaturedWorkSection
-        candidate={candidate}
-        projects={projects}
-        isOwnProfile={isOwnProfile}
-      />
+
       <CapabilitiesSection candidate={candidate} projects={projects} />
 
       {/* Placed after the capability graph: you should see what you've built before being told
