@@ -6,7 +6,7 @@ import { listPublishedProjects } from "@/server/repositories/projects";
 import { rolesMatchingCandidate } from "@/server/repositories/matches";
 import { MatchesList } from "@/components/talent/matches-list";
 
-export const metadata: Metadata = { title: "What's out there · Disruptajob" };
+export const metadata: Metadata = { title: "Job roles available · Disruptajob" };
 export const dynamic = "force-dynamic";
 
 /**
@@ -20,7 +20,7 @@ export default async function MatchesPage() {
   if (!account?.candidateId) {
     return (
       <main className="mx-auto max-w-[700px] px-6 py-24 text-center">
-        <h1 className="font-serif-display text-2xl text-ink">Sign in to see what&rsquo;s out there</h1>
+        <h1 className="font-serif-display text-2xl text-ink">Sign in to see the job roles available</h1>
         <p className="mx-auto mt-3 max-w-md text-[15px] text-ink-soft">
           This page scores open roles against your published evidence, so it needs to know
           whose evidence to score.
@@ -54,7 +54,7 @@ export default async function MatchesPage() {
   return (
     <main className="mx-auto max-w-[860px] px-6 py-14 lg:py-20">
       <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-        What&rsquo;s out there
+        Job roles available
       </p>
       <h1 className="font-serif-display text-3xl leading-tight text-ink sm:text-4xl">
         Open roles, scored against your evidence.

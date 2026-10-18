@@ -90,7 +90,7 @@ export function DemandPanel({ demand, ownerFirstName }: { demand: DemandSummary;
             There is nothing to apply to, on purpose. Companies reach out when they can see you;
             the list is here so you know what your evidence is already worth.{" "}
             <Link href="/talent/matches" className="text-ink underline-grow">
-              See everything that&rsquo;s out there
+              See all job roles available
             </Link>
           </p>
         </div>
