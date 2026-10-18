@@ -196,6 +196,25 @@ itself stays deterministic and explainable on purpose: an employer asking "why t
 gets pointed at actual work, and an opaque ranking model would trade that answer for a score
 nobody can defend. Same degradation rule as email: no key, no behaviour change.
 
+### 5c. Calm is a feature, discovered in the field
+
+On 18 October 2026, a 24-year-old tester handed over her LinkedIn and mentioned she had
+deleted the app because it stressed her out. Not switched away from: fled. The incumbent's
+emotional price is the feed of other people's promotions, the comparison engine, the
+always-on performance of professional self. She is the supply side this product wants most,
+and she is a nonconsumer for emotional reasons, not functional ones.
+
+What this names is a differentiator we built by principle and never sold: no feed, no
+streaks, no completion percentages, hidden by default, "one message when it's worth your
+time", "you never owe anyone a reason". The positioning sentence her behaviour wrote:
+**the job tool that doesn't make you feel behind.**
+
+What this binds: any future feature that borrows engagement mechanics from social
+platforms (feeds, activity indicators, comparison surfaces, streaks) is not just off-brand,
+it is off-strategy, because calm is part of what the supply side is choosing us FOR. The
+design principles already forbade pressure out of decency; this section forbids it out of
+positioning. Decency and strategy agreeing is worth writing down.
+
 ## 6. Objectives and key results
 
 Deliberately leading indicators. Revenue is a lagging measure of whether the two below are true.

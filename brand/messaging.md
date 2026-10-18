@@ -124,3 +124,13 @@ Short, specific, no pitch deck. Send it from you, not from a product.
 
 "Take your career to the next level" · "Unlock your potential" · "Join thousands of" ·
 "Trusted by leading companies" · "The future of hiring is here" · "Powered by AI"
+
+## Calm, said out loud
+
+Lines that sell the thing we always did quietly (see strategy §5c). Use where the reader is
+deciding whether this is another anxiety machine:
+
+- The job tool that doesn't make you feel behind.
+- No feed. No streaks. Nobody's promotion announcement at 11pm.
+- One message when a company is genuinely interested. Otherwise, silence, on purpose.
+- Hidden until you say otherwise, and you never owe anyone a reason.
