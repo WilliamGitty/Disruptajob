@@ -54,12 +54,30 @@ export function discoverableCandidateIds(viewingCompany: string): string[] {
   const target = normalise(viewingCompany);
   if (!target) return rows.map((r) => r.id);
 
-  return rows
-    .filter((r) => {
-      const blocked = (r.blocked ?? "").split("|").filter(Boolean).map(normalise);
-      return !blocked.some((b) => b === target || b.includes(target) || target.includes(b));
-    })
-    .map((r) => r.id);
+  const blockedCheck = (blockedRaw: string | null): boolean => {
+    const blocked = (blockedRaw ?? "").split("|").filter(Boolean).map(normalise);
+    return blocked.some((b) => b === target || b.includes(target) || target.includes(b));
+  };
+
+  const visible = rows.filter((r) => !blockedCheck(r.blocked)).map((r) => r.id);
+
+  // Registered interest is a scoped consent grant: it makes the candidate visible to the ONE
+  // company whose open role they raised a hand for, hidden or not. Two deliberate asymmetries
+  // with the blocklist: the grant matches company names STRICTLY (fuzzy matching may deny
+  // access, never give it), and a blocklist entry beats a standing interest, because blocking
+  // is the later, harder promise.
+  const interested = all<{ candidate_id: string; company_name: string; blocked: string | null }>(
+    `SELECT DISTINCT ri.candidate_id AS candidate_id, co.name AS company_name,
+            (SELECT GROUP_CONCAT(b.company_name, '|') FROM blocked_company b
+              WHERE b.candidate_id = ri.candidate_id) AS blocked
+       FROM role_interest ri
+       JOIN role r    ON r.id = ri.role_id AND r.status = 'open'
+       JOIN company co ON co.id = r.company_id`
+  )
+    .filter((r) => normalise(r.company_name) === target && !blockedCheck(r.blocked))
+    .map((r) => r.candidate_id);
+
+  return [...new Set([...visible, ...interested])];
 }
 
 /** Full profiles this company may see, loaded in one batch rather than one query per person. */

@@ -150,3 +150,77 @@ test("an empty viewing company skips the blocklist — the public-page contract"
   assert.deepEqual(discoverableCandidateIds(""), ["blocks-everyone"]);
   assert.equal(discoverableCandidateIds("").includes("hidden-one"), false);
 });
+
+// --- Registered interest: the scoped consent grant -------------------------------------
+
+function addOpenRole(roleId: string, companyId: string, companyName: string) {
+  run(
+    `INSERT OR IGNORE INTO company (id, slug, name, avatar_initials, accent_index, published, created_at)
+     VALUES (?,?,?,?,0,1,?)`,
+    companyId, companyId, companyName, "C", new Date().toISOString()
+  );
+  run(
+    `INSERT INTO role (id, company_id, title, why_this_role, status, created_at)
+     VALUES (?,?,?,'','open',?)`,
+    roleId, companyId, "A role", new Date().toISOString()
+  );
+}
+
+test("registered interest reveals a hidden candidate to that one company only", () => {
+  addCandidate("cand-int-1", "hidden", []);
+  addOpenRole("role-int-1", "co-int-1", "Halcyon Systems");
+  run(
+    "INSERT INTO role_interest (candidate_id, role_id, created_at) VALUES (?,?,?)",
+    "cand-int-1", "role-int-1", new Date().toISOString()
+  );
+
+  assert.ok(
+    isCandidateVisibleTo("cand-int-1", "Halcyon Systems"),
+    "interest must open the wall for the company it was given to"
+  );
+  assert.ok(
+    !isCandidateVisibleTo("cand-int-1", "Some Other Firm"),
+    "and for nobody else: the grant is scoped, not a visibility toggle"
+  );
+  assert.ok(
+    !isCandidateVisibleTo("cand-int-1", "Halcyon"),
+    "the grant matches strictly: a fuzzy name may deny access, never give it"
+  );
+});
+
+test("withdrawing interest restores the wall", () => {
+  addCandidate("cand-int-2", "hidden", []);
+  addOpenRole("role-int-2", "co-int-2", "Withdraw Co");
+  run(
+    "INSERT INTO role_interest (candidate_id, role_id, created_at) VALUES (?,?,?)",
+    "cand-int-2", "role-int-2", new Date().toISOString()
+  );
+  assert.ok(isCandidateVisibleTo("cand-int-2", "Withdraw Co"));
+
+  run("DELETE FROM role_interest WHERE candidate_id = ?", "cand-int-2");
+  assert.ok(!isCandidateVisibleTo("cand-int-2", "Withdraw Co"), "deletion is withdrawal");
+});
+
+test("the blocklist beats a standing interest", () => {
+  addCandidate("cand-int-3", "hidden", ["Regret Ltd"]);
+  addOpenRole("role-int-3", "co-int-3", "Regret Ltd");
+  run(
+    "INSERT INTO role_interest (candidate_id, role_id, created_at) VALUES (?,?,?)",
+    "cand-int-3", "role-int-3", new Date().toISOString()
+  );
+  assert.ok(
+    !isCandidateVisibleTo("cand-int-3", "Regret Ltd"),
+    "blocking is the later, harder promise: it wins over an old interest"
+  );
+});
+
+test("interest in a closed role grants nothing", () => {
+  addCandidate("cand-int-4", "hidden", []);
+  addOpenRole("role-int-4", "co-int-4", "Closed Co");
+  run("UPDATE role SET status = 'closed' WHERE id = 'role-int-4'");
+  run(
+    "INSERT INTO role_interest (candidate_id, role_id, created_at) VALUES (?,?,?)",
+    "cand-int-4", "role-int-4", new Date().toISOString()
+  );
+  assert.ok(!isCandidateVisibleTo("cand-int-4", "Closed Co"));
+});

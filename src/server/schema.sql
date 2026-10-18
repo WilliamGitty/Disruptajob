@@ -344,3 +344,13 @@ CREATE TABLE IF NOT EXISTS email_verification (
   created_at TEXT NOT NULL,
   expires_at TEXT NOT NULL
 );
+
+-- Interest a candidate registers in a specific open role. The consequential kind: registering
+-- interest lets THAT company see this candidate (see repositories/discovery.ts), so rows here
+-- are consent grants, not engagement metrics. Withdrawn by deletion; the blocklist always wins.
+CREATE TABLE IF NOT EXISTS role_interest (
+  candidate_id TEXT NOT NULL REFERENCES candidate(id) ON DELETE CASCADE,
+  role_id      TEXT NOT NULL REFERENCES role(id) ON DELETE CASCADE,
+  created_at   TEXT NOT NULL,
+  PRIMARY KEY (candidate_id, role_id)
+);

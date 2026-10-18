@@ -35,6 +35,8 @@ export const LIMITS = {
   resetByIp: { max: 10, windowMs: 60 * 60 * 1000 },
   /** And one address can't be flooded with reset mail it never asked for. */
   resetByEmail: { max: 3, windowMs: 60 * 60 * 1000 },
+  /** Registering interest is consequential (it grants a company visibility), so no spraying. */
+  roleInterestByIp: { max: 30, windowMs: 60 * 60 * 1000 },
 } as const satisfies Record<string, Limit>;
 
 export type LimitName = keyof typeof LIMITS;

@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { capabilityLabel } from "@/lib/capabilities";
+import { registerRoleInterest, withdrawRoleInterest } from "@/server/actions/interest";
 import type { RoleMatch } from "@/server/repositories/matches";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,23 @@ import { cn } from "@/lib/utils";
  */
 export function MatchesList({ matches }: { matches: RoleMatch[] }) {
   const [arrangement, setArrangement] = useState<string>("any");
+  const [overrides, setOverrides] = useState<Record<string, boolean>>({});
+  const [notice, setNotice] = useState<string | null>(null);
+  const [, startSaving] = useTransition();
+
+  function toggleInterest(m: RoleMatch, currentlyInterested: boolean) {
+    setNotice(null);
+    startSaving(async () => {
+      const result = currentlyInterested
+        ? await withdrawRoleInterest(m.roleId)
+        : await registerRoleInterest(m.roleId);
+      if (!result.ok) {
+        setNotice(result.error ?? "That didn't work just now.");
+        return;
+      }
+      setOverrides((o) => ({ ...o, [m.roleId]: !currentlyInterested }));
+    });
+  }
   const [minPct, setMinPct] = useState<number>(0);
   const [hideConflicts, setHideConflicts] = useState(false);
 
@@ -28,6 +46,9 @@ export function MatchesList({ matches }: { matches: RoleMatch[] }) {
 
   return (
     <div>
+      {notice && (
+        <p className="mb-3 border border-accent/30 bg-accent-soft px-3 py-2 text-sm text-ink">{notice}</p>
+      )}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-y border-ink/10 py-3 text-sm">
         <label className="flex items-center gap-2 text-ink-soft">
           Arrangement
@@ -108,6 +129,30 @@ export function MatchesList({ matches }: { matches: RoleMatch[] }) {
                 <span className="text-accent-dark"> · clashes with your terms</span>
               )}
             </p>
+            {(() => {
+              const interested = overrides[m.roleId] ?? m.interested;
+              return (
+                <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <button
+                    type="button"
+                    onClick={() => toggleInterest(m, interested)}
+                    className={cn(
+                      "border px-3 py-1.5 text-xs font-medium transition-colors",
+                      interested
+                        ? "border-evidence/40 bg-evidence-soft text-ink"
+                        : "border-ink/20 text-ink hover:border-ink/50"
+                    )}
+                  >
+                    {interested ? "Interest registered ✓ (withdraw)" : "Register interest"}
+                  </button>
+                  <span className="text-xs text-ink-faint">
+                    {interested
+                      ? `${m.companyName} can now see your profile. Withdraw any time; you never owe a reason.`
+                      : `Lets ${m.companyName} see your profile, even while you're hidden. Nothing is sent.`}
+                  </span>
+                </div>
+              );
+            })()}
           </li>
         ))}
       </ul>

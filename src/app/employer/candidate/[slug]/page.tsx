@@ -1,3 +1,4 @@
+import { interestInCompany } from "@/server/repositories/interest";
 import { DemoBadge } from "@/components/ui/demo-badge";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -50,6 +51,10 @@ export default async function CandidateMatchPage({
   if (!company) return <CompanyGate title="Sign in to view candidates" />;
   if (!isCandidateVisibleTo(candidate.id, company.name)) notFound();
 
+  const interestedRoles = interestInCompany(company.id)
+    .filter((i) => i.candidateId === candidate.id)
+    .map((i) => i.roleTitle);
+
   const match = matchCandidate(candidate, q);
   const onBoard = account?.companyId
     ? pipelineCandidateIds(account.companyId).includes(candidate.id)
@@ -74,6 +79,11 @@ export default async function CandidateMatchPage({
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="font-serif-display text-3xl text-ink">{candidate.name}</h1>
                   {candidate.isDemo && <DemoBadge />}
+                  {interestedRoles.length > 0 && (
+                    <span className="border border-evidence/40 bg-evidence-soft px-2 py-0.5 text-xs text-ink">
+                      Registered interest in {interestedRoles.join(", ")}
+                    </span>
+                  )}
                 </div>
                 <p className="mt-1 text-sm text-ink-soft">{candidate.headline}</p>
                 <p className="mt-1 text-xs text-ink-faint">{candidate.location}</p>

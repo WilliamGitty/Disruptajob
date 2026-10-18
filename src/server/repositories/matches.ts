@@ -17,12 +17,15 @@ import type { CandidateProfile, EmployerTerms } from "@/types";
  */
 
 export interface RoleMatch {
+  roleId: string;
   roleTitle: string;
   companyName: string;
   companySlug: string;
   demo: boolean;
   /** 0-98, same ceiling as the employer side: certainty is never claimed. */
   pct: number;
+  /** Whether this candidate has a standing interest registered on the role. */
+  interested: boolean;
   /** The explanation: which of the role's asks this person's evidence covers. */
   covered: string[];
   missing: string[];
@@ -43,6 +46,13 @@ export function rolesMatchingCandidate(candidate: CandidateProfile): RoleMatch[]
     candidate.capabilities.filter((c) => c.evidenceCount > 0).map((c) => [c.tag, c])
   );
   if (evidenced.size === 0) return [];
+
+  const interests = new Set(
+    all<{ role_id: string }>(
+      "SELECT role_id FROM role_interest WHERE candidate_id = ?",
+      candidate.id
+    ).map((r) => r.role_id)
+  );
 
   const companies = new Map(
     all<CompanyRow>("SELECT id, name, slug, demo FROM company WHERE published = 1").map((c) => [c.id, c])
@@ -72,6 +82,8 @@ export function rolesMatchingCandidate(candidate: CandidateProfile): RoleMatch[]
     const fit = assessMutualFit(terms, candidate);
 
     matches.push({
+      roleId: role.id,
+      interested: interests.has(role.id),
       roleTitle: role.title,
       companyName: company.name,
       companySlug: company.slug,

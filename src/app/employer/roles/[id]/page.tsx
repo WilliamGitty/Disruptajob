@@ -10,6 +10,7 @@ import { matchCandidatesForRole } from "@/server/matching";
 import { assessMutualFit } from "@/lib/role-matching";
 import { capabilityLabel } from "@/lib/capabilities";
 import { requireEmployer } from "@/server/auth";
+import { interestInCompany } from "@/server/repositories/interest";
 import { InitialsMark } from "@/components/ui/initials-mark";
 import { Button } from "@/components/ui/button";
 import { InviteModal } from "@/components/employer/invite-modal";
@@ -50,6 +51,7 @@ export default async function RoleMatchesPage({ params }: { params: Promise<{ id
 
   const required = capabilitiesForRole(role);
   const matches = matchCandidatesForRole(role, company.name);
+  const interestedHere = interestInCompany(company.id).filter((i) => i.roleId === role.id).length;
   const onBoard = new Set(pipelineCandidateIds(account.companyId));
 
   return (
@@ -96,6 +98,11 @@ export default async function RoleMatchesPage({ params }: { params: Promise<{ id
         <h2 className="mb-8 text-sm font-medium text-ink-faint">
           {matches.length} {matches.length === 1 ? "person has" : "people have"} evidence for this
           work
+          {interestedHere > 0 && (
+            <span className="text-evidence">
+              {" "}· {interestedHere} registered interest in this role
+            </span>
+          )}
         </h2>
 
         {matches.length === 0 ? (
