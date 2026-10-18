@@ -154,3 +154,30 @@ test("unpublished companies don't generate demand", () => {
 
   assert.equal(demandFor(candidate()).matchingRoles, 0);
 });
+
+test("the named list carries company, role, overlap, and visibility", () => {
+  addRole("r-d1", "co-d1", "Detail Co", ["automation", "growth"]);
+  const d = demandFor(candidate({ discoverability: "hidden" }));
+  const row = d.matchingRoleDetails.find((r) => r.companyName === "Detail Co");
+  assert.ok(row, "matching role must be listed");
+  assert.deepEqual(row.tags, ["automation"], "only the evidenced overlap is shown");
+  assert.equal(row.canSee, false, "a hidden candidate is marked invisible to them");
+});
+
+test("blocked companies are counted but never named", () => {
+  addRole("r-d2", "co-d2", "Blocked Corp", ["automation"]);
+  const d = demandFor(candidate({ blockedCompanies: ["Blocked Corp"] }));
+  assert.ok(d.matchingRoles >= 1, "still counted in the aggregate");
+  assert.ok(
+    !d.matchingRoleDetails.some((r) => r.companyName === "Blocked Corp"),
+    "a blocklist entry is not singled out back to its owner"
+  );
+});
+
+test("the named list is capped and ordered by overlap", () => {
+  for (let i = 0; i < 12; i++) {
+    addRole(`r-cap-${i}`, `co-cap-${i}`, `Cap Co ${i}`, ["automation"]);
+  }
+  const d = demandFor(candidate());
+  assert.ok(d.matchingRoleDetails.length <= 8, "capped at eight rows");
+});

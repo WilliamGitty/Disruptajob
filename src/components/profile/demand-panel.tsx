@@ -60,6 +60,39 @@ export function DemandPanel({ demand, ownerFirstName }: { demand: DemandSummary;
         </div>
       </div>
 
+      {demand.matchingRoleDetails.length > 0 && (
+        <div className="mt-5 border-t border-ink/10 pt-5">
+          <p className="text-xs font-medium uppercase tracking-[0.12em] text-ink-faint">
+            Who, and for what
+          </p>
+          <ul className="mt-3 space-y-2.5">
+            {demand.matchingRoleDetails.map((r) => (
+              <li key={`${r.companySlug}-${r.roleTitle}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm">
+                <Link href={`/company/${r.companySlug}`} className="font-medium text-ink underline-grow">
+                  {r.companyName}
+                </Link>
+                {r.demo && (
+                  <span className="border border-ink/20 bg-paper-dim px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-ink-soft">
+                    Example
+                  </span>
+                )}
+                <span className="text-ink-soft">{r.roleTitle}</span>
+                <span className="text-ink-faint">
+                  needs {r.tags.map((t) => capabilityLabel(t)).join(", ")}
+                </span>
+                {!r.canSee && (
+                  <span className="text-xs text-accent-dark">can&rsquo;t see you yet</span>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs leading-relaxed text-ink-faint">
+            There is nothing to apply to, on purpose. Companies reach out when they can see you;
+            the list is here so you know what your evidence is already worth.
+          </p>
+        </div>
+      )}
+
       {demand.invisibleTo > 0 && (
         <div className="mt-5 border-t border-ink/10 pt-5">
           <p className="flex items-start gap-3 text-[15px] leading-relaxed text-ink">

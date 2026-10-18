@@ -27,6 +27,18 @@ export interface CapabilityDemand {
   roles: number;
 }
 
+export interface RoleDemand {
+  roleTitle: string;
+  companyName: string;
+  companySlug: string;
+  /** Part of the invented demo population; rendered with its badge. */
+  demo: boolean;
+  /** The overlap: capabilities the role asks for that this person has evidenced. */
+  tags: string[];
+  /** Whether this company could find them today. */
+  canSee: boolean;
+}
+
 export interface DemandSummary {
   /** Open roles demanding at least one capability this candidate has evidenced. */
   matchingRoles: number;
@@ -38,11 +50,19 @@ export interface DemandSummary {
   gaps: CapabilityDemand[];
   /** Whether the reason for being unseen is hiding rather than a blocklist. */
   hiddenEntirely: boolean;
+  /**
+   * The names behind the number: open roles whose asks overlap this person's evidence, best
+   * overlap first. Blocked companies are counted in the aggregates but never listed, keeping
+   * the existing rule that a blocklist entry is not singled out back to its owner.
+   */
+  matchingRoleDetails: RoleDemand[];
 }
 
 interface CompanyRow {
   id: string;
   name: string;
+  slug: string;
+  demo: number;
 }
 
 export function demandFor(candidate: CandidateProfile): DemandSummary {
@@ -51,13 +71,14 @@ export function demandFor(candidate: CandidateProfile): DemandSummary {
   );
 
   const companies = new Map(
-    all<CompanyRow>("SELECT id, name FROM company WHERE published = 1").map((c) => [c.id, c.name])
+    all<CompanyRow>("SELECT id, name, slug, demo FROM company WHERE published = 1").map((c) => [c.id, c])
   );
 
   const openRoles = listRoles().filter((r) => r.status === "open" && companies.has(r.companyId));
 
   const mine = new Map<string, number>();
   const theirs = new Map<string, number>();
+  const details: RoleDemand[] = [];
   let matchingRoles = 0;
   let invisibleTo = 0;
 
@@ -76,9 +97,22 @@ export function demandFor(candidate: CandidateProfile): DemandSummary {
     matchingRoles += 1;
 
     // The same two gates search applies, asked in reverse: could this company find them?
-    const companyName = companies.get(role.companyId) ?? "";
-    const visible = isDiscoverable(candidate) && !isBlockedBy(candidate, companyName);
+    const company = companies.get(role.companyId);
+    const companyName = company?.name ?? "";
+    const blocked = isBlockedBy(candidate, companyName);
+    const visible = isDiscoverable(candidate) && !blocked;
     if (!visible) invisibleTo += 1;
+
+    if (company && !blocked) {
+      details.push({
+        roleTitle: role.title,
+        companyName: company.name,
+        companySlug: company.slug,
+        demo: company.demo === 1,
+        tags: overlap,
+        canSee: visible,
+      });
+    }
   }
 
   const rank = (m: Map<string, number>): CapabilityDemand[] =>
@@ -86,11 +120,14 @@ export function demandFor(candidate: CandidateProfile): DemandSummary {
       .map(([tag, roles]) => ({ tag, roles }))
       .sort((a, b) => b.roles - a.roles || a.tag.localeCompare(b.tag));
 
+  details.sort((a, b) => b.tags.length - a.tags.length || a.companyName.localeCompare(b.companyName));
+
   return {
     matchingRoles,
     invisibleTo,
     inDemand: rank(mine),
     gaps: rank(theirs).slice(0, 4),
     hiddenEntirely: !isDiscoverable(candidate),
+    matchingRoleDetails: details.slice(0, 8),
   };
 }
