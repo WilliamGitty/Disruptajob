@@ -635,6 +635,95 @@ export const PROJECTS: Project[] = [
     ],
     mediaGallery: ["weekly-leadership-metrics-pack"],
   },
+  // Maya Okonkwo (demo) — the person whose work never produced a repo ---------
+  {
+    id: "wellbeing-workshop-programme",
+    slug: "wellbeing-workshop-programme",
+    ownerId: "maya-okonkwo",
+    title: "The Wellbeing Workshop Programme",
+    description:
+      "Designed and ran a ten-session wellbeing workshop programme for a community charity, from the first outline to standing in front of the room.",
+    thumbnailSeed: "wellbeing-workshop-programme",
+    capabilities: ["training-facilitation", "care-support", "public-speaking"],
+    tools: ["Canva", "Google Forms", "Eventbrite"],
+    evidence: [
+      ev("mw1", "write-up", "Session plans", "The full ten-session curriculum, with what changed after each run"),
+      ev("mw2", "metric", "Attendance", "Attendance doubled between session one and session three"),
+      ev("mw3", "testimonial", "Branch manager's note", "Why two other branches asked to run the same programme"),
+    ],
+    outcome:
+      "Attendance doubled by the third session, and the programme was adopted by two other branches using my training notes.",
+    problem:
+      "Members kept asking for wellbeing support the charity had no structured way to give; signposting them elsewhere meant months of waiting for people who needed something now.",
+    whatIBuilt:
+      "A ten-session programme: the curriculum, the materials, a feedback form after every session, and training notes written so another branch could run it without me in the building.",
+    myContribution:
+      "All of it, from the first outline to delivery, with a volunteer co-host I trained up from session four so the programme didn't depend on one person.",
+    process: [
+      { title: "Asked before designing", description: "Surveyed members about what they actually wanted help with, not what a programme template assumed." },
+      { title: "Ran it small first", description: "Piloted two sessions with eight people and rewrote half the material from what fell flat." },
+      { title: "Made it survive without me", description: "Wrote the training notes and co-ran sessions until a volunteer could lead alone." },
+    ],
+    mediaGallery: ["wellbeing-workshop-programme", "wellbeing-workshop-programme-2"],
+  },
+  {
+    id: "volunteer-rota-rebuild",
+    slug: "volunteer-rota-rebuild",
+    ownerId: "maya-okonkwo",
+    title: "The Volunteer Rota Rebuild",
+    description:
+      "Untangled a volunteer rota that lived in one coordinator's head and rebuilt it so forty volunteers could see and swap their own shifts.",
+    thumbnailSeed: "volunteer-rota-rebuild",
+    capabilities: ["community-building", "operations"],
+    tools: ["Google Sheets", "WhatsApp"],
+    evidence: [
+      ev("mv1", "write-up", "How the rota works", "The shift structure and the swap rules, written for the next coordinator"),
+      ev("mv2", "metric", "No-show gaps", "Uncovered shifts went from most weeks to nearly none"),
+    ],
+    outcome:
+      "Uncovered shifts dropped to nearly none, and the Sunday-night phone-around to fill gaps stopped happening at all.",
+    problem:
+      "Forty volunteers, one spreadsheet only the coordinator understood, and a weekly scramble whenever anyone was ill or away.",
+    whatIBuilt:
+      "A rota anyone can read: fixed shift patterns, a swap rule volunteers run themselves over WhatsApp, and a one-page guide so holidays don't break it.",
+    myContribution:
+      "Interviewed the volunteers about why swaps failed, designed the new structure, and walked every regular through it one by one.",
+    process: [
+      { title: "Found the real failure", description: "Swaps failed because nobody knew who was qualified for which shift, so that went on the sheet first." },
+      { title: "Let volunteers run it", description: "Moved swaps into the volunteers' own hands with one simple rule instead of routing everything through one person." },
+    ],
+    mediaGallery: ["volunteer-rota-rebuild"],
+  },
+  {
+    id: "winter-fundraiser",
+    slug: "winter-fundraiser",
+    ownerId: "maya-okonkwo",
+    title: "The Winter Fundraiser",
+    description:
+      "Planned and ran the charity's winter fundraising evening: the venue, the programme, the volunteers on the night, and the appeal that followed.",
+    thumbnailSeed: "winter-fundraiser",
+    capabilities: ["event-delivery", "fundraising", "writing-content"],
+    tools: ["Eventbrite", "Instagram", "Mailchimp"],
+    evidence: [
+      ev("mf1", "metric", "What it raised", "Covered the winter heating costs with a margin"),
+      ev("mf2", "write-up", "The appeal letter", "The follow-up appeal that turned attendees into regular donors"),
+      ev("mf3", "screenshot", "The room, full", "The hall at capacity on the night"),
+    ],
+    outcome:
+      "Covered the winter heating costs and signed up thirty new regular donors from one evening.",
+    problem:
+      "Energy costs were about to eat the winter budget, and the charity had never run a fundraising event bigger than a bake sale.",
+    whatIBuilt:
+      "The whole evening: venue negotiation, a programme of member performances, a volunteer crew brief, ticketing, and the written appeal that went out the week after.",
+    myContribution:
+      "Led it end to end with a committee of three, and wrote every word of the appeal myself.",
+    process: [
+      { title: "Priced the real need", description: "Set the target from the actual heating bills, and said so on the posters, because a specific number gets believed." },
+      { title: "Made the night about members", description: "Programme was members performing, not speeches, so the room was full of their families." },
+      { title: "Followed up while it was warm", description: "The appeal went out five days later to everyone who came, and that is where the regular donors came from." },
+    ],
+    mediaGallery: ["winter-fundraiser", "winter-fundraiser-2"],
+  },
 ];
 
 function projectsFor(ids: string[]) {
@@ -646,6 +735,47 @@ function projectsFor(ids: string[]) {
 // ---------------------------------------------------------------------------
 
 export const CANDIDATES: CandidateProfile[] = [
+  {
+    id: "maya-okonkwo",
+    slug: "maya-okonkwo",
+    userId: "u-maya",
+    name: "Maya Okonkwo",
+    headline: "Community and Wellbeing Coordinator",
+    shortDescription:
+      "I run the workshops, events and volunteer crew that keep a community charity on its feet.",
+    location: "Leeds, UK",
+    availability: "open",
+    avatarInitials: "MO",
+    accentIndex: 2,
+    capabilities: [
+      cap("training-facilitation", "Training and Facilitation", 5, ["wellbeing-workshop-programme"]),
+      cap("community-building", "Community Building", 5, ["volunteer-rota-rebuild", "winter-fundraiser"]),
+      cap("care-support", "Care and Support", 4, ["wellbeing-workshop-programme"]),
+      cap("event-delivery", "Event Delivery", 4, ["winter-fundraiser"]),
+      cap("public-speaking", "Public Speaking", 3, ["wellbeing-workshop-programme"]),
+      cap("fundraising", "Fundraising", 3, ["winter-fundraiser"]),
+      cap("operations", "Operations", 3, ["volunteer-rota-rebuild"]),
+      cap("writing-content", "Writing and Content", 2, ["winter-fundraiser"]),
+    ],
+    projectIds: projectsFor(["wellbeing-workshop-programme", "volunteer-rota-rebuild", "winter-fundraiser"]),
+    experience: [
+      { company: "Hollybrook Community Trust", role: "Community and Wellbeing Coordinator", startDate: "2022", endDate: "Present" },
+      { company: "The Fold Cafe", role: "Shift Supervisor", startDate: "2019", endDate: "2022" },
+    ],
+    education: [
+      { institution: "Leeds City College", qualification: "Level 3 Health and Social Care", endYear: "2019" },
+    ],
+    discoverability: "open",
+    // Blocks her own employer, like Jordan: the move that makes publishing safe while employed.
+    blockedCompanies: ["Hollybrook Community Trust"],
+    nonNegotiables: {
+      roleTypes: ["Community Manager", "Programme Coordinator"],
+      compFloor: "£29,000",
+      workArrangements: ["onsite", "hybrid"],
+      locationConstraint: "Leeds or West Yorkshire",
+      dealbreakers: [],
+    },
+  },
   {
     id: "william-sandford",
     slug: "jordan-blake",

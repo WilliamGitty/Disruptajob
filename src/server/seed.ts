@@ -20,115 +20,11 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
   db.exec("BEGIN");
   try {
     for (const c of CANDIDATES) {
-      insert(
-        `INSERT INTO candidate (id, slug, name, headline, short_description, location,
-                                availability, avatar_initials, accent_index, discoverability,
-                                comp_floor, location_constraint, demo, created_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,?)`,
-        c.id,
-        c.slug,
-        c.name,
-        c.headline,
-        c.shortDescription,
-        c.location,
-        c.availability,
-        c.avatarInitials,
-        c.accentIndex,
-        c.discoverability ?? "hidden",
-        c.nonNegotiables?.compFloor ?? null,
-        c.nonNegotiables?.locationConstraint ?? null,
-        now
-      );
-
-      for (const name of c.blockedCompanies ?? []) {
-        insert("INSERT INTO blocked_company (candidate_id, company_name) VALUES (?,?)", c.id, name);
-      }
-      for (const rt of c.nonNegotiables?.roleTypes ?? []) {
-        insert("INSERT INTO candidate_role_type (candidate_id, role_type) VALUES (?,?)", c.id, rt);
-      }
-      for (const a of c.nonNegotiables?.workArrangements ?? []) {
-        insert("INSERT INTO candidate_arrangement (candidate_id, arrangement) VALUES (?,?)", c.id, a);
-      }
-      for (const d of c.nonNegotiables?.dealbreakers ?? []) {
-        insert("INSERT INTO candidate_dealbreaker (candidate_id, dealbreaker) VALUES (?,?)", c.id, d);
-      }
-      c.experience.forEach((e, i) =>
-        insert(
-          `INSERT INTO experience (id, candidate_id, company, role, start_date, end_date, sort_order)
-           VALUES (?,?,?,?,?,?,?)`,
-          `exp-${c.id}-${i}`,
-          c.id,
-          e.company,
-          e.role,
-          e.startDate,
-          e.endDate,
-          i
-        )
-      );
-      c.education.forEach((e, i) =>
-        insert(
-          `INSERT INTO education (id, candidate_id, institution, qualification, end_year, sort_order)
-           VALUES (?,?,?,?,?,?)`,
-          `edu-${c.id}-${i}`,
-          c.id,
-          e.institution,
-          e.qualification,
-          e.endYear,
-          i
-        )
-      );
+      insertCandidateGraph(db, c, now);
     }
 
     for (const p of PROJECTS) {
-      insert(
-        `INSERT INTO project (id, owner_id, slug, title, description, thumbnail_seed, outcome,
-                              problem, what_i_built, my_contribution, demo_url, status, source, created_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-        p.id,
-        p.ownerId,
-        p.slug,
-        p.title,
-        p.description,
-        p.thumbnailSeed,
-        p.outcome,
-        p.problem,
-        p.whatIBuilt,
-        p.myContribution,
-        p.demoUrl ?? null,
-        p.status ?? "published",
-        p.source ?? "manual",
-        now
-      );
-      for (const tag of p.capabilities) {
-        insert("INSERT INTO project_capability (project_id, tag) VALUES (?,?)", p.id, tag);
-      }
-      for (const tool of p.tools) {
-        insert("INSERT OR IGNORE INTO project_tool (project_id, tool) VALUES (?,?)", p.id, tool);
-      }
-      p.evidence.forEach((e, i) =>
-        insert(
-          `INSERT INTO evidence (id, project_id, type, label, description, url, sort_order)
-           VALUES (?,?,?,?,?,?,?)`,
-          e.id,
-          p.id,
-          e.type,
-          e.label,
-          e.description ?? null,
-          e.url ?? null,
-          i
-        )
-      );
-      p.process.forEach((s, i) =>
-        insert(
-          `INSERT INTO project_process_step (id, project_id, title, description, sort_order)
-           VALUES (?,?,?,?,?)`,
-          `step-${p.id}-${i}`,
-          p.id,
-          s.title,
-          s.description,
-          i
-        )
-      );
+      insertProjectGraph(db, p, now);
     }
 
     for (const co of COMPANIES) {
@@ -342,4 +238,134 @@ export function seedIfEmpty(db: DatabaseSync): boolean {
     db.exec("ROLLBACK");
     throw error;
   }
+}
+
+/** One demo candidate's full row set. Shared by the fresh seed and the backfill migrations. */
+function insertCandidateGraph(db: DatabaseSync, c: (typeof CANDIDATES)[number], now: string): void {
+  const insert = (sql: string, ...params: unknown[]) => db.prepare(sql).run(...(params as never[]));
+  insert(
+    `INSERT INTO candidate (id, slug, name, headline, short_description, location,
+                            availability, avatar_initials, accent_index, discoverability,
+                            comp_floor, location_constraint, demo, created_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,?)`,
+    c.id,
+    c.slug,
+    c.name,
+    c.headline,
+    c.shortDescription,
+    c.location,
+    c.availability,
+    c.avatarInitials,
+    c.accentIndex,
+    c.discoverability ?? "hidden",
+    c.nonNegotiables?.compFloor ?? null,
+    c.nonNegotiables?.locationConstraint ?? null,
+    now
+  );
+  for (const name of c.blockedCompanies ?? []) {
+    insert("INSERT INTO blocked_company (candidate_id, company_name) VALUES (?,?)", c.id, name);
+  }
+  for (const rt of c.nonNegotiables?.roleTypes ?? []) {
+    insert("INSERT INTO candidate_role_type (candidate_id, role_type) VALUES (?,?)", c.id, rt);
+  }
+  for (const a of c.nonNegotiables?.workArrangements ?? []) {
+    insert("INSERT INTO candidate_arrangement (candidate_id, arrangement) VALUES (?,?)", c.id, a);
+  }
+  for (const d of c.nonNegotiables?.dealbreakers ?? []) {
+    insert("INSERT INTO candidate_dealbreaker (candidate_id, dealbreaker) VALUES (?,?)", c.id, d);
+  }
+  c.experience.forEach((e, i) =>
+    insert(
+      `INSERT INTO experience (id, candidate_id, company, role, start_date, end_date, sort_order)
+       VALUES (?,?,?,?,?,?,?)`,
+      `exp-${c.id}-${i}`,
+      c.id,
+      e.company,
+      e.role,
+      e.startDate,
+      e.endDate,
+      i
+    )
+  );
+  c.education.forEach((e, i) =>
+    insert(
+      `INSERT INTO education (id, candidate_id, institution, qualification, end_year, sort_order)
+       VALUES (?,?,?,?,?,?)`,
+      `edu-${c.id}-${i}`,
+      c.id,
+      e.institution,
+      e.qualification,
+      e.endYear,
+      i
+    )
+  );
+}
+
+/** One demo project's full row set. Shared by the fresh seed and the backfill migrations. */
+function insertProjectGraph(db: DatabaseSync, p: (typeof PROJECTS)[number], now: string): void {
+  const insert = (sql: string, ...params: unknown[]) => db.prepare(sql).run(...(params as never[]));
+
+      insert(
+        `INSERT INTO project (id, owner_id, slug, title, description, thumbnail_seed, outcome,
+                              problem, what_i_built, my_contribution, demo_url, status, source, created_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        p.id,
+        p.ownerId,
+        p.slug,
+        p.title,
+        p.description,
+        p.thumbnailSeed,
+        p.outcome,
+        p.problem,
+        p.whatIBuilt,
+        p.myContribution,
+        p.demoUrl ?? null,
+        p.status ?? "published",
+        p.source ?? "manual",
+        now
+      );
+      for (const tag of p.capabilities) {
+        insert("INSERT INTO project_capability (project_id, tag) VALUES (?,?)", p.id, tag);
+      }
+      for (const tool of p.tools) {
+        insert("INSERT OR IGNORE INTO project_tool (project_id, tool) VALUES (?,?)", p.id, tool);
+      }
+      p.evidence.forEach((e, i) =>
+        insert(
+          `INSERT INTO evidence (id, project_id, type, label, description, url, sort_order)
+           VALUES (?,?,?,?,?,?,?)`,
+          e.id,
+          p.id,
+          e.type,
+          e.label,
+          e.description ?? null,
+          e.url ?? null,
+          i
+        )
+      );
+      p.process.forEach((s, i) =>
+        insert(
+          `INSERT INTO project_process_step (id, project_id, title, description, sort_order)
+           VALUES (?,?,?,?,?)`,
+          `step-${p.id}-${i}`,
+          p.id,
+          s.title,
+          s.description,
+          i
+        )
+      );
+}
+
+/**
+ * Backfill one mock candidate (and their projects) into a database seeded before they existed.
+ * No-op when the candidate is already there. The caller decides transaction boundaries: the
+ * migration runner already wraps each migration, so no BEGIN here.
+ */
+export function seedMockCandidate(db: DatabaseSync, candidateId: string): void {
+  const c = CANDIDATES.find((x) => x.id === candidateId);
+  if (!c) throw new Error(`No mock candidate with id ${candidateId}`);
+  if (db.prepare("SELECT 1 FROM candidate WHERE id = ?").get(candidateId)) return;
+  const now = new Date().toISOString();
+  insertCandidateGraph(db, c, now);
+  for (const p of PROJECTS.filter((x) => x.ownerId === candidateId)) insertProjectGraph(db, p, now);
 }

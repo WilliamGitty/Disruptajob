@@ -1,6 +1,7 @@
 import type { DatabaseSync } from "node:sqlite";
 import { CANDIDATES, COMPANIES } from "@/lib/mock-data";
 import { seedDemoDemand } from "./demo-demand";
+import { seedMockCandidate } from "./seed";
 import { seedGeneratedDemand } from "./demo-demand-generated";
 
 /**
@@ -129,6 +130,19 @@ const MIGRATIONS: Migration[] = [
     id: "010-candidate-linkedin-url",
     up: (db) => {
       addColumn(db, "candidate", "linkedin_url", "TEXT");
+    },
+  },
+  {
+    // Maya Okonkwo: the demo person whose evidence is workshops, events and writing, not code.
+    // Two real testers read the all-tech examples as "not for people like me", and the homepage
+    // now demonstrates with her. Guarded for the fresh install: migrations run BEFORE the seed,
+    // and inserting into an empty candidate table would make seedIfEmpty think the database is
+    // populated and skip the entire demo world.
+    id: "011-demo-maya",
+    up: (db) => {
+      const seeded = db.prepare("SELECT COUNT(*) AS n FROM candidate").get() as { n: number };
+      if (seeded.n === 0) return;
+      seedMockCandidate(db, "maya-okonkwo");
     },
   },
 ];

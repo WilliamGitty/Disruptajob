@@ -66,3 +66,29 @@ test("a migration already satisfied by schema.sql does not throw", () => {
 
   assert.doesNotThrow(() => runMigrations(db));
 });
+
+test("011: Maya backfills into a seeded database, but never pre-empts a fresh seed", () => {
+  // The trap: migrations run BEFORE seedIfEmpty. If 011 inserted into an empty candidate
+  // table, the seed would see a populated database and skip the entire demo world.
+  const fresh = freshDb();
+  runMigrations(fresh);
+  const onFresh = fresh.prepare("SELECT COUNT(*) AS n FROM candidate").get() as { n: number };
+  assert.equal(onFresh.n, 0, "011 must leave an unseeded database untouched");
+
+  // An existing database (seeded before Maya existed, migrations already recorded up to 010)
+  // gets her from the migration.
+  const existing = freshDb();
+  existing
+    .prepare("INSERT INTO candidate (id, slug, name, headline, short_description, location, availability, avatar_initials, accent_index, created_at) VALUES ('someone','someone','Some One','','','','open','SO',0,'2026-01-01')")
+    .run();
+  runMigrations(existing);
+  const maya = existing
+    .prepare("SELECT demo FROM candidate WHERE slug = 'maya-okonkwo'")
+    .get() as { demo: number } | undefined;
+  assert.ok(maya, "an already-seeded database gains Maya");
+  assert.equal(maya.demo, 1, "and she is flagged as demo like the rest of the invented world");
+  const projects = existing
+    .prepare("SELECT COUNT(*) AS n FROM project WHERE owner_id = 'maya-okonkwo'")
+    .get() as { n: number };
+  assert.equal(projects.n, 3, "with her three projects");
+});

@@ -259,7 +259,7 @@ export default async function SettingsPage({
               id="headline"
               name="headline"
               defaultValue={me.headline}
-              placeholder="Operations · Automation · AI Enablement"
+              placeholder="Events · Community · Training"
             />
             <p className="text-xs text-ink-faint">
               The things you actually do, not the title on your contract.
@@ -273,7 +273,7 @@ export default async function SettingsPage({
               name="shortDescription"
               rows={2}
               defaultValue={me.shortDescription}
-              placeholder="I build systems that help businesses operate better with AI."
+              placeholder="I run the workshops, events and community that keep our members coming back."
             />
           </div>
 

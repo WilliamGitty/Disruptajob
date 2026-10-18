@@ -235,7 +235,7 @@ export function WorkStep({ setup, patch }: StepProps) {
 
       <Field label="What would you call this role?">
         <Input
-          placeholder="AI Operations Lead"
+          placeholder="Operations Lead"
           value={setup.roleTitle}
           onChange={(e) => patch({ roleTitle: e.target.value })}
         />

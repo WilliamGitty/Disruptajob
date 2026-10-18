@@ -212,12 +212,12 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
             <Screen
               kicker="First, the gap"
               question="What do you actually do that your job title doesn't say?"
-              hint="Say it like you'd tell a friend. The automations nobody asked you to build, the product calls you somehow ended up running: the stuff with no line on your CV. What you write here appears on your page in your own words; you'll see it before it publishes and can edit it any time."
+              hint="Say it like you'd tell a friend. The rota you untangled, the event you pulled off, the automations nobody asked you to build: the stuff with no line on your CV. What you write here appears on your page in your own words; you'll see it before it publishes and can edit it any time."
             >
               <Writing
                 value={draft.titleGap}
                 onChange={(v) => patch({ titleGap: v, updatedAt: new Date().toISOString() })}
-                placeholder="Officially I'm an ops manager. Actually, I…"
+                placeholder="Officially I'm a support worker. Actually, I also run our events, the volunteer rota and the socials…"
               />
             </Screen>
           )}
@@ -246,7 +246,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
                   id="work-title"
                   value={project.title}
                   onChange={(e) => patchProject({ title: e.target.value })}
-                  placeholder="The invoice automation"
+                  placeholder="The workshop series"
                   maxLength={120}
                 />
               </div>
@@ -305,7 +305,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
                     id="work-outcome"
                     value={project.outcome}
                     onChange={(e) => patchProject({ outcome: e.target.value })}
-                    placeholder="Invoicing went from 3 days a month to 2 hours"
+                    placeholder="Attendance doubled by the third session"
                     maxLength={400}
                   />
                 </div>
@@ -317,7 +317,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
                     id="work-link"
                     value={project.demoUrl ?? ""}
                     onChange={(e) => patchProject({ demoUrl: e.target.value })}
-                    placeholder="https://github.com/you/the-thing"
+                    placeholder="A doc, a post, a page, a repo: anything that shows it happened"
                   />
                 </div>
               </div>

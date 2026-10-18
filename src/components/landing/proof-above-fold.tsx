@@ -19,9 +19,16 @@ import { Reveal } from "@/components/landing/reveal";
 export function ProofAboveFold() {
   // Public page: only people who opted into being discoverable. An empty viewer means no company
   // blocklist applies, because nobody is being shown to a named employer here.
-  const candidate = listDiscoverableCandidates("")
-    .filter((c) => c.capabilities.some((cap) => cap.evidenceCount > 0))
-    .sort((a, b) => b.capabilities.length - a.capabilities.length)[0];
+  const discoverable = listDiscoverableCandidates("").filter((c) =>
+    c.capabilities.some((cap) => cap.evidenceCount > 0)
+  );
+  // Lead with the person whose evidence is workshops, events and writing, not code. The
+  // deterrence is asymmetric: a developer isn't scared off by a care worker's example, but a
+  // care worker reading an all-tech example correctly concludes the site isn't for her, and
+  // two real testers did exactly that.
+  const candidate =
+    discoverable.find((c) => c.slug === "maya-okonkwo") ??
+    [...discoverable].sort((a, b) => b.capabilities.length - a.capabilities.length)[0];
 
   if (!candidate) return null;
 

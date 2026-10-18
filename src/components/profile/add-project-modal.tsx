@@ -146,7 +146,7 @@ export function AddProjectModal({
                   id="project-title"
                   required
                   maxLength={MAX_SHORT}
-                  placeholder="AI-powered invoice triage"
+                  placeholder="The community fundraiser"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
@@ -158,7 +158,7 @@ export function AddProjectModal({
                   id="project-description"
                   required
                   maxLength={MAX_SHORT}
-                  placeholder="A tool that classifies and routes inbound invoices automatically."
+                  placeholder="Planned and ran a fundraising event that covered the charity's winter costs."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -170,7 +170,7 @@ export function AddProjectModal({
                   <Input
                     id="project-repo"
                     type="url"
-                    placeholder="https://github.com/you/project"
+                    placeholder="A doc, a post, a page, a repo: anything that shows it happened"
                     value={repoUrl}
                     onChange={(e) => setRepoUrl(e.target.value)}
                   />
