@@ -73,9 +73,12 @@ export function Header({
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
         <Logo />
         <nav className="flex items-center gap-4 sm:gap-5">
+          {/* Left-aligned: About is the leftmost door, and a right-aligned menu under it
+              hangs off the left edge of a phone screen. The founder saw it happen. */}
           <NavDropdown
             id="about"
             label="About"
+            align="left"
             items={aboutItems}
             openId={openId}
             onToggle={toggle}
@@ -161,6 +164,7 @@ function NavDropdown({
   onNavigate,
   bordered = false,
   buttonBadge = 0,
+  align = "right",
   footer,
 }: {
   id: string;
@@ -171,6 +175,7 @@ function NavDropdown({
   onNavigate: () => void;
   bordered?: boolean;
   buttonBadge?: number;
+  align?: "left" | "right";
   footer?: ReactNode;
 }) {
   const open = openId === id;
@@ -208,7 +213,10 @@ function NavDropdown({
           />
           <div
             role="menu"
-            className="absolute right-0 top-full z-50 mt-2 w-56 border border-ink/15 bg-paper py-1.5 shadow-[3px_3px_0_rgba(26,24,21,0.08)]"
+            className={cn(
+              "absolute top-full z-50 mt-2 w-56 border border-ink/15 bg-paper py-1.5 shadow-[3px_3px_0_rgba(26,24,21,0.08)]",
+              align === "left" ? "left-0" : "right-0"
+            )}
           >
             {items.map((item) => (
               <Link
