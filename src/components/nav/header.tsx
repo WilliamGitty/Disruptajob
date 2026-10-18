@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/server/actions/auth";
 
@@ -178,6 +178,89 @@ function CountDot({ count }: { count: number }) {
   );
 }
 
+/**
+ * The "me" menu. One stable place that always leads back to your own things, from any page —
+ * added after the founder, signed in on the homepage, had no path back to his own profile.
+ */
+function AccountMenu({
+  signedInAs,
+  talentHome,
+}: {
+  signedInAs: { name: string; role: "talent" | "employer" };
+  talentHome: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const items =
+    signedInAs.role === "talent"
+      ? [
+          { label: "My profile", href: talentHome },
+          { label: "My work", href: `${talentHome}#work` },
+          { label: "Add work", href: "/talent/onboarding" },
+          { label: "Who's interested", href: "/talent/opportunities" },
+          { label: "My settings", href: "/talent/settings" },
+        ]
+      : [
+          { label: "Find people", href: "/employer" },
+          { label: "Your role", href: "/employer/setup" },
+          { label: "Pipeline", href: "/employer/pipeline" },
+          { label: "Conversations", href: "/employer/responses" },
+          { label: "Account settings", href: "/employer/settings" },
+        ];
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="flex items-center gap-1.5 border border-ink/15 px-3 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-ink/40"
+      >
+        {signedInAs.name.split(" ")[0]}
+        <ChevronDown className={cn("h-3.5 w-3.5 text-ink-faint transition-transform", open && "rotate-180")} />
+      </button>
+      {open && (
+        <>
+          {/* click-away layer */}
+          <button
+            type="button"
+            aria-hidden
+            tabIndex={-1}
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-40 cursor-default"
+          />
+          <div
+            role="menu"
+            className="absolute right-0 top-full z-50 mt-2 w-52 border border-ink/15 bg-paper py-1.5 shadow-[3px_3px_0_rgba(26,24,21,0.08)]"
+          >
+            {items.map((item) => (
+              <Link
+                key={item.label}
+                role="menuitem"
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2 text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="my-1.5 border-t border-ink/10" />
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                role="menuitem"
+                className="block w-full px-4 py-2 text-left text-[13px] text-ink-soft transition-colors hover:bg-paper-dim hover:text-ink"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
@@ -227,12 +310,7 @@ function ModeToggle({
 
       {/* Who you are is now a real thing that can be wrong, so it's always on screen. */}
       {signedInAs ? (
-        <form action={signOutAction} className="hidden items-center gap-2 sm:flex">
-          <span className="text-[13px] text-ink-faint">{signedInAs.name}</span>
-          <button type="submit" className="text-[13px] text-ink-soft underline-grow">
-            Sign out
-          </button>
-        </form>
+        <AccountMenu signedInAs={signedInAs} talentHome={talentHome} />
       ) : (
         <Link href="/signin" className="hidden text-[13px] text-ink-soft underline-grow sm:inline">
           Sign in
