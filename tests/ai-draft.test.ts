@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { cvDraftsPrompt, draftPrompt, parseCvDrafts, parseDraftSuggestion } from "@/server/ai";
+import { cvDraftsPrompt, draftPrompt, parseCvDrafts, parseDraftSuggestion, parseTidy, tidyPrompt } from "@/server/ai";
 import { CAPABILITY_DEFINITIONS } from "@/lib/capabilities";
 
 /**
@@ -111,4 +111,30 @@ test("the CV prompt asks for work, not titles, and carries the taxonomy", () => 
   const prompt = cvDraftsPrompt();
   assert.ok(prompt.includes("not job titles"));
   for (const c of CAPABILITY_DEFINITIONS) assert.ok(prompt.includes(c.tag));
+});
+
+test("tidy: JSON buried in model prose still parses, and fields clamp at 400", () => {
+  const parsed = parseTidy(
+    "Of course! Here is the tidied version:\n" +
+      JSON.stringify({
+        titleGap: "x".repeat(900),
+        description: "I run mental health workshops and deliver talks to large audiences.",
+        outcome: "",
+      }) +
+      "\nLet me know if you'd like changes."
+  );
+  assert.ok(parsed);
+  assert.equal(parsed.titleGap.length, 400);
+  assert.equal(parsed.outcome, "", "an empty field stays empty");
+});
+
+test("tidy: prose without JSON returns null rather than guessing", () => {
+  assert.equal(parseTidy("I tidied it up for you, hope that helps."), null);
+});
+
+test("the tidy prompt forbids invention and inflation in so many words", () => {
+  const prompt = tidyPrompt({ titleGap: "a", description: "b", outcome: "c" });
+  assert.ok(prompt.includes("Never add a fact"));
+  assert.ok(prompt.includes("Never inflate"));
+  assert.ok(prompt.includes("No em dashes"));
 });

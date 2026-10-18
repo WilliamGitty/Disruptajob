@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCustomProjects, useOnboardingDraft } from "@/lib/client-store";
 import { completeCandidateOnboarding } from "@/server/actions/onboarding";
+import { tidyOnboardingWording } from "@/server/actions/tidy";
 import { trackEvent } from "@/server/actions/track";
 import { EVENTS } from "@/lib/events";
 import { CAPABILITY_DEFINITIONS, CAPABILITY_GROUPS, capabilityLabel } from "@/lib/capabilities";
@@ -41,6 +42,8 @@ import { cn } from "@/lib/utils";
 export interface OnboardingSession {
   name: string;
   email: string;
+  /** Where their import desk lives, when a profile already exists. */
+  profileSlug?: string;
 }
 
 const BEATS = ["gap", "work", "proof", "you", "claim"] as const;
@@ -107,6 +110,12 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
     // A reload after finishing: the slug lives only in memory, but the profile is real.
     return <AlreadyDoneView onReset={() => { reset(); remove((p) => p.id === CONVO_PROJECT_ID); }} />;
   }
+
+  // The fork (tester-driven): writing cold is hard for people whose work lives in documents,
+  // and forcing the questions on them produced shorthand pages they were shocked by. Two doors,
+  // equal billing: describe one piece of work, or start from a CV/LinkedIn/GitHub import.
+  const needsStartChoice =
+    !draft.startPath && !draft.titleGap.trim() && !project.description.trim();
 
   const beat: Beat = BEATS[Math.min(draft.step, LAST)];
   const beatIndex = BEATS.indexOf(beat);
@@ -185,6 +194,16 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
     });
   }
 
+  if (needsStartChoice) {
+    return (
+      <StartChooser
+        importHref={session?.profileSlug ? `/profile/${session.profileSlug}#imports` : "/signup?next=import"}
+        signedIn={Boolean(session)}
+        onQuestions={() => patch({ startPath: "questions", updatedAt: new Date().toISOString() })}
+      />
+    );
+  }
+
   return (
     <div className="mx-auto max-w-[1060px] px-6 py-10 lg:py-16">
       <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
@@ -193,7 +212,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
             <Screen
               kicker="First, the gap"
               question="What do you actually do that your job title doesn't say?"
-              hint="Say it like you'd tell a friend. The automations nobody asked you to build, the product calls you somehow ended up running: the stuff with no line on your CV."
+              hint="Say it like you'd tell a friend. The automations nobody asked you to build, the product calls you somehow ended up running: the stuff with no line on your CV. What you write here appears on your page in your own words; you'll see it before it publishes and can edit it any time."
             >
               <Writing
                 value={draft.titleGap}
@@ -388,6 +407,38 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
                   </div>
                 </div>
               )}
+              <div className="mt-8 border-t border-ink/10 pt-6">
+                <p className="max-w-xl text-[15px] leading-relaxed text-ink-soft">
+                  Your page publishes <span className="font-medium text-ink">word for word</span> as
+                  you wrote it. Go back to change anything, or let AI tidy the wording below: you
+                  approve or reject every suggestion, and nothing is added that you didn&rsquo;t say.
+                </p>
+                <TidyPass
+                  titleGap={draft.titleGap}
+                  description={project.description}
+                  outcome={project.outcome}
+                  onApply={(fields) => {
+                    if (fields.titleGap !== undefined) patch({ titleGap: fields.titleGap, updatedAt: new Date().toISOString() });
+                    if (fields.description !== undefined || fields.outcome !== undefined) {
+                      patchProject({
+                        ...(fields.description !== undefined ? { description: fields.description } : {}),
+                        ...(fields.outcome !== undefined ? { outcome: fields.outcome } : {}),
+                      });
+                    }
+                  }}
+                />
+                {/* On a phone the live preview lives below the fold; at the moment of publishing
+                    it must be in front of the words "word for word", so here it is. */}
+                <div className="mt-6 lg:hidden">
+                  <PagePreview
+                    name={draft.name || session?.name || ""}
+                    title={draft.currentTitle}
+                    location={draft.location}
+                    gap={draft.titleGap}
+                    project={project}
+                  />
+                </div>
+              </div>
               <div className="mt-8">
                 <Button type="button" variant="accent" size="lg" onClick={finish} disabled={saving}>
                   {saving ? (
@@ -695,6 +746,171 @@ function AlreadyDoneView({ onReset }: { onReset: () => void }) {
           Start fresh
         </Button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * The two doors. Equal billing on purpose: the questions suit work that never produced a file
+ * (ops, care, events); the import suits people whose work is already written down somewhere.
+ * Neither door touches the one rule — imports arrive as drafts the person tags themselves.
+ */
+function StartChooser({
+  importHref,
+  signedIn,
+  onQuestions,
+}: {
+  importHref: string;
+  signedIn: boolean;
+  onQuestions: () => void;
+}) {
+  return (
+    <div className="mx-auto max-w-[760px] px-6 py-14 lg:py-20">
+      <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
+        Build your page
+      </p>
+      <h1 className="font-serif-display text-3xl leading-tight text-ink sm:text-4xl">
+        How do you want to start?
+      </h1>
+      <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-soft">
+        Both roads end at the same place: a page of real work, hidden until you say otherwise.
+      </p>
+
+      <div className="mt-10 grid gap-5 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={onQuestions}
+          className="group border border-ink/15 bg-paper p-6 text-left transition-colors hover:border-ink"
+        >
+          <p className="font-serif-display text-xl text-ink">Describe one piece of work</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+            Four short questions, about ten minutes. Best when your proudest work never produced
+            a document: the process you ran, the event you pulled off, the thing you kept alive.
+          </p>
+          <p className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow">
+            Start writing <ArrowRight className="h-4 w-4" />
+          </p>
+        </button>
+
+        <Link
+          href={importHref}
+          className="group border border-ink/15 bg-paper p-6 text-left transition-colors hover:border-ink"
+        >
+          <p className="font-serif-display text-xl text-ink">Start from what you have</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+            Drop a CV or LinkedIn PDF, or import public GitHub repos. AI drafts projects from
+            them for you to edit, tag and publish, or throw away. The file itself is never kept.
+          </p>
+          <p className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow">
+            {signedIn ? "Go to your import desk" : "Claim your page first (under a minute)"}{" "}
+            <ArrowRight className="h-4 w-4" />
+          </p>
+        </Link>
+      </div>
+
+      <p className="mt-8 text-xs leading-relaxed text-ink-faint">
+        Whichever door: nothing you type or import ever becomes a capability by itself. Scores
+        come only from work you publish and tag yourself.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The approved tidy-up. AI proposes cleaner wording for the person's own text; each field shows
+ * the proposal next to what they wrote, and only their explicit "use this" applies it. The
+ * import-desk contract, applied to prose: AI drafts, humans claim.
+ */
+function TidyPass({
+  titleGap,
+  description,
+  outcome,
+  onApply,
+}: {
+  titleGap: string;
+  description: string;
+  outcome: string;
+  onApply: (fields: { titleGap?: string; description?: string; outcome?: string }) => void;
+}) {
+  const [proposal, setProposal] = useState<{ titleGap: string; description: string; outcome: string } | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [decided, setDecided] = useState<Set<string>>(new Set());
+  const [tidying, startTidying] = useTransition();
+
+  function requestTidy() {
+    setNotice(null);
+    startTidying(async () => {
+      const result = await tidyOnboardingWording({ titleGap, description, outcome });
+      if (!result.ok) {
+        setNotice(result.error);
+        return;
+      }
+      setProposal(result.proposal);
+      setDecided(new Set());
+    });
+  }
+
+  const fields = proposal
+    ? ([
+        { key: "titleGap", label: "What your title hides", mine: titleGap, theirs: proposal.titleGap },
+        { key: "description", label: "Your piece of work", mine: description, theirs: proposal.description },
+        { key: "outcome", label: "What changed", mine: outcome, theirs: proposal.outcome },
+      ] as const).filter((f) => f.mine.trim() && f.theirs && f.theirs !== f.mine && !decided.has(f.key))
+    : [];
+
+  return (
+    <div className="mt-5">
+      {!proposal && (
+        <Button type="button" variant="outline" onClick={requestTidy} disabled={tidying}>
+          {tidying ? (
+            <>
+              Tidying <Loader2 className="h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Tidy my wording"
+          )}
+        </Button>
+      )}
+      {notice && <p className="mt-3 text-sm text-ink-soft">{notice}</p>}
+      {proposal && fields.length === 0 && (
+        <p className="text-sm text-ink-soft">
+          {decided.size > 0 ? "Done. The rest stays in your words." : "Nothing to tidy. Your wording already reads well."}
+        </p>
+      )}
+      {fields.map((f) => (
+        <div key={f.key} className="mt-4 border border-ink/15 bg-paper-dim/50 p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-faint">{f.label}</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+            <span className="text-ink-faint">Yours: </span>
+            {f.mine}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ink">
+            <span className="text-ink-faint">Tidied: </span>
+            {f.theirs}
+          </p>
+          <div className="mt-3 flex gap-3">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                onApply({ [f.key]: f.theirs } as { titleGap?: string; description?: string; outcome?: string });
+                setDecided((d) => new Set([...d, f.key]));
+              }}
+            >
+              Use the tidied version
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => setDecided((d) => new Set([...d, f.key]))}
+            >
+              Keep mine
+            </Button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

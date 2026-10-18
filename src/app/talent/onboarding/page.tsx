@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ConversationFlow } from "@/components/onboarding/conversation-flow";
 import { getCurrentAccount } from "@/server/auth";
+import { getCandidateById } from "@/server/repositories/candidates";
 import { EVENTS, track } from "@/server/analytics";
 
 export const metadata: Metadata = {
@@ -20,7 +21,12 @@ export default async function OnboardingPage() {
   // the password and keep their real name rather than asking for it again.
   const session =
     account?.role === "talent"
-      ? { name: account.displayName, email: account.email }
+      ? {
+          name: account.displayName,
+          email: account.email,
+          // Where the import desk lives, for the fork's second door.
+          profileSlug: account.candidateId ? getCandidateById(account.candidateId)?.slug : undefined,
+        }
       : undefined;
 
   return (

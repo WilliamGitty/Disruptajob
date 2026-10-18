@@ -80,6 +80,13 @@ export async function signUpAction(formData: FormData) {
   }
 
   // Straight into the thing they came to do, rather than a dead-end "account created" screen.
+  // Someone who chose the import door in onboarding goes to their page's import desk, which
+  // exists the moment the account does.
+  if (role === "talent" && formData.get("next") === "import" && created?.candidateId) {
+    const { getCandidateById } = await import("../repositories/candidates");
+    const slug = getCandidateById(created.candidateId)?.slug;
+    if (slug) redirect(`/profile/${slug}#imports`);
+  }
   redirect(role === "talent" ? "/talent/onboarding" : "/employer/setup");
 }
 

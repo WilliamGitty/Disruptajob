@@ -342,6 +342,8 @@ export interface CandidateMatch {
 export interface OnboardingDraft {
   step: number; // current step index, for resume
   completedAt?: string;
+  /** Which door they chose at the start: answer questions, or import a CV/LinkedIn/GitHub. */
+  startPath?: "questions" | "import";
   // Step 1 — hook
   titleGap: string;
   // Step 2 — identity

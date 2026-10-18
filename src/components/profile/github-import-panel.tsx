@@ -45,7 +45,7 @@ export function GitHubImportPanel({ drafts }: { drafts: Project[] }) {
   }
 
   return (
-    <section className="mx-auto max-w-[1000px] px-6 py-10 lg:px-10" aria-label="Import work from GitHub">
+    <section id="imports" className="mx-auto max-w-[1000px] scroll-mt-20 px-6 py-10 lg:px-10" aria-label="Import work from GitHub">
       <div className="border border-ink/15 bg-paper-dim p-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-md">

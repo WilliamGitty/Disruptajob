@@ -46,7 +46,8 @@ Under Settings:
 SIGNED-OUT / GENERAL PAGES
 - Signed-out header, top right: an About menu (About us, Why create an account?, Articles, Guides, FAQ), I'm hiring, Sign in, and Create an account.
 - Why create an account (/why): a short page listing what an account gets you. Reading for the undecided.
-- Add your first project (homepage button): the onboarding. Four short questions (the gap your title hides, one piece of work, what it proves, who you are), then claim the page with email and password. About ten minutes. Progress saves in the browser; leaving and returning picks up where they left off.
+- Add your first project (homepage button): the onboarding. It starts with a choice of two doors: describe one piece of work (four short questions, about ten minutes), or start from what you have (a CV, LinkedIn PDF, or GitHub, which goes via the import desk). Progress saves in the browser; leaving and returning picks up where they left off.
+- What you write in onboarding appears on your page in your own words, word for word. Before claiming, the page is shown as it will publish, and there is an optional "Tidy my wording" button: AI proposes cleaner wording for your own text and you approve or reject each field. It never adds anything you didn't say.
 - People: browse everyone who chose to be visible. Community: coming; the page explains. Articles and Guides: reading. About and FAQ: what it says.
 - Sign in, Create an account: top right when signed out. Forgotten password: link on the sign-in page; reset links arrive by email and work once.
 

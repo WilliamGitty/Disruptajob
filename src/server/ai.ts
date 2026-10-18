@@ -246,3 +246,90 @@ export async function assistantReply(
     return null;
   }
 }
+
+export interface TidyProposal {
+  titleGap: string;
+  description: string;
+  outcome: string;
+}
+
+/**
+ * The tidy-up prompt. This walks a real line: a tester wrote shorthand into onboarding, was
+ * shocked to meet it verbatim on her page, and asked for exactly this cleanup. The product's
+ * rule survives because the model may only repair HER words (spelling, grammar, sentence
+ * breaks), never add a fact, a skill, or an adjective she didn't write, and she approves or
+ * rejects the result before anything publishes. Pure and exported for tests.
+ */
+export function tidyPrompt(fields: { titleGap: string; description: string; outcome: string }): string {
+  return [
+    `Someone wrote these notes about their own work, in a hurry, for their public profile. Tidy the wording WITHOUT changing the substance: fix spelling, grammar, capitalisation and sentence breaks; keep first person; keep their vocabulary where it is already clear. British English.`,
+    ``,
+    `Hard rules:`,
+    `- Never add a fact, skill, number, or claim that is not in their text.`,
+    `- Never inflate ("helped with" must not become "led").`,
+    `- No em dashes. No exclamation marks. No buzzwords.`,
+    `- Keep each field roughly the same length as the original. An empty field stays empty.`,
+    ``,
+    `Field 1, what their job title hides: """${fields.titleGap.slice(0, 1000)}"""`,
+    `Field 2, a piece of work they did: """${fields.description.slice(0, 1000)}"""`,
+    `Field 3, what changed because of it: """${fields.outcome.slice(0, 500)}"""`,
+    ``,
+    `Reply with ONLY a JSON object, no markdown fence: {"titleGap": "...", "description": "...", "outcome": "..."}`,
+  ].join("\n");
+}
+
+/** Clamp the tidy reply to the allowed shape. Exported for tests. */
+export function parseTidy(raw: string): TidyProposal | null {
+  try {
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+    if (start === -1 || end <= start) return null;
+    const parsed = JSON.parse(raw.slice(start, end + 1)) as Record<string, unknown>;
+    const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+    return {
+      titleGap: str(parsed.titleGap, 400),
+      description: str(parsed.description, 400),
+      outcome: str(parsed.outcome, 400),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Tidy a person's own onboarding words. Null when the key is absent or the model misbehaves. */
+export async function tidyProfileWording(fields: {
+  titleGap: string;
+  description: string;
+  outcome: string;
+}): Promise<TidyProposal | null> {
+  if (!API_KEY) return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 700,
+        messages: [{ role: "user", content: tidyPrompt(fields) }],
+      }),
+    });
+    if (!res.ok) {
+      logError("ai.tidy-failed", new Error(`Anthropic responded ${res.status}`), {
+        body: (await res.text()).slice(0, 200),
+      });
+      return null;
+    }
+    const data = (await res.json()) as { content?: { type: string; text?: string }[] };
+    const text = data.content?.find((b) => b.type === "text")?.text ?? "";
+    const proposal = parseTidy(text);
+    if (!proposal) logWarn("ai.tidy-unparseable", "model reply was not the requested JSON", {});
+    return proposal;
+  } catch (error) {
+    logError("ai.tidy-failed", error, {});
+    return null;
+  }
+}

@@ -24,9 +24,9 @@ export const dynamic = "force-dynamic";
 export default async function SignUpPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; role?: string }>;
+  searchParams: Promise<{ error?: string; role?: string; next?: string }>;
 }) {
-  const { error, role } = await searchParams;
+  const { error, role, next } = await searchParams;
   const isEmployer = role === "employer";
 
   if (!SIGNUP_ENABLED) {
@@ -65,6 +65,8 @@ export default async function SignUpPage({
 
       <form action={signUpAction} className="mt-8 space-y-5">
         <input type="hidden" name="role" value={isEmployer ? "employer" : "talent"} />
+        {/* Carried from the onboarding fork: "import" lands the new account on its import desk. */}
+        {next === "import" && !isEmployer && <input type="hidden" name="next" value="import" />}
 
         <div className="space-y-2">
           <Label htmlFor="name">{isEmployer ? "Company name" : "Your name"}</Label>
