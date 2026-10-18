@@ -55,6 +55,7 @@ COMMON STUMBLES AND THEIR ANSWERS
 - "The import gave me empty drafts": delete them (Delete draft button) and re-import; if it persists, email hello@disruptajob.com.
 - "Where do I apply?": nowhere; there are no applications. Companies reach out when a profile matches and is visible to them. Registering interest on a role is the closest thing, and it only grants visibility.
 - "The percentages seem low": they rise as more work is published and tagged; the page explains each one ("because your evidence covers...").
+- The diagram at the top of a profile is the person's demonstrated capabilities: each spoke is a capability, its length is how much published evidence backs it. It is computed from published work, so adding and tagging real projects is the only way to change it.
 - "Is this really free?": for candidates, yes, always. Companies free during beta.
 - "The companies look fake": many are labelled Example companies, invented so the product can be walked through before real companies arrive. The badge marks every one of them.
 - "Is this only for tech people?": no. Capabilities cover four kinds of work: building and improving (AI, automation, prototyping, design), running things (operations, workflows, problem solving), working with people (speaking, training, community, care and support, client relationships), and insight and reach (research, writing, data, events, fundraising). If someone's work genuinely has no tag, they can email hello@disruptajob.com and the founder will consider adding one.

@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { Bookmark, BookmarkCheck, MessageSquarePlus } from "lucide-react";
 import type { CandidateProfile } from "@/types";
 import { InitialsMark } from "@/components/ui/initials-mark";
+import { CapabilityConstellation } from "@/components/ui/capability-constellation";
 import { Button } from "@/components/ui/button";
 import { InviteModal } from "@/components/employer/invite-modal";
 import { toggleSavedCandidate } from "@/server/actions/hiring";
@@ -42,7 +43,7 @@ export function ProfileHeader({
   return (
     <section className="border-b border-ink/10">
       <div className="mx-auto max-w-[1100px] px-6 py-14 lg:px-10 lg:py-20">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex gap-5">
             <InitialsMark initials={candidate.avatarInitials} index={candidate.accentIndex} size="lg" />
             <div>
@@ -71,6 +72,15 @@ export function ProfileHeader({
               </div>
             </div>
           </div>
+
+          {/* The whole person at a glance, before the breakdown: a tester wearing her
+              employer hat asked for exactly this. Renders only once two capabilities have
+              published evidence, so an empty page never shows an empty chart. */}
+          <CapabilityConstellation
+            capabilities={candidate.capabilities}
+            seed={candidate.slug}
+            className="w-full max-w-[420px] border border-ink/10 lg:shrink-0"
+          />
 
           {!isOwnProfile && (
             <div className="flex shrink-0 items-center gap-3">
