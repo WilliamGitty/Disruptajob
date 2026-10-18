@@ -11,7 +11,7 @@ import { useCustomProjects, useOnboardingDraft } from "@/lib/client-store";
 import { completeCandidateOnboarding } from "@/server/actions/onboarding";
 import { trackEvent } from "@/server/actions/track";
 import { EVENTS } from "@/lib/events";
-import { CAPABILITY_DEFINITIONS, capabilityLabel } from "@/lib/capabilities";
+import { CAPABILITY_DEFINITIONS, CAPABILITY_GROUPS, capabilityLabel } from "@/lib/capabilities";
 import { DictateButton } from "@/components/onboarding/dictate-button";
 import { cn } from "@/lib/utils";
 
@@ -240,32 +240,42 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
               question="Which of these did that work genuinely involve?"
               hint="Pick only what is true. Employers search by these tags, and every one you pick points straight at the work you just described."
             >
-              <div className="flex flex-wrap gap-2">
-                {CAPABILITY_DEFINITIONS.map((c) => {
-                  const on = project.capabilities.includes(c.tag);
-                  return (
-                    <button
-                      key={c.tag}
-                      type="button"
-                      title={c.description}
-                      onClick={() =>
-                        patchProject({
-                          capabilities: on
-                            ? project.capabilities.filter((t) => t !== c.tag)
-                            : [...project.capabilities, c.tag],
-                        })
-                      }
-                      className={cn(
-                        "border px-3 py-2 text-sm transition-colors",
-                        on
-                          ? "border-accent bg-accent-soft text-accent-dark"
-                          : "border-ink/15 bg-paper text-ink-soft hover:border-ink/35"
-                      )}
-                    >
-                      {c.label}
-                    </button>
-                  );
-                })}
+              <div className="space-y-5">
+                {CAPABILITY_GROUPS.map((group) => (
+                  <div key={group}>
+                    <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
+                      {group}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {CAPABILITY_DEFINITIONS.filter((c) => c.group === group).map((c) => {
+                        const on = project.capabilities.includes(c.tag);
+                        return (
+                          <button
+                            key={c.tag}
+                            type="button"
+                            title={c.description}
+                            aria-pressed={on}
+                            onClick={() =>
+                              patchProject({
+                                capabilities: on
+                                  ? project.capabilities.filter((t) => t !== c.tag)
+                                  : [...project.capabilities, c.tag],
+                              })
+                            }
+                            className={cn(
+                              "border px-3 py-2 text-sm transition-colors",
+                              on
+                                ? "border-accent bg-accent-soft text-accent-dark"
+                                : "border-ink/15 bg-paper text-ink-soft hover:border-ink/35"
+                            )}
+                          >
+                            {c.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
               <div className="mt-8 grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">

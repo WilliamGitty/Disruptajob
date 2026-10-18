@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { CAPABILITY_DEFINITIONS } from "@/lib/capabilities";
+import { CAPABILITY_DEFINITIONS, CAPABILITY_GROUPS } from "@/lib/capabilities";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,31 +30,40 @@ export function CapabilityPicker({
   const atMax = Boolean(max && selected.length >= max);
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {CAPABILITY_DEFINITIONS.map((cap) => {
-        const active = selected.includes(cap.tag);
-        const disabled = !active && atMax;
-        return (
-          <button
-            key={cap.tag}
-            type="button"
-            onClick={() => toggle(cap.tag)}
-            disabled={disabled}
-            title={cap.description}
-            aria-pressed={active}
-            className={cn(
-              "inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs transition-colors",
-              active
-                ? "border-accent bg-accent-soft text-ink"
-                : "border-ink/15 text-ink-soft hover:border-ink hover:text-ink",
-              disabled && "cursor-not-allowed opacity-40 hover:border-ink/15 hover:text-ink-soft"
-            )}
-          >
-            {active && <Check className="h-3 w-3 text-accent" />}
-            {cap.label}
-          </button>
-        );
-      })}
+    <div className="space-y-4">
+      {CAPABILITY_GROUPS.map((group) => (
+        <div key={group}>
+          <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
+            {group}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {CAPABILITY_DEFINITIONS.filter((c) => c.group === group).map((cap) => {
+              const active = selected.includes(cap.tag);
+              const disabled = !active && atMax;
+              return (
+                <button
+                  key={cap.tag}
+                  type="button"
+                  onClick={() => toggle(cap.tag)}
+                  disabled={disabled}
+                  title={cap.description}
+                  aria-pressed={active}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs transition-colors",
+                    active
+                      ? "border-accent bg-accent-soft text-ink"
+                      : "border-ink/15 text-ink-soft hover:border-ink hover:text-ink",
+                    disabled && "cursor-not-allowed opacity-40 hover:border-ink/15 hover:text-ink-soft"
+                  )}
+                >
+                  {active && <Check className="h-3 w-3 text-accent" />}
+                  {cap.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

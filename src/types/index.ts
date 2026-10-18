@@ -37,6 +37,8 @@ export interface Evidence {
 export interface CapabilityDefinition {
   tag: string;
   label: string;
+  /** Which kind of work it is; the picker groups by this so the list reads as a map, not a wall. */
+  group: string;
   description: string;
 }
 
