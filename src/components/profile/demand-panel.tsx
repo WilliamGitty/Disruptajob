@@ -88,7 +88,10 @@ export function DemandPanel({ demand, ownerFirstName }: { demand: DemandSummary;
           </ul>
           <p className="mt-3 text-xs leading-relaxed text-ink-faint">
             There is nothing to apply to, on purpose. Companies reach out when they can see you;
-            the list is here so you know what your evidence is already worth.
+            the list is here so you know what your evidence is already worth.{" "}
+            <Link href="/talent/matches" className="text-ink underline-grow">
+              See everything that&rsquo;s out there
+            </Link>
           </p>
         </div>
       )}

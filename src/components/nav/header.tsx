@@ -202,6 +202,7 @@ function AccountMenu({
           { label: "My profile", href: talentHome },
           { label: "My work", href: `${talentHome}#work` },
           { label: "Add work", href: "/talent/onboarding" },
+          { label: "What's out there", href: "/talent/matches" },
           { label: "Who's interested", href: "/talent/opportunities" },
           { label: "My settings", href: "/talent/settings" },
         ]
