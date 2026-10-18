@@ -10,14 +10,15 @@ import { signOutAction } from "@/server/actions/auth";
 
 const EMPLOYER_HOME = "/employer";
 
+// The quick row for the three places a signed-in candidate actually goes day to day.
+// It speaks the same vocabulary as the full menu under their name; the founder caught
+// the old labels ("My profile", "Settings") surviving here after the menu restructure.
 function talentLinks(talentHome: string) {
   return [
-    { label: "My work", href: `${talentHome}#work` },
-    { label: "My profile", href: talentHome },
-    { label: "Add work", href: "/talent/onboarding" },
+    { label: "My projects", href: talentHome },
+    { label: "Job roles available", href: "/talent/matches" },
     // Named for what it feels like to receive, not for the system object behind it.
     { label: "Who's interested", href: "/talent/opportunities" },
-    { label: "Settings", href: "/talent/settings" },
   ];
 }
 
@@ -52,7 +53,7 @@ export function Header({
   const badgedHref = isEmployer ? "/employer/responses" : "/talent/opportunities";
 
   // On public pages, a visitor gets the public header: content links and the two doors. The
-  // app navigation (My work, Settings, ...) is a row of dead ends to anyone without an account,
+  // app navigation (My projects, Job roles available, ...) is a row of dead ends to anyone without an account,
   // and a signed-in person on a public page still has both doors home.
   const PUBLIC_PREFIXES = ["/about", "/articles", "/guides", "/faq", "/community", "/people", "/privacy", "/terms", "/signin", "/signup", "/forgot-password", "/reset-password", "/verify-email", "/company"];
   const isPublicPage = pathname === "/" || PUBLIC_PREFIXES.some((p) => pathname?.startsWith(p));
