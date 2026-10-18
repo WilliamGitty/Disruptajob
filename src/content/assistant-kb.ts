@@ -39,7 +39,7 @@ Under your name:
 - Who's interested: companies that have reached out to you. You get one email when that happens; there is nothing to check daily, by design.
 - Sign out: at the bottom of the name menu.
 Under Settings:
-- Account management: who can find you, your terms (preferred arrangements, location, a private minimum salary that is never shown to companies, only compared), your about text, LinkedIn link, data export and deletion.
+- Account management: your profile details first (name, location, headline, your one-sentence description, LinkedIn link, availability), then who can find you, then your terms (preferred arrangements, a private minimum salary that is never shown to companies, only compared), then data export and deletion.
 - Help: the FAQ page.
 - Terms and conditions: the terms page.
 

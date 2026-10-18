@@ -86,8 +86,85 @@ export default async function SettingsPage({
         You decide who sees this.
       </h1>
 
-      {/* --- Visibility --- */}
+      {/* --- The person, first. The founder scrolled past two sections of ceremony looking
+          for the fields that describe him; who you are precedes who may look. --- */}
       <section className="mt-10 border border-ink/10 p-7">
+        <h2 className="font-serif-display text-xl text-ink">Your profile</h2>
+
+        {saved === "basics" && savedNote}
+        <form action={updateBasics} className="mt-6 space-y-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" name="name" defaultValue={me.name} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="location">Where you are</Label>
+              <Input id="location" name="location" defaultValue={me.location} placeholder="London, UK" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="linkedinUrl">
+                LinkedIn URL <span className="text-ink-faint">(optional)</span>
+              </Label>
+              <Input
+                id="linkedinUrl"
+                name="linkedinUrl"
+                type="url"
+                defaultValue={me.linkedinUrl ?? ""}
+                placeholder="https://linkedin.com/in/you"
+              />
+              <p className="text-xs text-ink-faint">
+                Shown as a link in your background. We never read or score anything behind it.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="headline">Headline</Label>
+            <Input
+              id="headline"
+              name="headline"
+              defaultValue={me.headline}
+              placeholder="Events · Community · Training"
+            />
+            <p className="text-xs text-ink-faint">
+              The things you actually do, not the title on your contract.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="shortDescription">In a sentence</Label>
+            <Textarea
+              id="shortDescription"
+              name="shortDescription"
+              rows={2}
+              defaultValue={me.shortDescription}
+              placeholder="I run the workshops, events and community that keep our members coming back."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="availability">Availability</Label>
+            <select
+              id="availability"
+              name="availability"
+              defaultValue={me.availability}
+              className="h-11 w-full border border-ink/15 bg-paper px-3 text-sm text-ink"
+            >
+              <option value="open">Open to opportunities</option>
+              <option value="selectively-open">Selectively open</option>
+              <option value="not-looking">Not currently looking</option>
+            </select>
+          </div>
+
+          <Button type="submit" variant="accent">
+            Save profile
+          </Button>
+        </form>
+      </section>
+
+      {/* --- Visibility --- */}
+      <section className="mt-8 border border-ink/10 p-7">
         <div className="flex items-center gap-2">
           <Eye className="h-4 w-4 text-evidence" />
           <h2 className="font-serif-display text-xl text-ink">Who can find you</h2>
@@ -222,81 +299,6 @@ export default async function SettingsPage({
       </section>
 
       {/* --- Basics --- */}
-      <section className="mt-8 border border-ink/10 p-7">
-        <h2 className="font-serif-display text-xl text-ink">Your profile</h2>
-
-        {saved === "basics" && savedNote}
-        <form action={updateBasics} className="mt-6 space-y-5">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" defaultValue={me.name} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="location">Where you are</Label>
-              <Input id="location" name="location" defaultValue={me.location} placeholder="London, UK" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="linkedinUrl">
-                LinkedIn URL <span className="text-ink-faint">(optional)</span>
-              </Label>
-              <Input
-                id="linkedinUrl"
-                name="linkedinUrl"
-                type="url"
-                defaultValue={me.linkedinUrl ?? ""}
-                placeholder="https://linkedin.com/in/you"
-              />
-              <p className="text-xs text-ink-faint">
-                Shown as a link in your background. We never read or score anything behind it.
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="headline">Headline</Label>
-            <Input
-              id="headline"
-              name="headline"
-              defaultValue={me.headline}
-              placeholder="Events · Community · Training"
-            />
-            <p className="text-xs text-ink-faint">
-              The things you actually do, not the title on your contract.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="shortDescription">In a sentence</Label>
-            <Textarea
-              id="shortDescription"
-              name="shortDescription"
-              rows={2}
-              defaultValue={me.shortDescription}
-              placeholder="I run the workshops, events and community that keep our members coming back."
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="availability">Availability</Label>
-            <select
-              id="availability"
-              name="availability"
-              defaultValue={me.availability}
-              className="h-11 w-full border border-ink/15 bg-paper px-3 text-sm text-ink"
-            >
-              <option value="open">Open to opportunities</option>
-              <option value="selectively-open">Selectively open</option>
-              <option value="not-looking">Not currently looking</option>
-            </select>
-          </div>
-
-          <Button type="submit" variant="accent">
-            Save profile
-          </Button>
-        </form>
-      </section>
-
       <YourData email={account.email} />
 
       <p className="mt-8 text-sm text-ink-soft">
