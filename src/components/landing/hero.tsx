@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
  * hearing the reason this exists, so the argument moved into the opening viewport and the
  * thesis drawing moved below it (illustration-band.tsx), where it assembles slowly.
  *
- * Order differs by device on purpose, because the founder's own worry was "word heavy on
- * mobile": desktop reads headline, argument, button; a phone reads headline, button, argument,
- * so the first screen stays light and the case still arrives one swipe later.
+ * Same order on every device: headline, model line, the ask, then the argument (the why and
+ * the serif roll) for whoever wants it. The ask used to sit below the argument on desktop;
+ * the founder moved it up once the argument grew to full height.
  */
 export function Hero({
   ctaLabel = "Add your first project",
@@ -51,7 +51,7 @@ export function Hero({
                 are the most emotional copy on the site, so they are set as a serif roll,
                 typography instead of list furniture. order-2 on phones so the button stays
                 near the headline. */}
-            <div className="order-2 mt-14 border-t border-ink/10 pt-12 text-center lg:order-1">
+            <div className="order-2 mt-14 border-t border-ink/10 pt-12 text-center">
               <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
                 Why we built this
               </p>
@@ -100,11 +100,10 @@ export function Hero({
               </p>
             </div>
 
-            {/* The ask, centred: the founder wanted the button and its reassurances in the
-                middle of the page rather than hugging the left margin. order-1 on phones so
-                the first screen stays light. */}
-            <div className="order-1 flex flex-col items-center text-center lg:order-2">
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:mt-14">
+            {/* The ask sits between the lead and the why on every device now (founder call):
+                headline, model line, button, then the argument for whoever wants it. */}
+            <div className="order-1 flex flex-col items-center text-center">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <Button asChild size="lg" variant="accent">
                   <Link href={ctaHref}>
                     {ctaLabel}
