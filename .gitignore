@@ -48,3 +48,6 @@ next-env.d.ts
 
 # original source archive — superseded by this repo
 *.zip
+
+# tester feedback with real names — never publish to the public repo
+/feedback-sessions/
