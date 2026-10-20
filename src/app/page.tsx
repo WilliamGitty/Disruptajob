@@ -1,5 +1,5 @@
 import { Hero } from "@/components/landing/hero";
-import { WhyBand } from "@/components/landing/why-band";
+import { IllustrationBand } from "@/components/landing/illustration-band";
 import { Comparison } from "@/components/landing/comparison";
 import { ClaimsSection } from "@/components/landing/claims-section";
 import { CandidatePreviewGrid } from "@/components/landing/candidate-preview-grid";
@@ -96,10 +96,10 @@ export default async function Home() {
     <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       {band}
+      {/* The argument now lives inside the opening (hero.tsx); the drawing follows it,
+          assembling slowly. Founder call, 20 Oct. */}
       <Hero ctaLabel={ctaLabel} ctaHref={ctaHref} />
-      {/* The reason and the audience, before any demonstration: round-three testers who never
-          clicked through to /why bounced without hearing why this exists. */}
-      <WhyBand />
+      <IllustrationBand />
       <ProofAboveFold />
       <CandidatePreviewGrid />
 

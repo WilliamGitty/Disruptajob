@@ -28,11 +28,14 @@ export function Reveal({
   stagger,
   /** Extra delay in ms before this block reveals — lets a pair arrive as a sequence. */
   delay = 0,
+  /** Ms between staggered children. Default 90 (snappy); the hero drawing uses ~350 (assembling). */
+  step,
 }: {
   children: ReactNode;
   className?: string;
   stagger?: boolean | string;
   delay?: number;
+  step?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -42,6 +45,7 @@ export function Reveal({
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     el.style.setProperty("--reveal-delay", `${delay}ms`);
+    if (step) el.style.setProperty("--reveal-step", `${step}ms`);
 
     /*
      * The one rule that outranks the animation: nothing may ever be left invisible. So the
@@ -107,7 +111,7 @@ export function Reveal({
       window.removeEventListener("pageshow", onShow);
       document.removeEventListener("visibilitychange", onShow);
     };
-  }, [stagger, delay]);
+  }, [stagger, delay, step]);
 
   return (
     <div ref={ref} className={className}>
