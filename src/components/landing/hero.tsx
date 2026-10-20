@@ -45,58 +45,59 @@ export function Hero({
           </p>
 
           <div className="flex flex-col">
-            {/* The why and the who. order-2 on phones so the button stays near the headline. */}
-            <div className="order-2 mt-12 grid grid-cols-1 gap-10 border-t border-ink/10 pt-10 md:grid-cols-2 md:gap-16 lg:order-1 lg:gap-24">
-              <div>
-                <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-                  Why we built this
-                </p>
-                <h2 className="font-serif-display text-2xl leading-tight text-ink">
-                  Paper lies. Work doesn&rsquo;t.
-                </h2>
-                <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-ink-soft">
-                  Two hundred applications, four replies. That market is broken beyond repair,
-                  so we built a different one.
-                </p>
-                <p className="mt-3 text-[16px] leading-relaxed text-ink-soft">
-                  Here, nobody applies. You publish real work you have done. Companies read it
-                  and come to you. No AI rates you. No keyword filter bins you.
-                </p>
-                <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
-                  <Link
-                    href="/why"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow"
-                  >
-                    What an account gets you
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <Link href="/about" className="text-sm text-ink-soft underline-grow">
-                    The full story
-                  </Link>
-                </div>
+            {/* The why and the who, on the page's one centre axis. The previous version was
+                two left-aligned columns with bullet lists jammed between centred blocks; the
+                founder disliked it on every screen size and he was right: the circumstances
+                are the most emotional copy on the site, so they are set as a serif roll,
+                typography instead of list furniture. order-2 on phones so the button stays
+                near the headline. */}
+            <div className="order-2 mt-14 border-t border-ink/10 pt-12 text-center lg:order-1">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
+                Why we built this
+              </p>
+              <h2 className="font-serif-display text-2xl leading-tight text-ink sm:text-3xl">
+                Paper lies. Work doesn&rsquo;t.
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-ink-soft">
+                Two hundred applications, four replies. That market is broken beyond repair, so
+                we built a different one. Here, nobody applies. You publish real work you have
+                done. Companies read it and come to you. No AI rates you. No keyword filter
+                bins you.
+              </p>
+              <div className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <Link
+                  href="/why"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow"
+                >
+                  What an account gets you
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/about" className="text-sm text-ink-soft underline-grow">
+                  The full story
+                </Link>
               </div>
 
-              <div>
-                <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
-                  Who it&rsquo;s for
-                </p>
-                <ul className="space-y-2">
-                  {whoFor.map((line) => (
-                    <li key={line} className="flex gap-3 text-[16px] leading-relaxed text-ink-soft">
-                      <span aria-hidden className="mt-[0.65em] h-1.5 w-1.5 shrink-0 bg-accent" />
-                      {line}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-[16px] leading-relaxed text-ink">
-                  If your CV undersells you, you are who this is for.
-                </p>
-                {/* The anti-pitch qualifies the buyer, Hopkins-style, and costs us nobody we want. */}
-                <p className="mt-2 text-sm leading-relaxed text-ink-faint">
-                  And if you want to send fifty applications tonight, it is not for you. There
-                  is no apply button here.
-                </p>
+              <p className="mb-5 mt-12 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
+                Who it&rsquo;s for
+              </p>
+              <div className="space-y-2.5">
+                {whoFor.map((line) => (
+                  <p
+                    key={line}
+                    className="font-serif-display text-xl leading-snug text-ink sm:text-2xl"
+                  >
+                    {line}
+                  </p>
+                ))}
               </div>
+              <p className="mx-auto mt-7 max-w-xl text-[16px] font-medium leading-relaxed text-ink">
+                If your CV undersells you, you are who this is for.
+              </p>
+              {/* The anti-pitch qualifies the buyer, Hopkins-style, and costs us nobody we want. */}
+              <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-ink-faint">
+                And if you want to send fifty applications tonight, it is not for you. There is
+                no apply button here.
+              </p>
             </div>
 
             {/* The ask, centred: the founder wanted the button and its reassurances in the
