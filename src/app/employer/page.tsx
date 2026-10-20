@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
 export default async function EmployerPage() {
   // Real numbers from the database (audit D1): the previous ones were computed from the demo
   // fixtures module, so they would have stayed frozen while real people joined.
-  const candidateCount = listCandidates().length;
+  const candidateCount = listCandidates().filter((c) => !c.isDemo).length;
   const projectCount = countPublishedProjects();
   const evidenceCount = countEvidence();
 
@@ -44,13 +44,23 @@ export default async function EmployerPage() {
             <SearchBox autoFocus />
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-ink-faint">
-            <span>{candidateCount} people on the platform</span>
-            <span className="h-1 w-1 rounded-full bg-ink-faint/50" />
-            <span>{projectCount} documented projects</span>
-            <span className="h-1 w-1 rounded-full bg-ink-faint/50" />
-            <span>{evidenceCount} pieces of evidence</span>
-          </div>
+          {/* Real people only. The counts used to include the invented demo population,
+              which is the "213 companies" mistake aimed at employers instead. Small true
+              numbers read as one honest sentence rather than a stat row pretending scale. */}
+          {candidateCount >= 25 ? (
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-ink-faint">
+              <span>{candidateCount} people on the platform</span>
+              <span className="h-1 w-1 rounded-full bg-ink-faint/50" />
+              <span>{projectCount} documented projects</span>
+              <span className="h-1 w-1 rounded-full bg-ink-faint/50" />
+              <span>{evidenceCount} pieces of evidence</span>
+            </div>
+          ) : (
+            <p className="mt-10 text-xs text-ink-faint">
+              We are early: {candidateCount === 0 ? "the first real candidates are onboarding now" : `${candidateCount} real ${candidateCount === 1 ? "person" : "people"} so far`}.
+              Example profiles are labelled, so you can see exactly how it works before anyone pays anything.
+            </p>
+          )}
 
           <p className="mt-8 text-sm text-ink-faint">
             Prefer a structured brief?{" "}
@@ -71,14 +81,16 @@ export default async function EmployerPage() {
             <div>
               <h2 className="font-serif-display text-2xl text-ink">See it before you sign up</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-                Every profile on the{" "}
+                The{" "}
                 <Link href="/people" className="text-ink underline-grow">
                   public people page
                 </Link>{" "}
-                is real published work you can read right now, no account needed. An account is
-                for the part that has to be accountable: searching by capability and reaching
-                out happen as a named company, because candidates can block specific companies
-                and we check your name against those lists.
+                is open to read right now, no account needed. Real people sit alongside
+                invented example profiles, and every example wears a label, so you always know
+                which is which. An account is for the part that has to be accountable:
+                searching by capability and reaching out happen as a named company, because
+                candidates can block specific companies and we check your name against those
+                lists.
               </p>
             </div>
             <div>

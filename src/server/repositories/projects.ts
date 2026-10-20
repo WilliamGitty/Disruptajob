@@ -88,18 +88,28 @@ export function listPublishedProjects(candidateId: string): Project[] {
   return listProjectsForCandidate(candidateId).filter((p) => p.status !== "draft");
 }
 
-/** Published projects across the whole platform — an aggregate for honest landing stats. */
+/**
+ * Published projects by real people — the demo population is excluded, because a stat that
+ * counts invented people is the "213 companies" mistake wearing a different hat.
+ */
 export function countPublishedProjects(): number {
-  return get<{ n: number }>("SELECT COUNT(*) AS n FROM project WHERE status = 'published'")?.n ?? 0;
+  return (
+    get<{ n: number }>(
+      `SELECT COUNT(*) AS n FROM project p
+        JOIN candidate c ON c.id = p.owner_id
+       WHERE p.status = 'published' AND c.demo = 0`
+    )?.n ?? 0
+  );
 }
 
-/** Evidence artefacts attached to published projects, platform-wide. */
+/** Evidence artefacts on real people's published projects. Demo excluded, same reason. */
 export function countEvidence(): number {
   return (
     get<{ n: number }>(
       `SELECT COUNT(*) AS n FROM evidence e
         JOIN project p ON p.id = e.project_id
-       WHERE p.status = 'published'`
+        JOIN candidate c ON c.id = p.owner_id
+       WHERE p.status = 'published' AND c.demo = 0`
     )?.n ?? 0
   );
 }
