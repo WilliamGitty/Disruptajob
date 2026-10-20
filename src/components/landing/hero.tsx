@@ -32,15 +32,15 @@ export function Hero({
     <section className="relative border-b border-ink/10">
       <div className="mx-auto max-w-[1400px] px-6 pb-16 pt-16 lg:px-10 lg:pb-20 lg:pt-24">
         <div className="animate-fade-up">
-          <p className="mb-6 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
+          <p className="mb-6 text-center text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
             For people the CV format punishes
           </p>
           {/* The accent marks the villain and nothing else; a tester read the old two-word
               highlight as an accident, which means it was decoration. */}
-          <h1 className="max-w-4xl font-serif-display text-[2.75rem] leading-[1.05] tracking-tight text-ink sm:text-[3.5rem] lg:text-[4.25rem]">
+          <h1 className="mx-auto max-w-4xl text-center font-serif-display text-[2.75rem] leading-[1.05] tracking-tight text-ink sm:text-[3.5rem] lg:text-[4.25rem]">
             Your <span className="text-accent">CV</span> doesn&rsquo;t do you justice.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
+          <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-relaxed text-ink-soft">
             A CV turns gaps and job changes into red flags. Here, you show your work instead.
           </p>
 
