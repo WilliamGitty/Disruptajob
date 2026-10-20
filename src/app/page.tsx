@@ -1,4 +1,5 @@
 import { Hero } from "@/components/landing/hero";
+import { WhyBand } from "@/components/landing/why-band";
 import { Comparison } from "@/components/landing/comparison";
 import { ClaimsSection } from "@/components/landing/claims-section";
 import { CandidatePreviewGrid } from "@/components/landing/candidate-preview-grid";
@@ -39,9 +40,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * Deliberately short. Three testers in a row said the old page was too long to finish, and the
- * product's own thesis is demonstration over narration, so the page now does exactly four
- * things: the claim (hero), the proof (one real profile), the crowd (the grid), the employer
- * door. The argument sections that used to live here (not-your-fault, talent-pitch,
+ * product's own thesis is demonstration over narration, so the page does: the claim (hero), the why and the who (the band), the proof (one real
+ * profile), the crowd (the grid), the employer door. The argument sections that used to live here (not-your-fault, talent-pitch,
  * disruption) survive as components; /about and /why carry that depth for whoever wants it.
  */
 export default async function Home() {
@@ -97,6 +97,9 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       {band}
       <Hero ctaLabel={ctaLabel} ctaHref={ctaHref} />
+      {/* The reason and the audience, before any demonstration: round-three testers who never
+          clicked through to /why bounced without hearing why this exists. */}
+      <WhyBand />
       <ProofAboveFold />
       <CandidatePreviewGrid />
 

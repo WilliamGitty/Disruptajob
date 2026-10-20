@@ -46,6 +46,7 @@ Under Settings:
 SIGNED-OUT / GENERAL PAGES
 - Signed-out header, top right: an About menu (About us, Why create an account?, Articles, Guides, FAQ), I'm hiring, Sign in, and Create an account.
 - Why create an account (/why): a short page listing what an account gets you. Reading for the undecided.
+- The homepage, under its main button, says why the site exists ("Paper lies. Work doesn't.") and who it is for: people the CV format punishes (career gaps, frequent moves, switchers, ops people, the self-taught). It also says who it is NOT for: anyone wanting to mass-apply, because there is no apply button.
 - Add your first project (homepage button): the onboarding. It starts with a choice of two doors: describe one piece of work (four short questions, about ten minutes), or start from what you have (a CV, LinkedIn PDF, or GitHub, which goes via the import desk). Progress saves in the browser; leaving and returning picks up where they left off.
 - What you write in onboarding appears on your page in your own words, word for word. Before claiming, the page is shown as it will publish, and there is an optional "Tidy my wording" button: AI proposes cleaner wording for your own text and you approve or reject each field. It never adds anything you didn't say.
 - People: browse everyone who chose to be visible. Community: coming; the page explains. Articles and Guides: reading. About and FAQ: what it says.
