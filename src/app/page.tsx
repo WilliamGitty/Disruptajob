@@ -1,11 +1,10 @@
 import { Hero } from "@/components/landing/hero";
 import { IllustrationBand } from "@/components/landing/illustration-band";
-import { Comparison } from "@/components/landing/comparison";
-import { ClaimsSection } from "@/components/landing/claims-section";
+
+
 import { CandidatePreviewGrid } from "@/components/landing/candidate-preview-grid";
 import { ProofAboveFold } from "@/components/landing/proof-above-fold";
 import { InterestCapture } from "@/components/landing/interest-capture";
-import { EmployerBand } from "@/components/landing/employer-band";
 import { EVENTS, track } from "@/server/analytics";
 import { getCurrentAccount } from "@/server/auth";
 import { getCandidateById } from "@/server/repositories/candidates";
@@ -102,13 +101,6 @@ export default async function Home() {
       <IllustrationBand />
       <ProofAboveFold />
       <CandidatePreviewGrid />
-
-      {/* Everything for companies, grouped and visually separated so a job-seeker doesn't read
-          "every CV on your desk is now perfect" and think it's aimed at them. */}
-      <EmployerBand>
-        <ClaimsSection />
-        <Comparison />
-      </EmployerBand>
 
       {/* The candidate email capture sits last, so the page ends by speaking to the person
           it's built for. */}

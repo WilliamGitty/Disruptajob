@@ -13,6 +13,8 @@ import { capabilitiesForRole, getOpenRolesForCompany } from "@/server/repositori
 import { matchCandidatesForRole } from "@/server/matching";
 import { getCurrentAccount } from "@/server/auth";
 import { SearchBox } from "@/components/employer/search-box";
+import { ClaimsSection } from "@/components/landing/claims-section";
+import { Comparison } from "@/components/landing/comparison";
 import type { Role } from "@/types";
 
 // Reads live database state, so it can't be prerendered.
@@ -106,6 +108,12 @@ export default async function EmployerPage() {
           </div>
         </div>
       </section>
+
+      {/* The employer pitch, moved here from the homepage (founder call, 20 Oct): the
+          homepage speaks only to candidates now, and the company that clicked "I'm hiring"
+          gets the full argument where it asked for it. */}
+      <ClaimsSection />
+      <Comparison />
 
       <RolesOverview />
     </main>
