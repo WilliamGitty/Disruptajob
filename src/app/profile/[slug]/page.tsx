@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCandidateBySlug } from "@/server/repositories/candidates";
@@ -8,7 +9,9 @@ import { getCompanyById } from "@/server/repositories/companies";
 import {
   listProjectsForCandidate,
   listPublishedProjects,
+  suggestedTagsForOwner,
 } from "@/server/repositories/projects";
+import { JourneyGuide } from "@/components/profile/journey-guide";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ShareProfileBar } from "@/components/profile/share-profile-bar";
 import { GitHubImportPanel } from "@/components/profile/github-import-panel";
@@ -50,15 +53,23 @@ export async function generateMetadata({
 
 export default async function ProfilePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ view?: string }>;
 }) {
   const { slug } = await params;
+  const { view } = await searchParams;
   const candidate = getCandidateBySlug(slug);
   if (!candidate) notFound();
 
   const viewer = await getCurrentAccount();
-  const isOwnProfile = viewer?.candidateId === candidate.id;
+  const isOwner = viewer?.candidateId === candidate.id;
+  // "See it as a company sees it": the owner can render their own page exactly as a visitor
+  // would. A page-level presentation switch only; the privacy gate below still keys on the
+  // true owner, so a hidden profile stays reachable to its owner in either view.
+  const companyPreview = isOwner && view === "company";
+  const isOwnProfile = isOwner && !companyPreview;
 
   /*
    * The gate the privacy policy promises. Audit finding S1: this page previously rendered any
@@ -70,7 +81,7 @@ export default async function ProfilePage({
    * but still never sees a hidden profile. 404 rather than 403 — a denial that confirms the
    * profile exists would itself leak.
    */
-  if (!isOwnProfile) {
+  if (!isOwner) {
     const viewerCompany = viewer?.companyId ? getCompanyById(viewer.companyId)?.name ?? "" : "";
     if (!isCandidateVisibleTo(candidate.id, viewerCompany)) notFound();
   }
@@ -79,6 +90,11 @@ export default async function ProfilePage({
   const projects = isOwnProfile
     ? listProjectsForCandidate(candidate.id)
     : listPublishedProjects(candidate.id);
+  // Drafts live at the import desk and ONLY there: shown in the main grid they looked like
+  // published cards with empty bursts and no tags, which the founder read as "it deployed my
+  // imports without any competencies".
+  const publishedProjects = projects.filter((p) => p.status !== "draft");
+  const draftProjects = projects.filter((p) => p.status === "draft");
 
     const personJsonLd = {
     "@context": "https://schema.org",
@@ -103,10 +119,25 @@ export default async function ProfilePage({
         />
       )}
       {isOwnProfile && <EvidenceNudge candidate={candidate} />}
+      {isOwnProfile && (
+        <JourneyGuide
+          slug={candidate.slug}
+          publishedCount={publishedProjects.length}
+          draftCount={draftProjects.length}
+        />
+      )}
+      {companyPreview && (
+        <div className="border-b border-ink/10 bg-ink px-6 py-2.5 text-center text-sm text-paper">
+          This is your page as a company sees it.{" "}
+          <Link href={`/profile/${candidate.slug}`} className="underline">
+            Back to your view
+          </Link>
+        </div>
+      )}
       <ProfileHeader candidate={candidate} isOwnProfile={isOwnProfile} />
       <FeaturedWorkSection
         candidate={candidate}
-        projects={projects}
+        projects={publishedProjects}
         isOwnProfile={isOwnProfile}
       />
 
@@ -114,7 +145,10 @@ export default async function ProfilePage({
           past a wall of tooling to find her own profile; the page is the point, the desk is
           the workshop behind it. */}
       {isOwnProfile && (
-        <GitHubImportPanel drafts={projects.filter((p) => p.status === "draft")} />
+        <GitHubImportPanel
+          drafts={draftProjects}
+          storedSuggestions={suggestedTagsForOwner(candidate.id)}
+        />
       )}
       {isOwnProfile && viewer && (
         <StandOutChecklist
@@ -157,7 +191,7 @@ export default async function ProfilePage({
         />
       )}
 
-      <CapabilitiesSection candidate={candidate} projects={projects} />
+      <CapabilitiesSection candidate={candidate} projects={publishedProjects} />
 
       {/* Placed after the capability graph: you should see what you've built before being told
           what would strengthen it. Owner only, nobody else sees how someone was advised. */}

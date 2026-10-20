@@ -76,6 +76,24 @@ function hydrate(row: ProjectRow): Project {
   };
 }
 
+/**
+ * AI-suggested tags for this owner's draft projects, keyed by project id. Read ONLY by the
+ * import desk UI: scoring, matching and discovery must never touch this table, because a
+ * suggestion is not a claim until a human publishes it.
+ */
+export function suggestedTagsForOwner(candidateId: string): Record<string, string[]> {
+  const rows = all<{ project_id: string; tag: string }>(
+    `SELECT st.project_id, st.tag
+       FROM project_suggested_tag st
+       JOIN project p ON p.id = st.project_id
+      WHERE p.owner_id = ? AND p.status = 'draft'`,
+    candidateId
+  );
+  const map: Record<string, string[]> = {};
+  for (const r of rows) (map[r.project_id] ??= []).push(r.tag);
+  return map;
+}
+
 export function listProjectsForCandidate(candidateId: string): Project[] {
   return all<ProjectRow>(
     `${SELECT_PROJECT} WHERE owner_id = ? ORDER BY created_at DESC`,

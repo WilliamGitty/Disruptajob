@@ -212,10 +212,15 @@ export async function importGitHubToProfile(rawUsername: string): Promise<Profil
     for (const tool of p.tools) {
       run("INSERT OR IGNORE INTO project_tool (project_id, tool) VALUES (?,?)", id, tool);
     }
-    // The suggestions key must match the draft the UI renders, so re-key by real id.
+    // The suggestions key must match the draft the UI renders, so re-key by real id — and
+    // persist them (project_suggested_tag, never project_capability) so a page reload doesn't
+    // silently throw the AI's reading away, which is what made imports feel bare.
     if (suggestions[`gh-${p.slug}`]) {
       suggestions[id] = suggestions[`gh-${p.slug}`];
       delete suggestions[`gh-${p.slug}`];
+      for (const tag of suggestions[id]) {
+        run("INSERT OR IGNORE INTO project_suggested_tag (project_id, tag) VALUES (?,?)", id, tag);
+      }
     }
     imported += 1;
   }
@@ -318,7 +323,12 @@ export async function importCvToProfile(formData: FormData): Promise<ProfileImpo
        VALUES (?,?,?,?,?,?,?,?,?,'',NULL,'draft','cv-import',?)`,
       id, account.candidateId, slug, d.title, d.description, slug, d.outcome, d.problem, d.whatIBuilt, now
     );
-    if (d.suggestedTags.length > 0) suggestions[id] = d.suggestedTags;
+    if (d.suggestedTags.length > 0) {
+      suggestions[id] = d.suggestedTags;
+      for (const tag of d.suggestedTags) {
+        run("INSERT OR IGNORE INTO project_suggested_tag (project_id, tag) VALUES (?,?)", id, tag);
+      }
+    }
     imported += 1;
   }
 

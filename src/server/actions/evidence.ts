@@ -2,9 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
-import { get, run, transaction } from "../db";
+import { all, get, run, transaction } from "../db";
 import { requireCandidate } from "../auth";
 import { isSafeHttpUrl } from "@/lib/project-input";
+import { CAPABILITY_DEFINITIONS } from "@/lib/capabilities";
 
 /**
  * Writing evidence.
@@ -189,8 +190,54 @@ export async function publishDraftProject(
     for (const tag of capabilities) {
       run("INSERT OR IGNORE INTO project_capability (project_id, tag) VALUES (?,?)", row.id, tag);
     }
+    // The human has claimed; the AI's suggestions have served their purpose and go.
+    run("DELETE FROM project_suggested_tag WHERE project_id = ?", row.id);
   });
 
   revalidatePath("/profile/[slug]", "page");
   return { ok: true };
+}
+
+/**
+ * Publish every reviewed draft in one press, each with the tags currently standing on it
+ * (the AI's suggestions, as edited by the owner's unticks in the UI before this call).
+ *
+ * The human claim is the press itself: the button sits under a list where every draft shows
+ * its tags, and the copy says what the press does. Drafts with no tags are skipped and
+ * reported, never force-published: untagged work is invisible to matching and publishing it
+ * would only decorate the page. Founder decision, 20 Oct 2026, recorded in
+ * docs/decisions/2026-10-20-import-flow.md.
+ */
+export async function publishAllDrafts(
+  ticks: Record<string, string[]>
+): Promise<{ ok: boolean; published: number; skipped: number; error?: string }> {
+  const account = await requireCandidate();
+
+  const drafts = all<{ id: string; description: string; what_i_built: string; problem: string; outcome: string }>(
+    "SELECT id, description, what_i_built, problem, outcome FROM project WHERE owner_id = ? AND status = 'draft'",
+    account.candidateId
+  );
+  if (drafts.length === 0) return { ok: false, published: 0, skipped: 0, error: "No drafts to publish." };
+
+  const validTags = new Set(CAPABILITY_DEFINITIONS.map((c) => c.tag));
+  let published = 0;
+  let skipped = 0;
+  for (const d of drafts) {
+    const capabilities = [...new Set(ticks[d.id] ?? [])].filter((t) => validTags.has(t));
+    if (capabilities.length === 0 || !d.description.trim()) {
+      skipped += 1;
+      continue;
+    }
+    transaction(() => {
+      run("UPDATE project SET status = 'published' WHERE id = ?", d.id);
+      for (const tag of capabilities) {
+        run("INSERT OR IGNORE INTO project_capability (project_id, tag) VALUES (?,?)", d.id, tag);
+      }
+      run("DELETE FROM project_suggested_tag WHERE project_id = ?", d.id);
+    });
+    published += 1;
+  }
+
+  revalidatePath("/profile/[slug]", "page");
+  return { ok: true, published, skipped };
 }

@@ -367,3 +367,14 @@ CREATE TABLE IF NOT EXISTS assistant_message (
   created_at   TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_assistant_created ON assistant_message(created_at);
+
+-- AI-suggested capability tags for DRAFT projects. Deliberately a separate table from
+-- project_capability, which remains human-claims-only: nothing in scoring, matching or
+-- discovery may ever read this table. Rows exist so suggestions survive a page reload; they
+-- are deleted when the human publishes (their ticks move to project_capability) and cascade
+-- away with the project.
+CREATE TABLE IF NOT EXISTS project_suggested_tag (
+  project_id TEXT NOT NULL REFERENCES project(id) ON DELETE CASCADE,
+  tag        TEXT NOT NULL,
+  PRIMARY KEY (project_id, tag)
+);
