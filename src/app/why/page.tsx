@@ -16,15 +16,15 @@ export default function WhyPage() {
   const reasons = [
     {
       title: "A page that shows your work",
-      body: "You describe real projects and tag what each one proves. The page reads as evidence, because that is all it can contain: nothing you merely claim about yourself appears anywhere on it.",
+      body: "You describe real work you have done: a project, an event, a system, a process you ran. We call this published work, which means work you chose to put on your page, in your own words. Your page holds only this work. There is no skills list to fill with claims, and no AI rates you or rewrites you.",
     },
     {
-      title: "A link that works from day one",
-      body: "Your page lives at one address. Put it in an application, an email signature, a message to a hiring manager. It works before any company here has ever seen you.",
+      title: "A link you can send anywhere",
+      body: "Your page lives at one web address. Put the link in a job application, an email signature, or a message. It is useful on its own, even if you never hear from any company on this site.",
     },
     {
-      title: "Roles scored against your evidence",
-      body: "Open roles are compared with the work you have published, and every percentage explains itself. There are no applications on this site. When a role deserves it, you register interest, which lets that one company see you and sends nothing.",
+      title: "Roles matched against your work",
+      body: "Open roles are compared with the work on your page, and every match percentage shows its reasons. There are no job applications here. If you like a role, you press one button, and that lets the company see your profile. That is all the button does. It sends no message and no documents.",
     },
     {
       title: "Hidden until you say otherwise",
@@ -41,8 +41,13 @@ export default function WhyPage() {
         What an account gets you.
       </h1>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-        It takes about ten minutes, four questions about work you have actually done. It is free
-        for candidates, always. Here is what exists at the end of it.
+        This page is for people looking for work. If you are hiring,{" "}
+        <Link href="/employer" className="text-ink underline-grow">
+          this one is yours
+        </Link>
+        . An account takes about ten minutes and is free, always. You can answer a few short
+        questions about real work, or start from a CV or GitHub and edit what AI drafts for you.
+        Either way, you approve every word. Here is what you get.
       </p>
 
       <div className="mt-10 space-y-8">

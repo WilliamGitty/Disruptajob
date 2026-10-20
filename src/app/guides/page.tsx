@@ -19,8 +19,8 @@ export default function GuidesPage() {
         Questions, answered properly.
       </h1>
       <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-        Each guide answers one real question well enough to be useful whether or not you ever
-        sign up here. The opinions live in{" "}
+        Each guide answers one real question properly. You do not need an account here for
+        them to be useful. The opinions live in{" "}
         <Link href="/articles" className="text-ink underline-grow">
           the articles
         </Link>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock, Eye, Heart, Link as LinkIcon } from "lucide-react";
+import { ArrowRight, Clock, Eye, Heart, Link as LinkIcon, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TitleVsWork } from "@/components/illustrations/title-vs-work";
 import { Reveal } from "@/components/landing/reveal";
@@ -32,8 +32,7 @@ export function Hero({
             Your <span className="text-accent">CV</span> doesn&rsquo;t do you justice.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
-            Gaps, changes, second starts: a CV turns them into red flags. Here, you show your
-            work instead.{" "}
+            A CV turns gaps and job changes into red flags. Here, you show your work instead.{" "}
             <Link href="/about" className="text-ink underline-grow">
               Here&rsquo;s why
             </Link>
@@ -50,6 +49,12 @@ export function Hero({
           </div>
 
           <ul className="mt-8 flex flex-wrap gap-x-7 gap-y-3 text-sm text-ink-soft">
+            {/* The denial goes where the suspicion forms. A tester read this site as "AI
+                analyses your CV and identifies your strengths", the exact product the one rule
+                forbids, so the difference is stated flat where the eye lands after the button. */}
+            <Reassurance icon={<UserCheck className="h-3.5 w-3.5" />}>
+              No AI rates you. Companies read the work itself
+            </Reassurance>
             <Reassurance icon={<Heart className="h-3.5 w-3.5" />}>
               Free, always. Companies pay; you don&rsquo;t
             </Reassurance>

@@ -139,7 +139,7 @@ export function Header({
                 Sign in
               </Link>
               <Link href="/talent/onboarding" className="shrink-0">
-                <span className="inline-flex h-9 items-center whitespace-nowrap border border-ink/20 px-3.5 text-sm font-medium text-ink transition-colors hover:border-ink sm:h-10 sm:px-5">
+                <span className="inline-flex h-9 items-center whitespace-nowrap bg-accent px-3.5 text-sm font-medium text-paper transition-colors hover:bg-accent-dark sm:h-10 sm:px-5">
                   Create an account
                 </span>
               </Link>

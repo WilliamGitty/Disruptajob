@@ -47,19 +47,19 @@ export default function AboutPage() {
 
         <h2 className="pt-4 font-serif-display text-xl text-ink">What we did about it</h2>
         <p>
-          We removed the claims and kept the proof. On Disruptajob you do not describe yourself
-          with adjectives; you publish work. Real projects, tagged with what they demonstrate,
-          with links and outcomes where they exist. A capability on a profile here can only come
-          from published evidence. There is nowhere in our database to type a skill into
-          existence: not for you, not for an importer, not for an AI. We built it that way on
-          purpose, and we keep it that way on principle.
+          We removed the claims and kept the proof. On Disruptajob you describe real work you
+          have done and put it on your page. We call this published work. You tag each piece
+          with what it demonstrates, and you add links and outcomes when you have them. Those
+          tags are the only thing that can give you a capability. There is nowhere in our
+          database to type a skill into existence: not for you, not for an importer, not for an
+          AI. We built it that way on purpose, and we keep it that way on principle.
         </p>
         <p>
-          Companies work the same way in reverse. There are no job postings to spray applications
-          at, because there are no applications. A company defines a role by the work it actually
-          contains, searches for people whose evidence matches, and reaches out, as itself, with a
-          message a human wrote. The first contact on this platform is always a real company that
-          read your actual work.
+          Companies work the same way in reverse. There are no applications here, so there are
+          no postings to spray them at. A company describes the work a role involves. It then
+          searches for people whose published work matches. When it finds someone, a human at
+          that company writes to them. The first contact on this platform is always a real
+          company that read your actual work.
         </p>
         <p>
           And because the people with the best evidence usually have jobs, every profile starts

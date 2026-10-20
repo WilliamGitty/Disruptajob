@@ -51,6 +51,11 @@ These mark text as machine-written. The Copywriter never uses them; reviews reje
 - **Hedge-fluff**: "simply", "just", "effortlessly", "in seconds". If it were effortless the
   sentence would not need to say so.
 - **The rhetorical-question opener.** Hopkins asked questions to qualify buyers, not to warm up.
+- **Any sentence a reader has to reread.** Three rounds of testers highlighted the same disease:
+  constructions that perform ("Here is what exists at the end of it", "it works before any
+  company here has ever seen you"). Subject, verb, object; one idea per sentence. Colon-list
+  openers ("Gaps, changes, second starts:") are out — a tester read one three times. If a
+  sentence is admired before it is understood, it is rewritten.
 
 ## How edits happen
 

@@ -236,7 +236,7 @@ export function ConversationFlow({ session }: { session?: OnboardingSession }) {
               <p className="mt-4 text-xs leading-relaxed text-ink-faint">
                 If your work lives on GitHub or in a CV, a rough answer here is enough: the
                 moment your page exists you can import either, and AI drafts the rest for you
-                to edit.
+                to edit and own. Nothing it writes is scored.
               </p>
               <div className="mt-6 max-w-sm space-y-2">
                 <Label htmlFor="work-title" className="text-ink-soft">
@@ -798,8 +798,9 @@ function StartChooser({
         >
           <p className="font-serif-display text-xl text-ink">Start from what you have</p>
           <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-            Drop a CV or LinkedIn PDF, or import public GitHub repos. AI drafts projects from
-            them for you to edit, tag and publish, or throw away. The file itself is never kept.
+            Drop a CV or LinkedIn PDF, or import public GitHub repos. AI drafts projects for
+            you to edit, tag and publish, or throw away. It writes a first draft; it never
+            rates you. The file itself is never kept.
           </p>
           <p className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-grow">
             {signedIn ? "Go to your import desk" : "Claim your page first (under a minute)"}{" "}

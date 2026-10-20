@@ -46,6 +46,26 @@ const CANDIDATE_QAS: QA[] = [
     a: "Most good evidence is not code. The process you redesigned, the automation you set up, the reporting pack you rebuilt, the event you ran: anything real, described concretely, with the outcome attached. If you did it and can explain it, it counts.",
   },
   {
+    q: "What does 'published work' actually mean?",
+    a: "Real work you did, described in your own words, and put on your page. A project, a system, an event, a dissertation, a process you ran. It is different from a skills list in one way that matters: a skill is a claim about yourself, and published work is the thing itself, which a reader can judge. You add links and outcomes when they exist, but a clear description of what you did and what changed is enough.",
+  },
+  {
+    q: "My work doesn't leave documents or links behind. Does it still count?",
+    a: "Yes, and this question is why our onboarding starts with 'what would break if you went away for a month'. Care work, operations, support, teaching: the best of it leaves no artefact, but anyone who really did it can describe how it worked. What you found, what you did, what changed. That description, in concrete detail, is the evidence. Someone who didn't do the work can't fake the detail under their own name in public.",
+  },
+  {
+    q: "I'm early in my career with little experience. Is this for me?",
+    a: "Yes, and arguably more than for anyone else. You are not asked for years of history here; you are asked for one real piece of work. A dissertation, a volunteer project, the system you built in a part-time job. One well-described piece puts you in search results next to people with long CVs, because the search reads work, not years.",
+  },
+  {
+    q: "Does this work outside tech?",
+    a: "Yes. Capabilities here cover four kinds of work: building and improving, running things, working with people (training, speaking, care and support, community), and insight and reach (research, writing, events, fundraising). Companies search by capability, not by industry, so a workshop programme and a software project sit in the same index.",
+  },
+  {
+    q: "Isn't this quite a rigid way to present a person?",
+    a: "It is narrower than a CV on purpose. The page only holds work that can be described and checked, because that is the part hiring keeps getting wrong. The rest of you still has room: your one-sentence description, your about text and your background are written in your own words and never scored. What the format refuses to hold is claims nobody can check, and that refusal is the product.",
+  },
+  {
     q: "Can I use my profile outside Disruptajob?",
     a: "Yes, and you should. Once you open your profile up, its link works anywhere: job applications, LinkedIn, an email signature. Evidence beats attachments.",
   },
