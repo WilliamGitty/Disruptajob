@@ -87,6 +87,10 @@ export default async function FunnelPage({
       </section>
 
       <Funnel title="Candidates" steps={report.candidate} />
+      <p className="mt-2 text-xs text-ink-faint">
+        Read why-create-an-account: {report.whyReaders} (optional detour, outside the funnel on
+        purpose: it would put the wrong denominator under the onboarding step)
+      </p>
       <Funnel title="Companies" steps={report.employer} />
 
       <section className="border border-ink/15 p-6">

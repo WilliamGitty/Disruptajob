@@ -24,6 +24,8 @@ they lead to *described work the person tags themselves*, never to a claim.
    their output was being read and their exit status wasn't.
 3. **Drive it in a browser.** Typechecking proves it compiles, not that it works. Several bugs in
    this repo passed all three checks above and were still broken end to end.
+   For sitewide changes, `npm run crawl` (dev server running) walks every page and fails on any
+   dead link or incomplete footer — tools/crawl.mjs, zero dependencies.
 4. For anything touching privacy or data, **mutation-test it**: break the rule on purpose and
    confirm the suite goes red. Two tests here passed against deliberately broken code until this
    was done — one was time-blind, one asserted a pragma that could not actually be switched off.

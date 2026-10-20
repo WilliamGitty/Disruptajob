@@ -216,8 +216,24 @@ function Section({ title, qas }: { title: string; qas: QA[] }) {
 }
 
 export default function FaqPage() {
+  // FAQPage structured data, same shape the guides use. Only plain-string answers are
+  // included: the JSX answers carry links whose text would serialise into mush, and a partial
+  // honest list beats a complete garbled one.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [...CANDIDATE_QAS, ...EMPLOYER_QAS, ...PLATFORM_QAS, ...DATA_QAS]
+      .filter((qa): qa is QA & { a: string } => typeof qa.a === "string")
+      .map((qa) => ({
+        "@type": "Question",
+        name: qa.q,
+        acceptedAnswer: { "@type": "Answer", text: qa.a },
+      })),
+  };
+
   return (
     <main className="mx-auto max-w-[680px] px-6 py-14 lg:py-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">FAQ</p>
       <h1 className="font-serif-display text-3xl leading-tight text-ink sm:text-4xl">
         Straight answers

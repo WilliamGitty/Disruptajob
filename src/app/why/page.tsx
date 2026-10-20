@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EVENTS, track } from "@/server/analytics";
 
 export const metadata: Metadata = {
   title: "Why create an account · Disruptajob",
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
  * first-time visitor is actually asking, in the Copywriter's voice: service, specifics,
  * reason-why. It makes no promise the product doesn't keep.
  */
-export default function WhyPage() {
+export const dynamic = "force-dynamic";
+
+export default async function WhyPage() {
+  await track(EVENTS.whyView, { path: "/why" });
   const reasons = [
     {
       title: "A page that shows your work",

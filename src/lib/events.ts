@@ -15,6 +15,8 @@ export const EVENTS = {
   employerSetupStep: "employer_setup_step",
   employerSetupComplete: "employer_setup_complete",
   interestCaptured: "interest_captured",
+  /** Someone read the why-create-an-account page: the step between landing and onboarding. */
+  whyView: "why_view",
 } as const;
 
 export type EventName = (typeof EVENTS)[keyof typeof EVENTS];

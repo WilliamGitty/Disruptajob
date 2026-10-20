@@ -139,12 +139,17 @@ export interface FunnelReport {
   /** Where candidates actually quit, by onboarding step index. */
   stepDropOff: { step: number; label: string; visitors: number }[];
   interest: { total: number; recent: { email: string; side: string; createdAt: string }[] };
+  /** Distinct visitors who read /why. Deliberately NOT a funnel step: the page is an optional
+      detour, and wedging it into the linear funnel would put the wrong denominator under the
+      onboarding conversion. A standalone number stays honest. */
+  whyReaders: number;
   totalEvents: number;
 }
 
 export function funnelReport(days = 30): FunnelReport {
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
   const counts = distinctVisitors(since);
+  const whyReaders = counts.get(EVENTS.whyView) ?? 0;
 
   const stepRows = all<{ step: number; label: string; n: number }>(
     `SELECT CAST(json_extract(props, '$.step') AS INTEGER) AS step,
@@ -170,6 +175,7 @@ export function funnelReport(days = 30): FunnelReport {
 
   return {
     since,
+    whyReaders,
     days,
     candidate: buildFunnel(CANDIDATE_FUNNEL, counts),
     employer: buildFunnel(EMPLOYER_FUNNEL, counts),
