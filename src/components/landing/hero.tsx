@@ -40,13 +40,13 @@ export function Hero({
           <h1 className="max-w-4xl font-serif-display text-[2.75rem] leading-[1.05] tracking-tight text-ink sm:text-[3.5rem] lg:text-[4.25rem]">
             Your <span className="text-accent">CV</span> doesn&rsquo;t do you justice.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
             A CV turns gaps and job changes into red flags. Here, you show your work instead.
           </p>
 
           <div className="flex flex-col">
             {/* The why and the who. order-2 on phones so the button stays near the headline. */}
-            <div className="order-2 mt-12 grid max-w-5xl grid-cols-1 gap-10 border-t border-ink/10 pt-10 md:grid-cols-2 md:gap-14 lg:order-1">
+            <div className="order-2 mt-12 grid grid-cols-1 gap-10 border-t border-ink/10 pt-10 md:grid-cols-2 md:gap-16 lg:order-1 lg:gap-24">
               <div>
                 <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
                   Why we built this
@@ -54,7 +54,7 @@ export function Hero({
                 <h2 className="font-serif-display text-2xl leading-tight text-ink">
                   Paper lies. Work doesn&rsquo;t.
                 </h2>
-                <p className="mt-4 text-[16px] leading-relaxed text-ink-soft">
+                <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-ink-soft">
                   Two hundred applications, four replies. That market is broken beyond repair,
                   so we built a different one.
                 </p>
@@ -99,9 +99,11 @@ export function Hero({
               </div>
             </div>
 
-            {/* The ask. order-1 on phones: light first screen, argument one swipe later. */}
-            <div className="order-1 lg:order-2">
-              <div className="mt-8 flex flex-wrap items-center gap-4 lg:mt-12">
+            {/* The ask, centred: the founder wanted the button and its reassurances in the
+                middle of the page rather than hugging the left margin. order-1 on phones so
+                the first screen stays light. */}
+            <div className="order-1 flex flex-col items-center text-center lg:order-2">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:mt-14">
                 <Button asChild size="lg" variant="accent">
                   <Link href={ctaHref}>
                     {ctaLabel}
@@ -110,7 +112,7 @@ export function Hero({
                 </Button>
               </div>
 
-              <ul className="mt-7 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 text-sm text-ink-soft">
+              <ul className="mt-7 flex max-w-4xl flex-wrap justify-center gap-x-7 gap-y-3 text-sm text-ink-soft">
                 {/* The denial goes where the suspicion forms. A tester read this site as "AI
                     analyses your CV", the exact product the one rule forbids. */}
                 <Reassurance icon={<UserCheck className="h-3.5 w-3.5" />}>
