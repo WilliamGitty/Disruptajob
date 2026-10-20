@@ -131,15 +131,15 @@ export function Header({
             <>
               <Link
                 href={EMPLOYER_HOME}
-                className="hidden text-sm text-ink-soft underline-grow sm:inline"
+                className="hidden whitespace-nowrap text-sm text-ink-soft underline-grow sm:inline"
               >
                 I&rsquo;m hiring
               </Link>
-              <Link href="/signin" className="text-sm text-ink-soft underline-grow">
+              <Link href="/signin" className="whitespace-nowrap text-sm text-ink-soft underline-grow">
                 Sign in
               </Link>
-              <Link href="/talent/onboarding">
-                <span className="inline-flex h-9 items-center border border-ink/20 px-3.5 text-sm font-medium text-ink transition-colors hover:border-ink sm:h-10 sm:px-5">
+              <Link href="/talent/onboarding" className="shrink-0">
+                <span className="inline-flex h-9 items-center whitespace-nowrap border border-ink/20 px-3.5 text-sm font-medium text-ink transition-colors hover:border-ink sm:h-10 sm:px-5">
                   Create an account
                 </span>
               </Link>
@@ -406,7 +406,7 @@ function Logo() {
         height={32}
         className="h-8 w-8 shrink-0 rounded-sm"
       />
-      <span className="hidden font-serif-display text-lg tracking-tight text-ink min-[430px]:inline">
+      <span className="hidden font-serif-display text-lg tracking-tight text-ink min-[560px]:inline">
         Disruptajob
       </span>
     </Link>
